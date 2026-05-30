@@ -1,0 +1,158 @@
+/* ==========================================================================
+   REFLECTION & STUDY PAGE WIDGETS
+   ========================================================================== */
+
+/* Drop Cap & Illuminated Headers */
+.illuminated-header { display: flex; align-items: center; margin-top: 0.2rem; gap: 0.3rem; }
+.drop-cap {
+    font-family: var(--f-fancy);
+    font-size: 2.9rem;
+    line-height: 2.4rem;
+    color: var(--terracotta);
+    border: 1px solid var(--ink-muted);
+    padding: 0.28rem 0.45rem;
+    border-radius: 4px;
+    background: rgba(154,53,18,0.05);
+    flex-shrink: 0;
+}
+.header-text h2 { font-family: var(--f-head); font-size: 1.25rem; color: var(--ink); }
+.cursive-sub    { font-family: var(--f-hand); font-size: 1rem; color: var(--ink-2); margin-top: 0.1rem; }
+
+/* Section dividers */
+.section-divider {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 1rem 0 0.5rem;
+}
+.divider-rule { flex: 1; height: 1px; background: var(--gold-dim); }
+.divider-icon { font-size: 0.8rem; opacity: 0.4; }
+.section-sub  { font-family: var(--f-hand); font-size: 0.9rem; color: var(--ink-muted); }
+
+/* Quote block */
+.quote-block {
+    background: var(--amber-glow);
+    border-left: 3px solid var(--amber);
+    border-radius: 0 6px 6px 0;
+    padding: 0.8rem 1rem;
+    margin: 0.6rem 0;
+    position: relative;
+}
+.quote-text {
+    font-family: var(--f-italic);
+    font-size: 0.95rem;
+    color: var(--ink);
+    font-style: italic;
+    line-height: 1.55;
+    margin: 0 0 0.3rem;
+}
+.quote-author {
+    font-family: var(--f-head);
+    font-size: 0.72rem;
+    color: var(--ink-muted);
+    letter-spacing: 0.06em;
+}
+.new-quote-btn {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.6rem;
+    background: none;
+    border: none;
+    font-size: 0.75rem;
+    color: var(--amber);
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+    font-family: var(--f-head);
+}
+.new-quote-btn:hover { opacity: 1; }
+
+/* Mindset chips */
+.mindset-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 0.5rem 0;
+}
+.mindset-btn {
+    padding: 0.3rem 0.75rem;
+    border: 1px solid var(--gold-dim);
+    border-radius: 20px;
+    background: none;
+    font-family: var(--f-head);
+    font-size: 0.7rem;
+    color: var(--ink-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.mindset-btn:hover { border-color: var(--amber); color: var(--amber); }
+.mindset-btn.active {
+    background: var(--amber-glow);
+    border-color: var(--amber);
+    color: var(--amber);
+}
+
+/* Active mindset name */
+.active-mindset-display {
+    font-family: var(--f-hand);
+    font-size: 0.9rem;
+    color: var(--amber);
+    margin-top: 0.3rem;
+}
+
+/* Sound chimes */
+.sound-section { margin-top: 0.8rem; }
+.sound-btns {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 0.4rem;
+}
+.sound-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.35rem 0.8rem;
+    border: 1px solid var(--gold-dim);
+    border-radius: 6px;
+    background: none;
+    font-family: var(--f-head);
+    font-size: 0.72rem;
+    color: var(--ink-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.sound-btn:hover { border-color: var(--amber); color: var(--amber); }
+.sound-btn.playing {
+    background: var(--amber-glow);
+    border-color: var(--amber);
+    color: var(--amber);
+}
+
+/* Page header */
+.page-header { margin-bottom: 0.2rem; }
+.page-header h1 {
+    font-family: var(--f-fancy);
+    font-size: 1.1rem;
+    color: var(--terracotta);
+    margin: 0 0 0.1rem;
+    letter-spacing: 0.04em;
+}
+.page-header-sub {
+    font-family: var(--f-hand);
+    font-size: 0.85rem;
+    color: var(--ink-muted);
+}
+
+/* ── Dark Mode Overrides ── */
+body.layout-ledger .drop-cap {
+    color: var(--amber);
+    border-color: rgba(229,195,106,0.3);
+    background: rgba(229,195,106,0.06);
+}
+body.layout-ledger .quote-block { background: rgba(229,195,106,0.06); border-color: var(--amber); }
+body.layout-ledger .quote-text  { color: var(--ink-2); }
+body.layout-ledger .mindset-btn { border-color: rgba(229,195,106,0.2); color: var(--ink-muted); }
+body.layout-ledger .mindset-btn.active { border-color: var(--amber); color: var(--amber); background: rgba(229,195,106,0.08); }
+body.layout-ledger .sound-btn { border-color: rgba(229,195,106,0.2); color: var(--ink-muted); }
+body.layout-ledger .sound-btn.playing { border-color: var(--amber); color: var(--amber); background: rgba(229,195,106,0.08); }

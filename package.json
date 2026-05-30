@@ -1,0 +1,14 @@
+{
+  "name": "whoami",
+  "version": "1.0.0",
+  "description": "The Scriptorium: Your Personal Journal & Dashboard",
+  "scripts": {
+    "dev": "vite --port 3000 --host",
+    "start": "npm run dev",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^5.2.0"
+  }
+}

@@ -1,0 +1,96 @@
+/* ==========================================================================
+   DAILY JOURNAL / JOURNAL PAGE WIDGETS
+   ========================================================================== */
+
+/* Page Headers */
+.page-header {
+    margin-bottom: 0.2rem;
+}
+.page-header h1 {
+    font-family: var(--f-fancy);
+    font-size: 1.1rem;
+    color: var(--terracotta);
+    margin: 0 0 0.1rem;
+    letter-spacing: 0.04em;
+}
+.page-header-sub {
+    font-family: var(--f-hand);
+    font-size: 0.85rem;
+    color: var(--ink-muted);
+}
+
+/* Section dividers */
+.section-divider {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0.8rem 0 0.4rem;
+}
+.divider-rule { flex: 1; height: 1px; background: var(--gold-dim); }
+.divider-icon { font-size: 0.8rem; opacity: 0.4; }
+.section-sub  { font-family: var(--f-hand); font-size: 0.9rem; color: var(--ink-muted); }
+
+/* Journal textarea */
+#scrapbook-textarea {
+    width: 100%;
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-family: var(--f-hand);
+    font-size: 1rem;
+    color: var(--ink);
+    line-height: 1.9;
+    resize: none;
+    outline: none;
+    padding: 0.5rem 0;
+    background-image: repeating-linear-gradient(
+        to bottom,
+        transparent,
+        transparent 1.86rem,
+        rgba(133,97,68,0.1) 1.86rem,
+        rgba(133,97,68,0.1) 1.9rem
+    );
+    transition: color 0.4s;
+}
+#scrapbook-textarea::placeholder {
+    color: var(--ink-muted);
+    opacity: 0.5;
+    font-style: italic;
+}
+
+/* Scrapbook footer */
+.scrapbook-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.5rem;
+    font-family: var(--f-head);
+    font-size: 0.68rem;
+    color: var(--ink-muted);
+}
+
+/* Autosave indicator */
+.autosave-indicator {
+    font-family: var(--f-hand);
+    font-size: 0.75rem;
+    color: var(--amber);
+    opacity: 0;
+    transition: opacity 0.4s;
+}
+.autosave-indicator.visible { opacity: 1; }
+
+/* ── Dark Mode Overrides ── */
+body.layout-ledger #scrapbook-textarea {
+    color: var(--ink);
+    background-image: repeating-linear-gradient(
+        to bottom,
+        transparent,
+        transparent 1.86rem,
+        rgba(229,195,106,0.07) 1.86rem,
+        rgba(229,195,106,0.07) 1.9rem
+    );
+}
+body.layout-ledger #scrapbook-textarea:focus {
+    border-color: #e5c36a;
+    box-shadow: 0 0 12px rgba(229, 195, 106, 0.08);
+}

@@ -1,0 +1,48 @@
+/* ==========================================================================
+   BASE — desk background, body states
+   ========================================================================== */
+
+/* Body state classes toggled by app.js */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: var(--f-body);
+    background: var(--desk);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Desk glow ambient */
+.desk-bg {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: radial-gradient(ellipse at 50% 30%, rgba(80,40,10,0.18) 0%, transparent 70%),
+                var(--desk);
+    position: relative;
+}
+
+.desk-glow {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 340px;
+    background: radial-gradient(ellipse at 50% -10%, rgba(180,100,20,0.12) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Book wrapper */
+.book-wrapper {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 1.5rem 1rem;
+    position: relative;
+    z-index: 5;
+}

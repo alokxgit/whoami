@@ -1,0 +1,251 @@
+/* ==========================================================================
+   GOALS & DAILY TASKS PAGE WIDGETS
+   ========================================================================== */
+
+/* Page Headers */
+.page-header {
+    margin-bottom: 0.2rem;
+}
+.page-header h1 {
+    font-family: var(--f-fancy);
+    font-size: 1.1rem;
+    color: var(--terracotta);
+    margin: 0 0 0.1rem;
+    letter-spacing: 0.04em;
+}
+.page-header-sub {
+    font-family: var(--f-hand);
+    font-size: 0.85rem;
+    color: var(--ink-muted);
+}
+
+/* Section dividers */
+.section-divider {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0.8rem 0 0.4rem;
+}
+.divider-rule { flex: 1; height: 1px; background: var(--gold-dim); }
+.divider-icon { font-size: 0.8rem; opacity: 0.4; }
+.section-sub  { font-family: var(--f-hand); font-size: 0.9rem; color: var(--ink-muted); }
+
+/* Goal form */
+.goal-form {
+    display: flex;
+    gap: 0.5rem;
+    margin: 0.5rem 0;
+}
+.goal-form input[type="text"] {
+    flex: 1;
+    padding: 0.45rem 0.8rem;
+    border: 1px solid var(--gold-dim);
+    border-radius: 6px;
+    background: rgba(255,255,255,0.5);
+    font-family: var(--f-hand);
+    font-size: 0.9rem;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s;
+}
+.goal-form input[type="text"]:focus { border-color: var(--amber); }
+.goal-form button,
+.activity-form button {
+    padding: 0.45rem 1rem;
+    background: var(--terracotta);
+    border: none;
+    border-radius: 6px;
+    color: #faf5e6;
+    font-family: var(--f-head);
+    font-size: 0.78rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.goal-form button:hover,
+.activity-form button:hover { background: #7c2e10; }
+
+/* Goal list */
+.goal-list { list-style: none; padding: 0; margin: 0.4rem 0; display: flex; flex-direction: column; gap: 0.5rem; }
+.goal-item {
+    background: rgba(229,195,106,0.07);
+    border: 1px solid var(--gold-dim);
+    border-radius: 7px;
+    padding: 0.55rem 0.8rem;
+}
+.goal-item-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+.goal-text {
+    font-family: var(--f-hand);
+    font-size: 0.95rem;
+    color: var(--ink);
+    flex: 1;
+}
+.goal-actions { display: flex; gap: 0.3rem; }
+.goal-action-btn {
+    background: none;
+    border: 1px solid var(--gold-dim);
+    border-radius: 4px;
+    padding: 2px 7px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    color: var(--ink-muted);
+    transition: all 0.2s;
+}
+.goal-action-btn:hover { border-color: var(--amber); color: var(--amber); }
+.delete-goal-btn:hover { border-color: var(--terracotta); color: var(--terracotta); }
+
+/* Progress bar */
+.goal-progress-wrap { margin-top: 0.4rem; }
+.goal-progress-bar {
+    height: 5px;
+    background: var(--gold-dim);
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+}
+.goal-progress-fill {
+    height: 100%;
+    background: linear-gradient(to right, var(--amber), var(--terracotta));
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+.goal-progress-label {
+    font-family: var(--f-head);
+    font-size: 0.65rem;
+    color: var(--ink-muted);
+    margin-top: 0.2rem;
+}
+
+/* Activity form */
+.activity-form {
+    display: flex;
+    gap: 0.5rem;
+    margin: 0.5rem 0;
+    flex-wrap: wrap;
+}
+.activity-form input[type="text"] {
+    flex: 1;
+    min-width: 120px;
+    padding: 0.4rem 0.7rem;
+    border: 1px solid var(--gold-dim);
+    border-radius: 6px;
+    background: rgba(255,255,255,0.5);
+    font-family: var(--f-hand);
+    font-size: 0.88rem;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s;
+}
+.activity-form input[type="text"]:focus { border-color: var(--amber); }
+.activity-form select {
+    padding: 0.4rem 0.6rem;
+    border: 1px solid var(--gold-dim);
+    border-radius: 6px;
+    background: rgba(255,255,255,0.5);
+    font-family: var(--f-head);
+    font-size: 0.75rem;
+    color: var(--ink);
+    outline: none;
+}
+
+/* Filter buttons */
+.filter-btns {
+    display: flex;
+    gap: 0.4rem;
+    margin: 0.5rem 0 0.3rem;
+    flex-wrap: wrap;
+}
+.filter-btn {
+    padding: 0.25rem 0.7rem;
+    border: 1px solid var(--gold-dim);
+    border-radius: 14px;
+    background: none;
+    font-family: var(--f-head);
+    font-size: 0.68rem;
+    color: var(--ink-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.filter-btn:hover { border-color: var(--amber); color: var(--amber); }
+.filter-btn.active {
+    background: var(--amber-glow);
+    border-color: var(--amber);
+    color: var(--amber);
+}
+
+/* Activity list */
+.activity-list {
+    list-style: none;
+    padding: 0;
+    margin: 0.3rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    max-height: 260px;
+    overflow-y: auto;
+}
+.activity-item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.45rem 0.7rem;
+    border: 1px solid var(--gold-dim);
+    border-radius: 6px;
+    background: rgba(255,255,255,0.3);
+    transition: background 0.2s;
+}
+.activity-item.done { opacity: 0.55; }
+.activity-item.done .activity-text { text-decoration: line-through; }
+.activity-checkbox {
+    width: 16px;
+    height: 16px;
+    border: 1.5px solid var(--amber);
+    border-radius: 3px;
+    cursor: pointer;
+    flex-shrink: 0;
+    accent-color: var(--amber);
+}
+.activity-text {
+    flex: 1;
+    font-family: var(--f-hand);
+    font-size: 0.9rem;
+    color: var(--ink);
+}
+.priority-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+.priority-high   { background: var(--terracotta); }
+.priority-medium { background: var(--amber); }
+.priority-low    { background: var(--forest); }
+.activity-actions { margin-left: auto; }
+.delete-activity-btn {
+    background: none;
+    border: none;
+    font-size: 0.7rem;
+    color: var(--ink-muted);
+    cursor: pointer;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+    font-family: var(--f-head);
+}
+.delete-activity-btn:hover { opacity: 1; color: var(--terracotta); }
+
+/* ── Dark Mode Overrides ── */
+body.layout-ledger .goal-form input[type="text"],
+body.layout-ledger .activity-form input[type="text"],
+body.layout-ledger .activity-form select {
+    background: rgba(255,255,255,0.05);
+    border-color: rgba(229,195,106,0.2);
+    color: var(--ink);
+}
+body.layout-ledger .goal-item   { background: rgba(229,195,106,0.05); border-color: rgba(229,195,106,0.12); }
+body.layout-ledger .activity-item { background: rgba(229,195,106,0.04); border-color: rgba(229,195,106,0.1); }
+body.layout-ledger .goal-form button,
+body.layout-ledger .activity-form button { background: rgba(229,195,106,0.15); color: var(--amber); }

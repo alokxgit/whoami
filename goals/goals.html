@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alok | Goals &amp; Tasks</title>
+    <meta name="description" content="Manage your goals and daily tasks in your personal journal.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=EB+Garamond:ital,wght@0,400..700;1,400..700&family=IM+Fell+English:ital@0;1&family=Marcellus&family=Patrick+Hand&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../shared/css/variables.css">
+    <link rel="stylesheet" href="../shared/css/base.css">
+    <link rel="stylesheet" href="../shared/css/book.css">
+    <link rel="stylesheet" href="goals.css">
+    <link rel="stylesheet" href="../shared/css/responsive.css">
+</head>
+
+<body class="layout-codex book-state-open">
+
+    <svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
+        <defs>
+            <filter id="paper-texture" x="0%" y="0%" width="100%" height="100%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="5" result="noise" />
+                <feDiffuseLighting in="noise" lighting-color="#fdfaf2" surfaceScale="1.5" result="light">
+                    <feDistantLight azimuth="60" elevation="55" />
+                </feDiffuseLighting>
+                <feBlend mode="multiply" in="SourceGraphic" in2="light" />
+            </filter>
+        </defs>
+    </svg>
+
+    <div class="desk-bg">
+        <div class="desk-glow"></div>
+        <div class="book-wrapper">
+            <div class="open-book-view">
+
+                <!-- Bookmarks rail -->
+                <nav class="bookmarks-rail" aria-label="Journal sections">
+                    <a class="bookmark-tab" data-spread="reflection-study" href="../reflection/reflection.html">
+                        <span class="bm-num">I</span><span class="bm-label">Reflection</span>
+                    </a>
+                    <a class="bookmark-tab active" data-spread="deeds-goals" href="goals.html">
+                        <span class="bm-num">II</span><span class="bm-label">Goals &amp; Tasks</span>
+                    </a>
+                    <a class="bookmark-tab" data-spread="chronicles" href="../journal/journal.html">
+                        <span class="bm-num">III</span><span class="bm-label">Journal</span>
+                    </a>
+                    <a class="bookmark-tab" data-spread="settings" href="../settings/settings.html">
+                        <span class="bm-num">IV</span><span class="bm-label">Settings</span>
+                    </a>
+                </nav>
+
+                <!-- Book casing -->
+                <div class="book-casing">
+                    <a href="../index.html" class="close-book-banner">← Close Journal</a>
+
+                    <!-- SPREAD II: Goals & Tasks -->
+                    <div class="book-spread active-spread" id="spread-deeds-goals">
+
+                        <!-- LEFT PAGE: Goals -->
+                        <div class="book-page page-left">
+                            <div class="page-texture"></div>
+                            <div class="flourish top">❧</div>
+
+                            <div class="page-running-header">
+                                <span class="running-brand">Alok</span>
+                                <div class="running-switcher">
+                                    <div class="layout-switcher-mini">
+                                        <button class="switcher-btn" data-layout="codex" title="Monk's Codex">📖</button>
+                                        <button class="switcher-btn" data-layout="folio" title="Traveler's Folio">💼</button>
+                                        <button class="switcher-btn" data-layout="ledger" title="Scribe's Ledger">📜</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="page-header">
+                                <h1>My Main Goals</h1>
+                                <p class="page-header-sub">Track your big ambitions</p>
+                            </div>
+
+                            <form class="goal-form" id="goal-form">
+                                <input type="text" id="goal-input" placeholder="Add a new goal..." autocomplete="off">
+                                <button type="submit">+ Add</button>
+                            </form>
+
+                            <ul class="goal-list" id="goal-list"></ul>
+
+                            <div class="flourish bottom">❦</div>
+                        </div>
+
+                        <!-- SPINE -->
+                        <div class="page-spine"></div>
+
+                        <!-- RIGHT PAGE: Daily Tasks -->
+                        <div class="book-page page-right">
+                            <div class="page-texture"></div>
+                            <div class="flourish top">❧</div>
+
+                            <div class="page-running-header">
+                                <span class="running-section">Goals &amp; Tasks</span>
+                                <div class="page-date-badge">
+                                    <span class="day-number">30</span>
+                                    <span class="month">May</span>
+                                    <span class="year">2026</span>
+                                </div>
+                            </div>
+
+                            <div class="page-header">
+                                <h1>Daily Tasks</h1>
+                                <p class="page-header-sub">What needs to get done today?</p>
+                            </div>
+
+                            <form class="activity-form" id="activity-form">
+                                <input type="text" id="activity-input" placeholder="What needs to be done today?" autocomplete="off">
+                                <select id="activity-priority">
+                                    <option value="high">🔴 High</option>
+                                    <option value="medium" selected>🟡 Medium</option>
+                                    <option value="low">🟢 Low</option>
+                                </select>
+                                <button type="submit">+ Add</button>
+                            </form>
+
+                            <div class="filter-btns">
+                                <button class="filter-btn active" data-filter="all">All Tasks</button>
+                                <button class="filter-btn" data-filter="todo">To Do</button>
+                                <button class="filter-btn" data-filter="done">Completed</button>
+                            </div>
+
+                            <ul class="activity-list" id="activity-list"></ul>
+
+                            <div class="flourish bottom">❦</div>
+                        </div>
+
+                    </div><!-- /spread -->
+                </div><!-- /book-casing -->
+            </div><!-- /open-book-view -->
+        </div><!-- /book-wrapper -->
+    </div><!-- /desk-bg -->
+
+    <script src="../shared/js/core.js"></script>
+    <script src="goals.js"></script>
+</body>
+
+</html>

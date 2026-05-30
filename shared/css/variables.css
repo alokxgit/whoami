@@ -1,0 +1,62 @@
+/* ==========================================================================
+   VARIABLES & DESIGN TOKENS
+   ========================================================================== */
+:root {
+    --desk:            #0d0703;
+    
+    /* Default / Monk's Codex — creamy parchment */
+    --parchment:       #faf5e6;
+    --parchment-dark:  #eddcb1;
+    --parchment-burnt: #b8904f;
+    --ink:             #271609;
+    --ink-2:           #482f1b;
+    --ink-muted:       #856144;
+    --amber:           #cc7822;
+    --amber-glow:      rgba(204,120,34,0.16);
+    --terracotta:      #9a3512;
+    --forest:          #3c542e;
+    --gold:            #e5c36a;
+    --gold-dim:        rgba(229,195,106,0.2);
+    --f-fancy:  'Cinzel Decorative', serif;
+    --f-head:   'Marcellus', serif;
+    --f-body:   'EB Garamond', serif;
+    --f-italic: 'IM Fell English', serif;
+    --f-hand:   'Patrick Hand', cursive;
+
+    /* Dynamic Themeable Variables (default = Codex) */
+    --page-bg:            var(--parchment);
+    --page-texture-blend: multiply;
+    --page-border:        rgba(80, 53, 31, 0.16);
+    --paper-opacity:      1;
+}
+
+/* ── Traveler's Folio Theme ── */
+body.layout-folio {
+    --parchment:       #edd39e;
+    --parchment-dark:  #c8a05c;
+    --ink:             #2b1d14;
+    --ink-2:           #523929;
+    --ink-muted:       #8c6a50;
+    --amber:           #aa5a17;
+    --terracotta:      #8b3a10;
+    --page-bg:         #edd39e;
+    --page-texture-blend: multiply;
+    --page-border:     rgba(60, 30, 10, 0.2);
+}
+
+/* ── Scribe's Ledger Theme (Dark Mode) ── */
+body.layout-ledger {
+    --parchment:       #1c2733;
+    --parchment-dark:  #243140;
+    --ink:             #f7edd8;
+    --ink-2:           #d9c9a8;
+    --ink-muted:       #9e8c70;
+    --amber:           #e5c36a;
+    --amber-glow:      rgba(229, 195, 106, 0.14);
+    --terracotta:      #e5c36a;
+    --gold:            #e5c36a;
+    --gold-dim:        rgba(229,195,106,0.12);
+    --page-bg:         #1c2733;
+    --page-texture-blend: screen;
+    --page-border:     rgba(229,195,106,0.12);
+}
