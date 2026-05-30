@@ -13,12 +13,15 @@
 /* ── Bookmarks rail (right side tabs) ── */
 .bookmarks-rail {
     position: absolute;
-    top: 60px;
+    top: 0;
     right: -42px;
+    height: 100%;
     display: flex;
     flex-direction: column;
     gap: 6px;
     z-index: 30;
+    padding: 60px 0 0;
+    box-sizing: border-box;
 }
 
 .bookmark-tab {
@@ -80,28 +83,17 @@ body.layout-ledger .book-casing {
     border-radius: 5px;
 }
 
-/* ── Close banner ── */
-.close-book-banner {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.6rem;
-    padding: 0.4rem 1rem;
-    background: rgba(0,0,0,0.25);
-    border-radius: 8px;
-    margin-bottom: 10px;
-    font-family: var(--f-head);
-    font-size: 0.72rem;
-    color: rgba(250,245,230,0.5);
-    letter-spacing: 0.06em;
-    cursor: pointer;
-    text-decoration: none;
-    transition: color 0.2s, background 0.2s;
-    flex-shrink: 0;
+/* ── Close tab in sidebar ── */
+.bookmark-tab.close-book-banner {
+    margin-top: auto;
+    background: rgba(0,0,0,0.35);
+    opacity: 0.55;
+    border-top: 1px solid rgba(255,255,255,0.08);
 }
-.close-book-banner:hover {
-    color: var(--gold);
-    background: rgba(0,0,0,0.38);
+.bookmark-tab.close-book-banner:hover {
+    opacity: 1;
+    background: rgba(180,30,10,0.55);
+    transform: rotate(180deg) translateX(-4px);
 }
 
 /* ── Page spread ── */

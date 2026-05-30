@@ -51,11 +51,14 @@
                     <a class="bookmark-tab" data-spread="settings" href="../settings/settings.html">
                         <span class="bm-num">IV</span><span class="bm-label">Settings</span>
                     </a>
+                    <a class="bookmark-tab close-book-banner" href="../index.html" title="Close Journal">
+                        <span class="bm-num">✕</span><span class="bm-label">Close</span>
+                    </a>
                 </nav>
 
                 <!-- Book casing -->
                 <div class="book-casing">
-                    <a href="../index.html" class="close-book-banner">← Close Journal</a>
+
 
                     <!-- SPREAD III: Journal -->
                     <div class="book-spread active-spread" id="spread-chronicles">
@@ -69,28 +72,19 @@
                                 <span class="running-brand">Alok</span>
                                 <div class="running-switcher">
                                     <div class="layout-switcher-mini">
-                                        <button class="switcher-btn" data-layout="codex" title="Monk's Codex">📖</button>
-                                        <button class="switcher-btn" data-layout="folio" title="Traveler's Folio">💼</button>
-                                        <button class="switcher-btn" data-layout="ledger" title="Scribe's Ledger">📜</button>
+                                        <button class="switcher-btn" data-layout="codex"
+                                            title="Monk's Codex">📖</button>
+                                        <button class="switcher-btn" data-layout="folio"
+                                            title="Traveler's Folio">💼</button>
+                                        <button class="switcher-btn" data-layout="ledger"
+                                            title="Scribe's Ledger">📜</button>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="page-header">
-                                <h1>Daily Journal</h1>
-                                <p class="page-header-sub">Write freely — your thoughts, your words</p>
-                            </div>
 
-                            <div class="section-divider">
-                                <div class="divider-rule"></div>
-                                <span class="divider-icon">✒️</span>
-                                <span class="section-sub">Today's Entry</span>
-                                <span class="divider-icon">✒️</span>
-                                <div class="divider-rule"></div>
-                            </div>
 
-                            <textarea
-                                id="scrapbook-textarea"
+                            <textarea id="scrapbook-textarea"
                                 placeholder="Write your thoughts for today..."
                                 aria-label="Daily journal entry"></textarea>
 
@@ -98,8 +92,6 @@
                                 <span id="word-count">0 words</span>
                                 <span class="autosave-indicator" id="autosave-status">Ink drying...</span>
                             </div>
-
-                            <div class="flourish bottom">❦</div>
                         </div>
 
                         <!-- SPINE -->
@@ -108,7 +100,6 @@
                         <!-- RIGHT PAGE -->
                         <div class="book-page page-right">
                             <div class="page-texture"></div>
-                            <div class="flourish top">❧</div>
 
                             <div class="page-running-header">
                                 <span class="running-section">Daily Journal</span>
@@ -119,19 +110,27 @@
                                 </div>
                             </div>
 
-                            <div class="page-header">
-                                <h1>Notes &amp; Musings</h1>
-                                <p class="page-header-sub">Random thoughts and ideas</p>
-                            </div>
+                            <textarea id="scrapbook-textarea-right"
+                                placeholder=""
+                                aria-label="Journal continued"></textarea>
 
-                            <p style="font-family:var(--f-italic);font-size:0.9rem;color:var(--ink-muted);font-style:italic;line-height:1.7;margin-top:1rem;">
-                                "Fill this page with whatever comes to mind — ideas, sketches, fragments of thought. There are no rules here."
-                            </p>
-
-                            <div class="flourish bottom">❦</div>
                         </div>
 
                     </div><!-- /spread -->
+
+                    <!-- Page navigation footer -->
+                    <div class="journal-page-nav" id="journal-page-nav">
+                        <button class="page-nav-btn" id="prev-page-btn" disabled>
+                            ← Prev
+                        </button>
+                        <div class="page-nav-center">
+                            <div class="page-nav-dots" id="page-nav-dots"></div>
+                            <span class="page-nav-label" id="page-nav-label">Spread 1 of 1</span>
+                        </div>
+                        <button class="page-nav-btn" id="next-page-btn">
+                            New Page →
+                        </button>
+                    </div>
                 </div><!-- /book-casing -->
             </div><!-- /open-book-view -->
         </div><!-- /book-wrapper -->
