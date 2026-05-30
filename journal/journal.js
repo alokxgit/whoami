@@ -63,11 +63,76 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ── Navigate to a specific spread ──────────────────────────────────────
     function goTo(idx, focusTarget) {
-        flushCurrent();
-        persist();
-        currentIdx = idx;
-        localStorage.setItem('scriptorium_spread_idx', currentIdx);
-        renderSpread(focusTarget);
+        const dir = idx >= currentIdx ? 'forward' : 'backward';
+        animatePageTurn(dir, () => {
+            flushCurrent();
+            persist();
+            currentIdx = idx;
+            localStorage.setItem('scriptorium_spread_idx', currentIdx);
+            renderSpread(focusTarget);
+        });
+    }
+
+    // ── 3D page fold animation ──────────────────────────────────────────────
+    function animatePageTurn(direction, callback) {
+        const DURATION = 650;
+        const spread = document.getElementById('spread-chronicles');
+        if (!spread) { callback(); return; }
+
+        // Build flap (the folding page face)
+        const flap  = document.createElement('div');
+        flap.className = `page-fold-flap fold-${direction}`;
+
+        const front = document.createElement('div');
+        front.className = 'page-fold-face-front';
+
+        const back  = document.createElement('div');
+        back.className = 'page-fold-face-back';
+
+        flap.appendChild(front);
+        flap.appendChild(back);
+
+        // Crease: shadow near fold axis simulating paper bend
+        const crease = document.createElement('div');
+        crease.className = `page-fold-crease fold-${direction}`;
+        flap.appendChild(crease);
+
+        // Highlight: light catching the paper edge as it lifts
+        const highlight = document.createElement('div');
+        highlight.className = `page-fold-highlight fold-${direction}`;
+        flap.appendChild(highlight);
+
+        // Build shadow
+        const shadow = document.createElement('div');
+        shadow.className = `page-fold-shadow fold-${direction}`;
+
+        // Swap cover: hides the non-folding page's instant content change
+        const swapCover = document.createElement('div');
+        swapCover.className = `page-swap-cover fold-${direction}`;
+
+        spread.style.position = 'relative';
+        spread.appendChild(swapCover);
+        spread.appendChild(shadow);
+        spread.appendChild(flap);
+
+        // Trigger animation on next paint
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                flap.classList.add('go');
+                shadow.classList.add('go');
+                swapCover.classList.add('go');
+            });
+        });
+
+        // Swap content at the exact midpoint (page is edge-on = invisible)
+        setTimeout(callback, DURATION * 0.5);
+
+        // Cleanup after animation completes
+        setTimeout(() => {
+            flap.remove();
+            shadow.remove();
+            swapCover.remove();
+        }, DURATION + 80);
     }
 
     // ── Write current textarea values back into the state array ────────────

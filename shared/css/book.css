@@ -4,25 +4,27 @@
 
 /* ── Outer container ── */
 .open-book-view {
-    width: 95vw;
-    max-width: 1720px;
-    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    width: 100%;
+    max-width: 1850px;
     position: relative;
 }
 
-/* ── Bookmarks rail (right side tabs) ── */
+/* ── Bookmarks rail (right side tabs, flex sibling of book-casing) ── */
 .bookmarks-rail {
-    position: absolute;
-    top: 0;
-    right: -42px;
-    height: 100%;
+    width: 42px;
+    flex-shrink: 0;
     display: flex;
     flex-direction: column;
     gap: 6px;
     z-index: 30;
     padding: 60px 0 0;
     box-sizing: border-box;
+    position: relative;
 }
+
 
 .bookmark-tab {
     writing-mode: vertical-rl;
@@ -43,16 +45,41 @@
     align-items: center;
     gap: 5px;
 }
-.bookmark-tab:hover { opacity: 1; }
-.bookmark-tab.active { opacity: 1; transform: rotate(180deg) translateX(-4px); }
 
-.bookmark-tab[data-spread="reflection-study"] { background: var(--terracotta); }
-.bookmark-tab[data-spread="deeds-goals"]       { background: var(--ink); }
-.bookmark-tab[data-spread="chronicles"]        { background: #a26b2b; }
-.bookmark-tab[data-spread="settings"]          { background: var(--forest); }
+.bookmark-tab:hover {
+    opacity: 1;
+}
 
-.bm-num   { font-size: 0.6rem; opacity: 0.7; }
-.bm-label { font-size: 0.68rem; }
+/* Active tab pops slightly left (into the book) since rail is on the right */
+.bookmark-tab.active {
+    opacity: 1;
+    transform: rotate(180deg) translateX(4px);
+}
+
+.bookmark-tab[data-spread="reflection-study"] {
+    background: var(--terracotta);
+}
+
+.bookmark-tab[data-spread="deeds-goals"] {
+    background: var(--ink);
+}
+
+.bookmark-tab[data-spread="chronicles"] {
+    background: #a26b2b;
+}
+
+.bookmark-tab[data-spread="settings"] {
+    background: var(--forest);
+}
+
+.bm-num {
+    font-size: 0.6rem;
+    opacity: 0.7;
+}
+
+.bm-label {
+    font-size: 0.68rem;
+}
 
 /* ── Book casing ── */
 .book-casing {
@@ -65,9 +92,9 @@
     border-radius: 14px 20px 20px 14px;
     padding: 22px 28px;
     box-shadow:
-        0 10px 28px rgba(0,0,0,0.45),
-        -18px 30px 65px rgba(0,0,0,0.85),
-        inset 0 0 40px rgba(0,0,0,0.9);
+        0 10px 28px rgba(0, 0, 0, 0.45),
+        -18px 30px 65px rgba(0, 0, 0, 0.85),
+        inset 0 0 40px rgba(0, 0, 0, 0.9);
     display: flex;
     flex-direction: column;
 }
@@ -86,14 +113,15 @@ body.layout-ledger .book-casing {
 /* ── Close tab in sidebar ── */
 .bookmark-tab.close-book-banner {
     margin-top: auto;
-    background: rgba(0,0,0,0.35);
+    background: rgba(0, 0, 0, 0.35);
     opacity: 0.55;
-    border-top: 1px solid rgba(255,255,255,0.08);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
+
 .bookmark-tab.close-book-banner:hover {
     opacity: 1;
-    background: rgba(180,30,10,0.55);
-    transform: rotate(180deg) translateX(-4px);
+    background: rgba(180, 30, 10, 0.55);
+    transform: rotate(180deg) translateX(4px);
 }
 
 /* ── Page spread ── */
@@ -102,6 +130,7 @@ body.layout-ledger .book-casing {
     flex: 1;
     overflow: hidden;
 }
+
 .book-spread.active-spread {
     display: flex;
     flex-direction: row;
@@ -112,26 +141,24 @@ body.layout-ledger .book-casing {
     width: 22px;
     flex-shrink: 0;
     background: linear-gradient(to right,
-        rgba(0,0,0,0.35) 0%,
-        rgba(60,30,10,0.5) 30%,
-        rgba(80,45,15,0.6) 50%,
-        rgba(60,30,10,0.5) 70%,
-        rgba(0,0,0,0.35) 100%
-    );
+            rgba(0, 0, 0, 0.35) 0%,
+            rgba(60, 30, 10, 0.5) 30%,
+            rgba(80, 45, 15, 0.6) 50%,
+            rgba(60, 30, 10, 0.5) 70%,
+            rgba(0, 0, 0, 0.35) 100%);
     position: relative;
     z-index: 10;
 }
+
 .page-spine::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: repeating-linear-gradient(
-        to bottom,
-        transparent 0px,
-        transparent 18px,
-        rgba(0,0,0,0.08) 18px,
-        rgba(0,0,0,0.08) 19px
-    );
+    background: repeating-linear-gradient(to bottom,
+            transparent 0px,
+            transparent 18px,
+            rgba(0, 0, 0, 0.08) 18px,
+            rgba(0, 0, 0, 0.08) 19px);
 }
 
 /* ── Page base — NO filter here ── */
@@ -148,8 +175,13 @@ body.layout-ledger .book-casing {
     transition: background 0.4s, color 0.4s;
 }
 
-.book-page.page-left  { border-radius: 4px 0 0 4px; }
-.book-page.page-right { border-radius: 0 4px 4px 0; }
+.book-page.page-left {
+    border-radius: 4px 0 0 4px;
+}
+
+.book-page.page-right {
+    border-radius: 0 4px 4px 0;
+}
 
 /* Paper texture overlay (child, NOT the page itself) */
 .page-texture {
@@ -163,7 +195,10 @@ body.layout-ledger .book-casing {
 }
 
 /* All page content sits above the texture */
-.book-page > *:not(.page-texture) { position: relative; z-index: 2; }
+.book-page>*:not(.page-texture) {
+    position: relative;
+    z-index: 2;
+}
 
 /* ── Running headers (inside each page) ── */
 .page-running-header {
@@ -214,7 +249,12 @@ body.layout-ledger .book-casing {
     transition: all 0.2s;
     opacity: 0.6;
 }
-.switcher-btn:hover { opacity: 1; border-color: var(--gold-dim); }
+
+.switcher-btn:hover {
+    opacity: 1;
+    border-color: var(--gold-dim);
+}
+
 .switcher-btn.active {
     background: var(--gold-dim);
     border-color: var(--gold);
@@ -232,9 +272,21 @@ body.layout-ledger .book-casing {
     color: var(--ink-muted);
     letter-spacing: 0.04em;
 }
-.day-number { font-size: 1rem; color: var(--ink); font-family: var(--f-fancy); }
-.month      { font-size: 0.62rem; }
-.year       { font-size: 0.55rem; opacity: 0.7; }
+
+.day-number {
+    font-size: 1rem;
+    color: var(--ink);
+    font-family: var(--f-fancy);
+}
+
+.month {
+    font-size: 0.62rem;
+}
+
+.year {
+    font-size: 0.55rem;
+    opacity: 0.7;
+}
 
 /* Flourishes */
 .flourish {
@@ -246,5 +298,11 @@ body.layout-ledger .book-casing {
     pointer-events: none;
     user-select: none;
 }
-.flourish.top    { top: 0.5rem; }
-.flourish.bottom { bottom: 0.5rem; }
+
+.flourish.top {
+    top: 0.5rem;
+}
+
+.flourish.bottom {
+    bottom: 0.5rem;
+}

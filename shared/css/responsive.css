@@ -3,7 +3,11 @@
    ========================================================================== */
 
 @media (max-width: 1180px) {
-    .open-book-view { width: 100vw; }
+    /* Stack rail above the book on mobile */
+    .open-book-view {
+        width: 100%;
+        flex-direction: column-reverse; /* rail on top, book below */
+    }
 
     .book-casing {
         flex-direction: column;
@@ -27,9 +31,10 @@
 
     .bookmarks-rail {
         flex-direction: row;
-        position: static;
         width: 100%;
+        height: auto;
         justify-content: center;
+        padding: 0;
         margin-bottom: 0.5rem;
     }
 

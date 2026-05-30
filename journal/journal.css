@@ -150,3 +150,220 @@ body.layout-ledger #scrapbook-textarea-right {
     background-size: 100% 30px;
     background-attachment: local;
 }
+
+/* ── Page swap cover: masks the instant content change on the non-folding page ── */
+.page-swap-cover {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 50%;
+    background-color: var(--parchment);
+    z-index: 98;
+    pointer-events: none;
+    opacity: 0;
+}
+.page-swap-cover.fold-forward  { left: 0;  } /* covers left page */
+.page-swap-cover.fold-backward { right: 0; } /* covers right page */
+.page-swap-cover.go { animation: page-swap-cover-anim 0.65s ease-in-out forwards; }
+
+@keyframes page-swap-cover-anim {
+    0%   { opacity: 0; }
+    38%  { opacity: 0; }
+    50%  { opacity: 1; }
+    68%  { opacity: 0; }
+    100% { opacity: 0; }
+}
+
+/* ── Page fold 3D animation ── */
+#spread-chronicles {
+    perspective: 1600px;
+    overflow: visible;
+}
+
+.page-fold-flap {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: 100;
+    pointer-events: none;
+    transform-style: preserve-3d;
+    will-change: transform;
+}
+
+/* Forward: covers the right page, folds left from spine edge */
+.page-fold-flap.fold-forward {
+    left: 50%;
+    right: 0;
+    transform-origin: left center;
+}
+
+/* Backward: covers the left page, folds right from spine edge */
+.page-fold-flap.fold-backward {
+    left: 0;
+    right: 50%;
+    transform-origin: right center;
+}
+
+/* Crease overlay: simulates paper bending near the fold axis */
+.page-fold-crease {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    pointer-events: none;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    opacity: 0;
+}
+.page-fold-crease.fold-forward {
+    /* darkens near left edge (the spine/pivot) */
+    background: linear-gradient(
+        to right,
+        rgba(0,0,0,0.28) 0%,
+        rgba(0,0,0,0.10) 18%,
+        transparent 50%
+    );
+}
+.page-fold-crease.fold-backward {
+    /* darkens near right edge (the spine/pivot for backward) */
+    background: linear-gradient(
+        to left,
+        rgba(0,0,0,0.28) 0%,
+        rgba(0,0,0,0.10) 18%,
+        transparent 50%
+    );
+}
+.page-fold-flap.go .page-fold-crease {
+    animation: crease-pulse 0.65s ease-in-out forwards;
+}
+
+/* Light-catch highlight on fold edge */
+.page-fold-highlight {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 6px;
+    z-index: 6;
+    pointer-events: none;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    opacity: 0;
+    background: linear-gradient(to right,
+        rgba(255,255,255,0.55) 0%,
+        rgba(255,255,255,0.10) 60%,
+        transparent 100%
+    );
+}
+.page-fold-highlight.fold-forward  { left: 0; }
+.page-fold-highlight.fold-backward { right: 0; transform: scaleX(-1); }
+.page-fold-flap.go .page-fold-highlight {
+    animation: highlight-flash 0.65s ease-in-out forwards;
+}
+
+/* Front face — current parchment page */
+.page-fold-face-front,
+.page-fold-face-back {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+.page-fold-face-front {
+    background-color: var(--parchment);
+    background-image: linear-gradient(
+        transparent 23px,
+        rgba(133, 97, 68, 0.22) 23px,
+        rgba(133, 97, 68, 0.22) 24px,
+        transparent 24px
+    );
+    background-size: 100% 30px;
+    border-radius: 0 4px 4px 0;
+}
+
+/* Back face — slightly darker underside of the paper */
+.page-fold-face-back {
+    background-color: var(--parchment);
+    background-image: linear-gradient(
+        transparent 23px,
+        rgba(100, 78, 50, 0.20) 23px,
+        rgba(100, 78, 50, 0.20) 24px,
+        transparent 24px
+    );
+    background-size: 100% 30px;
+    border-radius: 4px 0 0 4px;
+}
+
+/* Back face orientation per direction */
+.fold-forward  .page-fold-face-back { transform: rotateY(180deg); }
+.fold-backward .page-fold-face-back { transform: rotateY(-180deg); }
+.fold-backward .page-fold-face-front { border-radius: 4px 0 0 4px; }
+
+/* Cast shadow strip next to the fold */
+.page-fold-shadow {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 70px;
+    z-index: 99;
+    pointer-events: none;
+    opacity: 0;
+}
+.page-fold-shadow.fold-forward  {
+    right: 50%;
+    background: linear-gradient(to left, rgba(0,0,0,0.22), transparent);
+}
+.page-fold-shadow.fold-backward {
+    left: 50%;
+    background: linear-gradient(to right, rgba(0,0,0,0.22), transparent);
+}
+
+/* Keyframe animations */
+@keyframes fold-page-fwd {
+    0%   { transform: rotateY(0deg)    translateZ(0px);  opacity: 1; }
+    12%  { transform: rotateY(-18deg)  translateZ(10px); } /* page lifts */
+    60%  { opacity: 1; }
+    100% { transform: rotateY(-180deg) translateZ(0px);  opacity: 0; }
+}
+@keyframes fold-page-bwd {
+    0%   { transform: rotateY(0deg)   translateZ(0px);  opacity: 1; }
+    12%  { transform: rotateY(18deg)  translateZ(10px); } /* page lifts */
+    60%  { opacity: 1; }
+    100% { transform: rotateY(180deg) translateZ(0px);  opacity: 0; }
+}
+@keyframes crease-pulse {
+    0%   { opacity: 0; }
+    18%  { opacity: 1; }
+    50%  { opacity: 0.25; }
+    62%  { opacity: 0; }
+    100% { opacity: 0; }
+}
+@keyframes highlight-flash {
+    0%   { opacity: 0; }
+    8%   { opacity: 1; }
+    40%  { opacity: 0.6; }
+    55%  { opacity: 0; }
+    100% { opacity: 0; }
+}
+@keyframes fold-shadow-pulse {
+    0%   { opacity: 0; }
+    35%  { opacity: 1; }
+    65%  { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+.page-fold-flap.fold-forward.go  { animation: fold-page-fwd 0.65s cubic-bezier(0.55,0,0.35,1) forwards; }
+.page-fold-flap.fold-backward.go { animation: fold-page-bwd 0.65s cubic-bezier(0.55,0,0.35,1) forwards; }
+.page-fold-shadow.go             { animation: fold-shadow-pulse 0.65s ease-in-out forwards; }
+
+/* Dark mode line color override (background-color handled by --parchment variable) */
+body.layout-ledger .page-fold-face-front,
+body.layout-ledger .page-fold-face-back {
+    background-image: linear-gradient(
+        transparent 23px,
+        rgba(229, 195, 106, 0.13) 23px,
+        rgba(229, 195, 106, 0.13) 24px,
+        transparent 24px
+    );
+    background-size: 100% 30px;
+}
+
