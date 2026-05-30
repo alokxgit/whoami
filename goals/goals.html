@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=EB+Garamond:ital,wght@0,400..700;1,400..700&family=IM+Fell+English:ital@0;1&family=Marcellus&family=Patrick+Hand&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=EB+Garamond:ital,wght@0,400..700;1,400..700&family=IM+Fell+English:ital@0;1&family=Marcellus&family=Caveat:wght@400;600&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="../shared/css/variables.css">
     <link rel="stylesheet" href="../shared/css/base.css">
@@ -48,8 +48,11 @@
                     <a class="bookmark-tab" data-spread="chronicles" href="../journal/journal.html">
                         <span class="bm-num">III</span><span class="bm-label">Journal</span>
                     </a>
+                    <a class="bookmark-tab" data-spread="kb" href="../knowledge_base/kb.html">
+                        <span class="bm-num">IV</span><span class="bm-label">Almanac</span>
+                    </a>
                     <a class="bookmark-tab" data-spread="settings" href="../settings/settings.html">
-                        <span class="bm-num">IV</span><span class="bm-label">Settings</span>
+                        <span class="bm-num">V</span><span class="bm-label">Settings</span>
                     </a>
                     <a class="bookmark-tab close-book-banner" href="../index.html" title="Close Journal">
                         <span class="bm-num">✕</span><span class="bm-label">Close</span>
@@ -63,45 +66,13 @@
                     <!-- SPREAD II: Goals & Tasks -->
                     <div class="book-spread active-spread" id="spread-deeds-goals">
 
-                        <!-- LEFT PAGE: Goals -->
+                        <!-- LEFT PAGE: Ambitions & Desires -->
                         <div class="book-page page-left">
                             <div class="page-texture"></div>
-                            <div class="flourish top">❧</div>
+
 
                             <div class="page-running-header">
                                 <span class="running-brand">Alok</span>
-                                <div class="running-switcher">
-                                    <div class="layout-switcher-mini">
-                                        <button class="switcher-btn" data-layout="codex" title="Monk's Codex">📖</button>
-                                        <button class="switcher-btn" data-layout="folio" title="Traveler's Folio">💼</button>
-                                        <button class="switcher-btn" data-layout="ledger" title="Scribe's Ledger">📜</button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="page-header">
-                                <h1>My Main Goals</h1>
-                                <p class="page-header-sub">Track your big ambitions</p>
-                            </div>
-
-                            <form class="goal-form" id="goal-form">
-                                <input type="text" id="goal-input" placeholder="Add a new goal..." autocomplete="off">
-                                <button type="submit">+ Add</button>
-                            </form>
-
-                            <ul class="goal-list" id="goal-list"></ul>
-
-                            <div class="flourish bottom">❦</div>
-                        </div>
-
-
-                        <!-- RIGHT PAGE: Daily Tasks -->
-                        <div class="book-page page-right">
-                            <div class="page-texture"></div>
-                            <div class="flourish top">❧</div>
-
-                            <div class="page-running-header">
-                                <span class="running-section">Goals &amp; Tasks</span>
                                 <div class="page-date-badge">
                                     <span class="day-number">30</span>
                                     <span class="month">May</span>
@@ -110,27 +81,67 @@
                             </div>
 
                             <div class="page-header">
-                                <h1>Daily Tasks</h1>
-                                <p class="page-header-sub">What needs to get done today?</p>
+                                <h1>Ambitions &amp; Desires</h1>
+
                             </div>
 
-                            <form class="activity-form" id="activity-form">
-                                <input type="text" id="activity-input" placeholder="What needs to be done today?" autocomplete="off">
-                                <select id="activity-priority">
-                                    <option value="high">🔴 High</option>
-                                    <option value="medium" selected>🟡 Medium</option>
-                                    <option value="low">🟢 Low</option>
-                                </select>
-                                <button type="submit">+ Add</button>
-                            </form>
+                            <div class="goals-container-scrollable">
+                                <!-- Section 1: Weekly Goals -->
+                                <div class="goal-section">
+                                    <div class="section-title-wrap">
+                                        <h2>✦ Weekly Goals</h2>
 
-                            <div class="filter-btns">
-                                <button class="filter-btn active" data-filter="all">All Tasks</button>
-                                <button class="filter-btn" data-filter="todo">To Do</button>
-                                <button class="filter-btn" data-filter="done">Completed</button>
+                                    </div>
+                                    <ul class="goals-custom-list" id="week-goals-list"></ul>
+                                </div>
+
+                                <!-- Section 2: Long-Term Goals -->
+                                <div class="goal-section">
+                                    <div class="section-title-wrap">
+                                        <h2>✦ Long-Term Goals</h2>
+
+                                    </div>
+                                    <ul class="goals-custom-list" id="long-term-goals-list"></ul>
+                                </div>
+
+                                <!-- Section 3: Inner Desires -->
+                                <div class="goal-section">
+                                    <div class="section-title-wrap">
+                                        <h2>✦ Inner Desires</h2>
+
+                                    </div>
+                                    <ul class="goals-custom-list" id="inner-desires-list"></ul>
+                                </div>
                             </div>
 
-                            <ul class="activity-list" id="activity-list"></ul>
+                            <div class="flourish bottom">❦</div>
+                        </div>
+
+
+                        <!-- RIGHT PAGE: Daily Tasks in Page Style -->
+                        <div class="book-page page-right">
+                            <div class="page-texture"></div>
+
+
+                            <div class="page-running-header">
+                                <span class="running-section">Daily Chronicle</span>
+                                <div class="page-date-badge">
+                                    <span class="day-number">30</span>
+                                    <span class="month">May</span>
+                                    <span class="year">2026</span>
+                                </div>
+                            </div>
+
+                            <div class="page-header">
+                                <h1>The Daily Ledger</h1>
+
+                            </div>
+
+                            <!-- Free-form Journal-Style Editor without lines -->
+                            <div class="goals-freeform-editor" id="goals-freeform-editor" contenteditable="true"
+                                spellcheck="false"
+                                placeholder="Write anything... Start a line with '-' to create an interactive checkbox.">
+                            </div>
 
                             <div class="flourish bottom">❦</div>
                         </div>

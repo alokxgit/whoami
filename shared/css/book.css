@@ -8,12 +8,14 @@
     flex-direction: row;
     align-items: stretch;
     width: 100%;
-    max-width: 1850px;
+    max-width: 1970px;
     position: relative;
 }
 
 /* ── Bookmarks rail (right side tabs, flex sibling of book-casing) ── */
 .bookmarks-rail {
+    order: 1;
+    /* display after book-casing → right side */
     width: 42px;
     flex-shrink: 0;
     display: flex;
@@ -70,6 +72,10 @@
 
 .bookmark-tab[data-spread="settings"] {
     background: var(--forest);
+}
+
+.bookmark-tab[data-spread="kb"] {
+    background: #2e5b70;
 }
 
 .bm-num {

@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=EB+Garamond:ital,wght@0,400..700;1,400..700&family=IM+Fell+English:ital@0;1&family=Marcellus&family=Patrick+Hand&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=EB+Garamond:ital,wght@0,400..700;1,400..700&family=IM+Fell+English:ital@0;1&family=Marcellus&family=Caveat:wght@400;600&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="../shared/css/variables.css">
     <link rel="stylesheet" href="../shared/css/base.css">
@@ -48,8 +48,11 @@
                     <a class="bookmark-tab" data-spread="chronicles" href="../journal/journal.html">
                         <span class="bm-num">III</span><span class="bm-label">Journal</span>
                     </a>
+                    <a class="bookmark-tab" data-spread="kb" href="../knowledge_base/kb.html">
+                        <span class="bm-num">IV</span><span class="bm-label">Almanac</span>
+                    </a>
                     <a class="bookmark-tab active" data-spread="settings" href="settings.html">
-                        <span class="bm-num">IV</span><span class="bm-label">Settings</span>
+                        <span class="bm-num">V</span><span class="bm-label">Settings</span>
                     </a>
                     <a class="bookmark-tab close-book-banner" href="../index.html" title="Close Journal">
                         <span class="bm-num">✕</span><span class="bm-label">Close</span>
@@ -159,7 +162,105 @@
                                 </label>
                             </div>
 
+                            <div class="settings-control-row">
+                                <div>
+                                    <div class="settings-control-label">Header &amp; Decorative Size</div>
+                                    <div class="settings-control-desc">EB Garamond &amp; Cinzel headings</div>
+                                </div>
+                                <div class="font-scale-adjuster">
+                                    <button class="font-scale-btn" id="scale-fancy-dec" title="Decrease size">A−</button>
+                                    <span class="font-scale-val" id="scale-fancy-val">1.0</span>
+                                    <button class="font-scale-btn" id="scale-fancy-inc" title="Increase size">A+</button>
+                                </div>
+                            </div>
+                            <div class="settings-control-row submenu-row">
+                                <div>
+                                    <div class="settings-control-label submenu-label">Header Font Family</div>
+                                    <div class="settings-control-desc">Choose primary heading typeface</div>
+                                </div>
+                                <select class="settings-select" id="font-fancy-select">
+                                    <option value="'Cinzel Decorative', serif">Cinzel Decorative</option>
+                                    <option value="'EB Garamond', serif">EB Garamond</option>
+                                    <option value="'IM Fell English', serif">IM Fell English</option>
+                                    <option value="'Marcellus', serif">Marcellus</option>
+                                </select>
+                            </div>
+
+                            <div class="settings-control-row">
+                                <div>
+                                    <div class="settings-control-label">Journal &amp; Ledger Text Size</div>
+                                    <div class="settings-control-desc">Caveat entries and daily task ledger</div>
+                                </div>
+                                <div class="font-scale-adjuster">
+                                    <button class="font-scale-btn" id="scale-hand-dec" title="Decrease size">A−</button>
+                                    <span class="font-scale-val" id="scale-hand-val">1.0</span>
+                                    <button class="font-scale-btn" id="scale-hand-inc" title="Increase size">A+</button>
+                                </div>
+                            </div>
+                            <div class="settings-control-row submenu-row">
+                                <div>
+                                    <div class="settings-control-label submenu-label">Journal Font Family</div>
+                                    <div class="settings-control-desc">Choose handwritten chronicle typeface</div>
+                                </div>
+                                <select class="settings-select" id="font-hand-select">
+                                    <option value="'Caveat', cursive">Caveat (Default)</option>
+                                    <option value="'Sacramento', cursive">Sacramento</option>
+                                    <option value="'Architects Daughter', cursive">Architects Daughter</option>
+                                    <option value="'Homemade Apple', cursive">Homemade Apple</option>
+                                    <option value="'Kalam', cursive">Kalam</option>
+                                </select>
+                            </div>
+
+                            <div class="settings-control-row">
+                                <div>
+                                    <div class="settings-control-label">System Labels &amp; Controls Size</div>
+                                    <div class="settings-control-desc">Marcellus buttons, tabs, and switches</div>
+                                </div>
+                                <div class="font-scale-adjuster">
+                                    <button class="font-scale-btn" id="scale-head-dec" title="Decrease size">A−</button>
+                                    <span class="font-scale-val" id="scale-head-val">1.0</span>
+                                    <button class="font-scale-btn" id="scale-head-inc" title="Increase size">A+</button>
+                                </div>
+                            </div>
+                            <div class="settings-control-row submenu-row">
+                                <div>
+                                    <div class="settings-control-label submenu-label">System Font Family</div>
+                                    <div class="settings-control-desc">Choose interface and button typeface</div>
+                                </div>
+                                <select class="settings-select" id="font-head-select">
+                                    <option value="'Marcellus', serif">Marcellus (Default)</option>
+                                    <option value="'EB Garamond', serif">EB Garamond</option>
+                                    <option value="'Cinzel Decorative', serif">Cinzel Decorative</option>
+                                    <option value="'Caveat', cursive">Caveat</option>
+                                </select>
+                            </div>
+
                             <div class="section-divider" style="margin-top:1rem;">
+                                <div class="divider-rule"></div>
+                                <span class="divider-icon">✒️</span>
+                                <span class="section-sub">Goal Registry</span>
+                                <div class="divider-rule"></div>
+                            </div>
+
+                            <div class="settings-goals-manager">
+                                <div class="manager-tabs">
+                                    <button class="manager-tab-btn active" data-tab="weekly" id="tab-btn-weekly">Weekly</button>
+                                    <button class="manager-tab-btn" data-tab="long" id="tab-btn-long">Long-Term</button>
+                                    <button class="manager-tab-btn" data-tab="desires" id="tab-btn-desires">Desires</button>
+                                </div>
+
+                                <div class="manager-content">
+                                    <form class="settings-goal-add-form" id="settings-goal-form">
+                                        <input type="text" id="settings-goal-input" placeholder="Add new weekly goal..." autocomplete="off" required>
+                                        <button type="submit">✒ Add</button>
+                                    </form>
+                                    <ul class="settings-goals-list" id="settings-goals-list">
+                                        <!-- Dynamically populated -->
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="section-divider" style="margin-top:1.2rem;">
                                 <div class="divider-rule"></div>
                                 <span class="divider-icon">💾</span>
                                 <span class="section-sub">Data</span>

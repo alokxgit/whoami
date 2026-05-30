@@ -15,6 +15,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const dropdownTrigger = document.getElementById('spread-dropdown-trigger');
     const dropdownMenu = document.getElementById('nested-spread-menu');
     const fontSelect = document.getElementById('font-select');
+    const projectSelect = document.getElementById('project-select');
+    const titleIndicator = document.getElementById('article-title-indicator');
+    const indexIndicator = document.getElementById('article-index-indicator');
 
     if (!leftTA || !rightTA) return;
 
@@ -35,8 +38,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ── State ──────────────────────────────────────────────────────────────
-    let spreads = [{ left: '', right: '' }];
-    let currentIdx = 0;
+    let spreads = [{ id: '', left: '', right: '', project: 'General' }];
+    let projects = ['General'];
+    let activeProject = localStorage.getItem('scriptorium_kb_active_project') || 'General';
+    let currentIdx = 0; // Index relative to activeProject filtered spreads
+
+    // Helper to get spreads filtered by active project
+    function getProjectSpreads() {
+        return spreads.filter(s => (s.project || 'General') === activeProject);
+    }
 
     // ── Font initialization ────────────────────────────────────────────────
     function applyFont(fontName) {
@@ -44,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
         rightTA.style.fontFamily = `"${fontName}", cursive, sans-serif`;
     }
 
-    const savedFont = localStorage.getItem('scriptorium_journal_font') || 'Caveat';
+    const savedFont = localStorage.getItem('scriptorium_kb_font') || 'Caveat';
     if (fontSelect) fontSelect.value = savedFont;
     applyFont(savedFont);
 
@@ -52,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fontSelect.addEventListener('change', (e) => {
             const font = e.target.value;
             applyFont(font);
-            localStorage.setItem('scriptorium_journal_font', font);
+            localStorage.setItem('scriptorium_kb_font', font);
         });
     }
 
@@ -60,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const fsDecBtn = document.getElementById('fs-dec');
     const fsIncBtn = document.getElementById('fs-inc');
 
-    let currentFS = parseFloat(localStorage.getItem('scriptorium_journal_font_size') || '1.1');
+    let currentFS = parseFloat(localStorage.getItem('scriptorium_kb_font_size') || '1.1');
 
     function applyFontSize(sizeRem) {
         const lineHeightPx = Math.round(sizeRem * 27.27);
@@ -78,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (currentFS > 0.8) {
                 currentFS = Math.round((currentFS - 0.1) * 10) / 10;
                 applyFontSize(currentFS);
-                localStorage.setItem('scriptorium_journal_font_size', currentFS);
+                localStorage.setItem('scriptorium_kb_font_size', currentFS);
             }
         });
     }
@@ -88,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (currentFS < 1.8) {
                 currentFS = Math.round((currentFS + 0.1) * 10) / 10;
                 applyFontSize(currentFS);
-                localStorage.setItem('scriptorium_journal_font_size', currentFS);
+                localStorage.setItem('scriptorium_kb_font_size', currentFS);
             }
         });
     }
@@ -124,6 +134,20 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // ── Dynamic Title Extraction Helper ────────────────────────────────────
+    function getFirstLineText(html) {
+        if (!html) return '';
+        let cleaned = html.replace(/<br\s*\/?>/gi, '\n');
+        cleaned = cleaned.replace(/<\/p>/gi, '\n');
+        cleaned = cleaned.replace(/<\/div>/gi, '\n');
+
+        const temp = document.createElement('div');
+        temp.innerHTML = cleaned;
+        const text = temp.innerText || temp.textContent || '';
+        const firstLine = text.split('\n')[0].trim();
+        return firstLine || '';
+    }
+
     // ── Unique Spread ID Naming Engine ──────────────────────────────────────
     function generateSpreadId() {
         const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -131,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const day = d.getDate();
         const month = months[d.getMonth()];
         const year = d.getFullYear();
-        const prefix = `${day}_${month}_${year}`; // e.g. 30_May_2026
+        const prefix = `kb_${day}_${month}_${year}`; // e.g. kb_30_May_2026
 
         // Find the maximum counter for today's prefix in the current spreads array
         let maxCounter = 0;
@@ -197,58 +221,170 @@ document.addEventListener('DOMContentLoaded', () => {
         }).join('');
     }
 
-    function loadLocalJournal() {
-        fetch('/api/journal')
+    function updateProjectSelectOptions() {
+        if (!projectSelect) return;
+        projectSelect.innerHTML = '';
+        projects.forEach(p => {
+            const opt = document.createElement('option');
+            opt.value = p;
+            opt.textContent = `${p}`;
+            projectSelect.appendChild(opt);
+        });
+        const createOpt = document.createElement('option');
+        createOpt.value = '__NEW__';
+        createOpt.textContent = '+ Create New Project...';
+        projectSelect.appendChild(createOpt);
+    }
+
+    if (projectSelect) {
+        projectSelect.addEventListener('change', (e) => {
+            const val = e.target.value;
+            if (val === '__NEW__') {
+                const newProj = prompt("Enter a name for the new project:");
+                if (newProj && newProj.trim()) {
+                    const cleanProj = newProj.trim().replace(/[^a-zA-Z0-9_\-\s]+/g, '').replace(/\s+/g, '_');
+                    if (cleanProj) {
+                        if (!projects.includes(cleanProj)) {
+                            projects.push(cleanProj);
+                        }
+                        activeProject = cleanProj;
+                        localStorage.setItem('scriptorium_kb_active_project', activeProject);
+                        updateProjectSelectOptions();
+                        projectSelect.value = activeProject;
+
+                        flushCurrent();
+                        const newId = generateSpreadId();
+                        spreads.push({ id: newId, left: '', right: '', project: activeProject });
+                        persist();
+
+                        const newPSpreads = getProjectSpreads();
+                        currentIdx = newPSpreads.length - 1;
+                        localStorage.setItem('scriptorium_kb_idx', currentIdx);
+                        renderSpread();
+                        updateWordCount();
+                        return;
+                    }
+                }
+                projectSelect.value = activeProject;
+            } else {
+                flushCurrent();
+                persist();
+                activeProject = val;
+                localStorage.setItem('scriptorium_kb_active_project', activeProject);
+
+                const pSpreads = getProjectSpreads();
+                if (pSpreads.length === 0) {
+                    spreads.push({ id: generateSpreadId(), left: '', right: '', project: activeProject });
+                    persist();
+                }
+
+                currentIdx = 0;
+                localStorage.setItem('scriptorium_kb_idx', currentIdx);
+                renderSpread();
+                updateWordCount();
+            }
+        });
+    }
+
+    function loadLocalKnowledgeBase() {
+        fetch('/api/kb')
             .then(res => res.json())
             .then(data => {
+                projects = ['General'];
+                if (data.projects && data.projects.length > 0) {
+                    data.projects.forEach(p => {
+                        if (p && p !== 'General' && !projects.includes(p)) {
+                            projects.push(p);
+                        }
+                    });
+                }
+
                 if (data.spreads && data.spreads.length > 0) {
                     spreads = data.spreads.map(spread => ({
                         id: spread.id || generateSpreadId(),
                         left: markdownToHtml(spread.left),
-                        right: markdownToHtml(spread.right)
+                        right: markdownToHtml(spread.right),
+                        project: spread.project || 'General'
                     }));
                 } else {
-                    const local = localStorage.getItem('scriptorium_spreads');
+                    const local = localStorage.getItem('scriptorium_kb_spreads');
                     if (local) {
                         spreads = JSON.parse(local);
                     } else {
-                        spreads = [{ id: generateSpreadId(), left: '', right: '' }];
+                        spreads = [{ id: generateSpreadId(), left: '', right: '', project: 'General' }];
                     }
                 }
 
-                // Ensure every single loaded spread is assigned an ID
                 spreads.forEach(s => {
                     if (!s.id) s.id = generateSpreadId();
+                    if (!s.project) s.project = 'General';
                 });
 
-                const savedIdx = parseInt(localStorage.getItem('scriptorium_spread_idx') || '0');
-                currentIdx = savedIdx < spreads.length ? savedIdx : spreads.length - 1;
+                updateProjectSelectOptions();
+
+                activeProject = localStorage.getItem('scriptorium_kb_active_project') || 'General';
+                if (!projects.includes(activeProject)) {
+                    activeProject = 'General';
+                }
+                if (projectSelect) projectSelect.value = activeProject;
+
+                const pSpreads = getProjectSpreads();
+                if (pSpreads.length === 0) {
+                    spreads.push({ id: generateSpreadId(), left: '', right: '', project: activeProject });
+                }
+
+                const savedIdx = parseInt(localStorage.getItem('scriptorium_kb_idx') || '0');
+                const finalPSpreads = getProjectSpreads();
+                currentIdx = savedIdx < finalPSpreads.length ? savedIdx : finalPSpreads.length - 1;
+
                 renderSpread();
                 updateWordCount();
             })
             .catch(err => {
                 console.error("Local server api unavailable, using localStorage fallback:", err);
-                const local = localStorage.getItem('scriptorium_spreads');
+                const local = localStorage.getItem('scriptorium_kb_spreads');
                 if (local) {
                     spreads = JSON.parse(local);
                 } else {
-                    spreads = [{ id: generateSpreadId(), left: '', right: '' }];
+                    spreads = [{ id: generateSpreadId(), left: '', right: '', project: 'General' }];
                 }
 
-                // Ensure every single loaded spread is assigned an ID
                 spreads.forEach(s => {
                     if (!s.id) s.id = generateSpreadId();
+                    if (!s.project) s.project = 'General';
                 });
 
-                const savedIdx = parseInt(localStorage.getItem('scriptorium_spread_idx') || '0');
-                currentIdx = savedIdx < spreads.length ? savedIdx : spreads.length - 1;
+                projects = ['General'];
+                spreads.forEach(s => {
+                    if (s.project && s.project !== 'General' && !projects.includes(s.project)) {
+                        projects.push(s.project);
+                    }
+                });
+
+                updateProjectSelectOptions();
+
+                activeProject = localStorage.getItem('scriptorium_kb_active_project') || 'General';
+                if (!projects.includes(activeProject)) {
+                    activeProject = 'General';
+                }
+                if (projectSelect) projectSelect.value = activeProject;
+
+                const pSpreads = getProjectSpreads();
+                if (pSpreads.length === 0) {
+                    spreads.push({ id: generateSpreadId(), left: '', right: '', project: activeProject });
+                }
+
+                const savedIdx = parseInt(localStorage.getItem('scriptorium_kb_idx') || '0');
+                const finalPSpreads = getProjectSpreads();
+                currentIdx = savedIdx < finalPSpreads.length ? savedIdx : finalPSpreads.length - 1;
+
                 renderSpread();
                 updateWordCount();
             });
     }
 
     // ── Init ───────────────────────────────────────────────────────────────
-    loadLocalJournal();
+    loadLocalKnowledgeBase();
 
     // ── Helper: Set Caret to End of Contenteditable ────────────────────────
     function setCaretToEnd(el) {
@@ -263,47 +399,31 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // ── Update Page Header Dates dynamically based on file names ───────────
-    function updateHeaderDates() {
-        const currentSpread = spreads[currentIdx];
+    // ── Update Indicators ─────────────────────────────────────────
+    function updateIndicators() {
+        const pSpreads = getProjectSpreads();
+        const currentSpread = pSpreads[currentIdx];
         if (!currentSpread) return;
-        if (!currentSpread.id) {
-            currentSpread.id = generateSpreadId();
+
+        // Clean article title (unsanitized first line text)
+        const cleanTitle = getFirstLineText(leftTA.innerHTML) || 'Untitled';
+        if (titleIndicator) {
+            titleIndicator.textContent = cleanTitle;
         }
 
-        // Parse e.g. "30_May_2026-1"
-        const match = currentSpread.id.match(/^(\d+)_([a-zA-Z]+)_(\d+)-(\d+)$/);
-        if (match) {
-            const day = match[1];
-            const month = match[2];
-            const year = match[3];
-
-            // Update Left Page Date Badge
-            const leftDayEl = document.getElementById('left-day-num');
-            const leftMonthEl = document.getElementById('left-month-name');
-            const leftYearEl = document.getElementById('left-year-num');
-
-            if (leftDayEl) leftDayEl.textContent = day;
-            if (leftMonthEl) leftMonthEl.textContent = month;
-            if (leftYearEl) leftYearEl.textContent = year;
-
-            // Update Right Page Date Badge
-            const rightDayEl = document.getElementById('right-day-num');
-            const rightMonthEl = document.getElementById('right-month-name');
-            const rightYearEl = document.getElementById('right-year-num');
-
-            if (rightDayEl) rightDayEl.textContent = day;
-            if (rightMonthEl) rightMonthEl.textContent = month;
-            if (rightYearEl) rightYearEl.textContent = year;
+        if (indexIndicator) {
+            indexIndicator.textContent = `${currentIdx + 1} / ${pSpreads.length}`;
         }
     }
 
     // ── Render current spread into the DOM ──────────────────────────────────
     function renderSpread(focusTarget) {
-        const s = spreads[currentIdx];
+        const pSpreads = getProjectSpreads();
+        const s = pSpreads[currentIdx];
+        if (!s) return;
         leftTA.innerHTML = s.left || '';
         rightTA.innerHTML = s.right || '';
-        updateHeaderDates();
+        updateIndicators();
         updateNav();
         updateWordCount();
         if (focusTarget === 'right') {
@@ -316,18 +436,27 @@ document.addEventListener('DOMContentLoaded', () => {
     // ── Update Dropdown Trigger Label ──────────────────────────────────────
     function updateDropdownTriggerLabel() {
         if (!dropdownTrigger) return;
-        const currentSpread = spreads[currentIdx];
-        if (currentSpread && currentSpread.id) {
-            const match = currentSpread.id.match(/^(\d+)_([a-zA-Z]+)_(\d+)-(\d+)$/);
-            if (match) {
-                const day = match[1];
-                const month = match[2];
-                const counter = match[4];
-                dropdownTrigger.innerHTML = `${day} ${month} (Sp. ${counter}) ▾`;
-                return;
+        const pSpreads = getProjectSpreads();
+        const currentSpread = pSpreads[currentIdx];
+        if (currentSpread) {
+            let titleText = getFirstLineText(currentSpread.left);
+            if (!titleText && currentSpread.id) {
+                const match = currentSpread.id.match(/^(?:kb_)?(\d+)_([a-zA-Z]+)_(\d+)-(\d+)/);
+                if (match) {
+                    const day = match[1];
+                    const month = match[2];
+                    const counter = match[4];
+                    titleText = `${day} ${month} (Article ${counter})`;
+                }
             }
+            titleText = titleText || `Article ${currentIdx + 1}`;
+            if (titleText.length > 30) {
+                titleText = titleText.substring(0, 30) + '...';
+            }
+            dropdownTrigger.innerHTML = `${titleText} ▾`;
+            return;
         }
-        dropdownTrigger.innerHTML = `Spread ${currentIdx + 1} ▾`;
+        dropdownTrigger.innerHTML = `Jump to... ▾`;
     }
 
     // ── Group and Render Nested Spread Menu (Accordion-style Tree) ─────────
@@ -335,101 +464,86 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!dropdownMenu) return;
         dropdownMenu.innerHTML = '';
 
-        // Group spreads by Year -> Month -> Day
+        // Group spreads by Project
         const tree = {};
+        const pSpreads = getProjectSpreads();
 
-        spreads.forEach((spread, index) => {
+        pSpreads.forEach((spread, index) => {
             if (!spread.id) return;
-            const match = spread.id.match(/^(\d+)_([a-zA-Z]+)_(\d+)-(\d+)$/);
-            let day = "Unknown";
-            let month = "Unknown";
-            let year = "Unknown";
-            let counter = (index + 1).toString();
+            const proj = activeProject;
 
-            if (match) {
-                day = match[1];
-                month = match[2];
-                year = match[3];
-                counter = match[4];
+            if (!tree[proj]) tree[proj] = [];
+
+            let titleText = getFirstLineText(spread.left);
+            if (!titleText && spread.id) {
+                const match = spread.id.match(/^(?:kb_)?(\d+)_([a-zA-Z]+)_(\d+)-(\d+)/);
+                if (match) {
+                    const day = match[1];
+                    const month = match[2];
+                    const counter = match[4];
+                    titleText = `${day} ${month} (Article ${counter})`;
+                }
+            }
+            titleText = titleText || `Article ${index + 1}`;
+            if (titleText.length > 30) {
+                titleText = titleText.substring(0, 30) + '...';
             }
 
-            if (!tree[year]) tree[year] = {};
-            if (!tree[year][month]) tree[year][month] = {};
-            if (!tree[year][month][day]) tree[year][month][day] = [];
-
-            tree[year][month][day].push({
+            tree[proj].push({
                 index,
-                counter,
-                label: `${day} ${month} (Spread ${counter})`
+                label: titleText
             });
         });
 
         // Loop over the grouped tree and build the DOM
-        for (const year in tree) {
-            const yearItem = document.createElement('div');
-            yearItem.className = 'menu-year-item';
+        for (const proj in tree) {
+            const projItem = document.createElement('div');
+            projItem.className = 'menu-year-item';
 
-            const yearHeader = document.createElement('div');
-            yearHeader.className = 'menu-year-header';
-            yearHeader.innerHTML = `<span>${year}</span> <span class="arrow">▾</span>`;
-            yearItem.appendChild(yearHeader);
+            const projHeader = document.createElement('div');
+            projHeader.className = 'menu-year-header';
+            projHeader.innerHTML = `<span>Project: ${proj}</span> <span class="arrow">▾</span>`;
+            projItem.appendChild(projHeader);
 
-            const monthsList = document.createElement('div');
-            monthsList.className = 'menu-months-list expanded'; // default expanded
-            yearItem.appendChild(monthsList);
+            const spreadsList = document.createElement('div');
+            spreadsList.className = 'menu-months-list expanded'; // default expanded
+            projItem.appendChild(spreadsList);
 
-            yearHeader.addEventListener('click', (e) => {
+            projHeader.addEventListener('click', (e) => {
                 e.stopPropagation();
-                monthsList.classList.toggle('expanded');
-                yearHeader.querySelector('.arrow').textContent = monthsList.classList.contains('expanded') ? '▾' : '▸';
+                spreadsList.classList.toggle('expanded');
+                projHeader.querySelector('.arrow').textContent = spreadsList.classList.contains('expanded') ? '▾' : '▸';
             });
 
-            for (const month in tree[year]) {
-                const monthItem = document.createElement('div');
-                monthItem.className = 'menu-month-item';
-
-                const monthHeader = document.createElement('div');
-                monthHeader.className = 'menu-month-header';
-                monthHeader.innerHTML = `<span>${month}</span> <span class="arrow">▾</span>`;
-                monthItem.appendChild(monthHeader);
-
-                const spreadsList = document.createElement('div');
-                spreadsList.className = 'menu-spreads-list expanded'; // default expanded
-                monthItem.appendChild(spreadsList);
-
-                monthHeader.addEventListener('click', (e) => {
+            tree[proj].forEach(sp => {
+                const option = document.createElement('div');
+                option.className = `menu-spread-option ${sp.index === currentIdx ? 'active' : ''}`;
+                option.textContent = sp.label;
+                option.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    spreadsList.classList.toggle('expanded');
-                    monthHeader.querySelector('.arrow').textContent = spreadsList.classList.contains('expanded') ? '▾' : '▸';
+                    goTo(sp.index);
+                    dropdownMenu.classList.remove('open');
                 });
+                spreadsList.appendChild(option);
+            });
 
-                for (const day in tree[year][month]) {
-                    tree[year][month][day].forEach(sp => {
-                        const option = document.createElement('div');
-                        option.className = `menu-spread-option ${sp.index === currentIdx ? 'active' : ''}`;
-                        option.textContent = `${day} ${month} (Spread ${sp.counter})`;
-                        option.addEventListener('click', (e) => {
-                            e.stopPropagation();
-                            goTo(sp.index);
-                            dropdownMenu.classList.remove('open');
-                        });
-                        spreadsList.appendChild(option);
-                    });
-                }
-
-                monthsList.appendChild(monthItem);
-            }
-
-            dropdownMenu.appendChild(yearItem);
+            dropdownMenu.appendChild(projItem);
         }
     }
 
     // ── Navigation UI ──────────────────────────────────────────────────────
     function updateNav() {
+        const pSpreads = getProjectSpreads();
         if (prevBtn) prevBtn.disabled = currentIdx === 0;
         if (nextBtn) {
-            const onLast = currentIdx === spreads.length - 1;
-            nextBtn.textContent = onLast ? 'New Page →' : 'Next →';
+            const onLast = currentIdx === pSpreads.length - 1;
+            if (onLast) {
+                nextBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display: block;"><path d="M5 12h14"/><path d="M12 5v14"/></svg>`;
+                nextBtn.title = "Create New Article";
+            } else {
+                nextBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display: block;"><path d="m9 18 6-6-6-6"/></svg>`;
+                nextBtn.title = "Next Article";
+            }
             nextBtn.disabled = false;
         }
         updateDropdownTriggerLabel();
@@ -443,7 +557,7 @@ document.addEventListener('DOMContentLoaded', () => {
             flushCurrent();
             persist();
             currentIdx = idx;
-            localStorage.setItem('scriptorium_spread_idx', currentIdx);
+            localStorage.setItem('scriptorium_kb_idx', currentIdx);
             renderSpread(focusTarget);
         });
     }
@@ -451,7 +565,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ── 3D page fold animation ──────────────────────────────────────────────
     function animatePageTurn(direction, callback) {
         const DURATION = 650;
-        const spread = document.getElementById('spread-chronicles');
+        const spread = document.getElementById('spread-almanac');
         if (!spread) { callback(); return; }
 
         // Build flap (the folding page face)
@@ -512,13 +626,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ── Write current values back into the state array ────────────────────
     function flushCurrent() {
-        const currentSpread = spreads[currentIdx];
-        const id = currentSpread ? currentSpread.id : null;
-        spreads[currentIdx] = {
-            id: id || generateSpreadId(),
-            left: leftTA.innerHTML,
-            right: rightTA.innerHTML
-        };
+        const pSpreads = getProjectSpreads();
+        const currentSpread = pSpreads[currentIdx];
+        if (!currentSpread) return;
+        const id = currentSpread.id;
+
+        const globalIndex = spreads.findIndex(s => s.id === id);
+        if (globalIndex !== -1) {
+            spreads[globalIndex] = {
+                id: id || generateSpreadId(),
+                left: leftTA.innerHTML,
+                right: rightTA.innerHTML,
+                project: activeProject
+            };
+        } else {
+            spreads.push({
+                id: id || generateSpreadId(),
+                left: leftTA.innerHTML,
+                right: rightTA.innerHTML,
+                project: activeProject
+            });
+        }
     }
 
     // ── Persistence ────────────────────────────────────────────────────────
@@ -528,22 +656,28 @@ document.addEventListener('DOMContentLoaded', () => {
         clearTimeout(saveTimer);
         flash('Ink drying...');
         saveTimer = setTimeout(() => {
-            localStorage.setItem('scriptorium_spreads', JSON.stringify(spreads));
-            localStorage.setItem('scriptorium_spread_idx', currentIdx);
+            localStorage.setItem('scriptorium_kb_spreads', JSON.stringify(spreads));
+            localStorage.setItem('scriptorium_kb_idx', currentIdx);
 
-            const s = spreads[currentIdx];
+            const pSpreads = getProjectSpreads();
+            const s = pSpreads[currentIdx];
+            if (!s) return;
             if (!s.id) s.id = generateSpreadId();
 
+            const currentTitle = getFirstLineText(s.left) || 'Untitled';
+
             // Save ONLY this specific page spread to the local filesystem
-            fetch('/api/journal/save', {
+            fetch('/api/kb/save', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
                     id: s.id,
+                    title: currentTitle,
                     left: htmlToMarkdown(s.left),
-                    right: htmlToMarkdown(s.right)
+                    right: htmlToMarkdown(s.right),
+                    project: activeProject
                 })
             })
                 .then(res => res.json())
@@ -568,12 +702,13 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => autoSave.classList.remove('visible'), 2200);
     }
 
-    // ── Word count (all spreads combined, ignoring HTML tags) ──────────────
+    // ── Word count (all active project spreads combined, ignoring HTML tags) ──────────────
     function updateWordCount() {
         if (!wordCount) return;
         flushCurrent();
         const temp = document.createElement('div');
-        const allText = spreads.map(s => {
+        const pSpreads = getProjectSpreads();
+        const allText = pSpreads.map(s => {
             temp.innerHTML = (s.left || '') + ' ' + (s.right || '');
             return temp.textContent || temp.innerText || '';
         }).join(' ');
@@ -594,6 +729,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ── Input & Autosave Events ─────────────────────────────────────────────
     leftTA.addEventListener('input', () => {
+        updateIndicators();
         updateWordCount();
         persist();
     });
@@ -612,61 +748,68 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (nextBtn) {
         nextBtn.addEventListener('click', () => {
-            if (currentIdx < spreads.length - 1) {
+            const pSpreads = getProjectSpreads();
+            if (currentIdx < pSpreads.length - 1) {
                 goTo(currentIdx + 1);
             } else {
                 flushCurrent();
                 const newId = generateSpreadId();
-                spreads.push({ id: newId, left: '', right: '' });
+                spreads.push({ id: newId, left: '', right: '', project: activeProject });
                 persist();
-                goTo(spreads.length - 1, 'left');
+
+                const newPSpreads = getProjectSpreads();
+                goTo(newPSpreads.length - 1, 'left');
             }
         });
     }
 
     if (tearBtn) {
         tearBtn.addEventListener('click', () => {
-            if (!confirm("Are you sure you want to tear out this spread? This will permanently delete these page files from disk.")) return;
+            if (!confirm("Are you sure you want to tear out this article? This will permanently delete this article from disk.")) return;
 
-            const tornSpread = spreads[currentIdx];
+            const pSpreads = getProjectSpreads();
+            const tornSpread = pSpreads[currentIdx];
 
-            // Remove the current spread from the array
-            spreads.splice(currentIdx, 1);
-
-            // If we have no spreads left, create an empty one
-            if (spreads.length === 0) {
-                spreads = [{ id: generateSpreadId(), left: '', right: '' }];
-            }
-
-            // Adjust currentIdx
-            if (currentIdx >= spreads.length) {
-                currentIdx = spreads.length - 1;
-            }
-
-            // Immediately load the new spread into the DOM before persisting
-            // This ensures flushCurrent() registers the correct adjacent content
-            const s = spreads[currentIdx];
-            leftTA.innerHTML = s.left || '';
-            rightTA.innerHTML = s.right || '';
-
-            // Update localStorage
-            localStorage.setItem('scriptorium_spreads', JSON.stringify(spreads));
-            localStorage.setItem('scriptorium_spread_idx', currentIdx);
-
-            // Call single file delete on server
             if (tornSpread && tornSpread.id) {
-                fetch('/api/journal/delete', {
+                // Remove the current spread from global spreads
+                const globalIndex = spreads.findIndex(s => s.id === tornSpread.id);
+                if (globalIndex !== -1) {
+                    spreads.splice(globalIndex, 1);
+                }
+
+                // If active project spreads are now empty, create a new empty spread
+                const newPSpreads = getProjectSpreads();
+                if (newPSpreads.length === 0) {
+                    spreads.push({ id: generateSpreadId(), left: '', right: '', project: activeProject });
+                }
+
+                // Adjust currentIdx
+                if (currentIdx >= getProjectSpreads().length) {
+                    currentIdx = getProjectSpreads().length - 1;
+                }
+
+                // Immediately load the new spread into the DOM before persisting
+                const s = getProjectSpreads()[currentIdx];
+                leftTA.innerHTML = s.left || '';
+                rightTA.innerHTML = s.right || '';
+
+                // Update localStorage
+                localStorage.setItem('scriptorium_kb_spreads', JSON.stringify(spreads));
+                localStorage.setItem('scriptorium_kb_idx', currentIdx);
+
+                // Call single file delete on server
+                fetch('/api/kb/delete', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ id: tornSpread.id })
-                }).catch(err => console.error("Failed to delete local spread file:", err));
+                }).catch(err => console.error("Failed to delete local article file:", err));
             }
 
             // Re-render navigation UI
             updateNav();
             updateWordCount();
 
-            flash('Page torn out ✂');
+            flash('Article torn out ✂');
         });
     }
 
@@ -833,15 +976,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
                 if (key === 's') {
-                    if (currentIdx < spreads.length - 1) {
+                    const pSpreads = getProjectSpreads();
+                    if (currentIdx < pSpreads.length - 1) {
                         goTo(currentIdx + 1);
                     } else {
                         // Create a new spread
                         flushCurrent();
                         const newId = generateSpreadId();
-                        spreads.push({ id: newId, left: '', right: '' });
+                        spreads.push({ id: newId, left: '', right: '', project: activeProject });
                         persist();
-                        goTo(spreads.length - 1, 'left');
+
+                        const newPSpreads = getProjectSpreads();
+                        goTo(newPSpreads.length - 1, 'left');
                     }
                     setVimState('normal');
                     return;

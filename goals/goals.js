@@ -1,148 +1,232 @@
 /* ==========================================================================
    GOALS & DAILY CHECKLIST PAGE INTERACTION SCRIPT
-   Handles daily checklists, task priority filtering, and ambition tracker
+   Handles dynamic structured Weekly, Long-Term, and Inner Desires
+   alongside an unlined freeform journal editor with markdown checkbox shortcuts.
    ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
-    // ── STATE ──
-    let goals      = JSON.parse(localStorage.getItem('scriptorium_goals'))      || [];
-    let activities = JSON.parse(localStorage.getItem('scriptorium_activities')) || [];
-    let currentFilter = 'all';
+    // ── STATE & PERSISTENCE INITIALIZATION ──
+    let weekGoals   = JSON.parse(localStorage.getItem('scriptorium_week_goals')) || [];
+    let longGoals   = JSON.parse(localStorage.getItem('scriptorium_long_goals')) || [];
+    let desires     = JSON.parse(localStorage.getItem('scriptorium_desires'))    || [];
 
-    // ── DOM ──
-    const goalForm       = document.getElementById('goal-form');
-    const goalInput      = document.getElementById('goal-input');
-    const goalList       = document.getElementById('goal-list');
-    const activityForm   = document.getElementById('activity-form');
-    const activityInput  = document.getElementById('activity-input');
-    const activityPriority = document.getElementById('activity-priority');
-    const activityList   = document.getElementById('activity-list');
-    const filterBtns     = document.querySelectorAll('.filter-btn');
-
-    // ── RENDER GOALS ──
-    function renderGoals() {
-        if (!goalList) return;
-        goalList.innerHTML = goals.length === 0
-            ? `<li style="text-align:center;color:var(--ink-muted);font-family:var(--f-hand);font-size:0.88rem;padding:1rem 0;">No goals yet. Add one above! ✨</li>`
-            : goals.map(goal => `
-            <li class="goal-item" data-id="${goal.id}">
-                <div class="goal-item-header">
-                    <span class="goal-text">${escapeHtml(goal.text)}</span>
-                    <div class="goal-actions">
-                        <button class="goal-action-btn decrement-goal-btn" data-id="${goal.id}" title="Decrease progress">−</button>
-                        <button class="goal-action-btn increment-goal-btn" data-id="${goal.id}" title="Increase progress">+</button>
-                        <button class="goal-action-btn delete-goal-btn" data-id="${goal.id}" title="Delete goal">🔥</button>
-                    </div>
-                </div>
-                <div class="goal-progress-wrap">
-                    <div class="goal-progress-bar">
-                        <div class="goal-progress-fill" style="width:${goal.progress || 0}%"></div>
-                    </div>
-                    <div class="goal-progress-label">${goal.progress || 0}% complete</div>
-                </div>
-            </li>`).join('');
+    // Prepopulate with elegant realistic placeholders on first load
+    if (weekGoals.length === 0) {
+        weekGoals = [
+            { id: 1, text: "Complete the main web dashboard integration", done: false },
+            { id: 2, text: "Learn the fundamentals of Web Audio synthesizers", done: false }
+        ];
+        localStorage.setItem('scriptorium_week_goals', JSON.stringify(weekGoals));
+    }
+    if (longGoals.length === 0) {
+        longGoals = [
+            { id: 1, text: "Secure a premium engineering job or internship", done: false },
+            { id: 2, text: "Build a strong, healthy and agile physique", done: false },
+            { id: 3, text: "Consistently practice and refine clear communication skills", done: false }
+        ];
+        localStorage.setItem('scriptorium_long_goals', JSON.stringify(longGoals));
+    }
+    if (desires.length === 0) {
+        desires = [
+            { id: 1, text: "Construct a gorgeous timber-frame country house", done: false },
+            { id: 2, text: "Travel and hike through the mountains in Kyoto, Japan", done: false }
+        ];
+        localStorage.setItem('scriptorium_desires', JSON.stringify(desires));
     }
 
-    // ── RENDER ACTIVITIES ──
-    function renderActivities() {
-        if (!activityList) return;
-        const filtered = activities.filter(act => {
-            if (currentFilter === 'all')  return true;
-            if (currentFilter === 'todo') return !act.done;
-            if (currentFilter === 'done') return act.done;
-            return true;
-        });
-        activityList.innerHTML = filtered.length === 0
-            ? `<li style="text-align:center;color:var(--ink-muted);font-family:var(--f-hand);font-size:0.88rem;padding:0.8rem 0;">Nothing here yet!</li>`
-            : filtered.map(act => `
-            <li class="activity-item ${act.done ? 'done' : ''}" data-id="${act.id}">
-                <input type="checkbox" class="activity-checkbox" data-id="${act.id}" ${act.done ? 'checked' : ''}>
-                <span class="activity-text">${escapeHtml(act.text)}</span>
-                <span class="priority-dot priority-${act.priority || 'medium'}"></span>
-                <div class="activity-actions">
-                    <button class="delete-activity-btn" data-id="${act.id}" title="Delete task">✒️ Delete</button>
-                </div>
-            </li>`).join('');
+    // ── DOM ELEMENTS ──
+    const weekListEl    = document.getElementById('week-goals-list');
+    const longListEl    = document.getElementById('long-term-goals-list');
+    const desireListEl  = document.getElementById('inner-desires-list');
+    const editorEl      = document.getElementById('goals-freeform-editor');
+
+    // ── RENDER FUNCTIONS ──
+    function renderWeekGoals() {
+        if (!weekListEl) return;
+        if (weekGoals.length === 0) {
+            weekListEl.innerHTML = `<li style="text-align:center;color:var(--ink-muted);font-family:var(--f-hand);font-size:0.85rem;padding:0.5rem 0;">No weekly goals registered.</li>`;
+            return;
+        }
+        weekListEl.innerHTML = weekGoals.map(g => `
+            <li class="custom-goal-item ${g.done ? 'done' : ''}" data-id="${g.id}">
+                <input type="checkbox" class="goal-checkbox" ${g.done ? 'checked' : ''} style="margin-right: 8px; cursor: pointer;">
+                <span class="goal-text-content">${escapeHtml(g.text)}</span>
+            </li>
+        `).join('');
     }
 
-    // ── GOAL FORM ──
-    if (goalForm) {
-        goalForm.addEventListener('submit', e => {
-            e.preventDefault();
-            const text = goalInput.value.trim();
-            if (!text) return;
-            goals.push({ id: Date.now(), text, progress: 0 });
-            localStorage.setItem('scriptorium_goals', JSON.stringify(goals));
-            goalInput.value = '';
-            renderGoals();
-        });
+    function renderLongGoals() {
+        if (!longListEl) return;
+        if (longGoals.length === 0) {
+            longListEl.innerHTML = `<li style="text-align:center;color:var(--ink-muted);font-family:var(--f-hand);font-size:0.85rem;padding:0.5rem 0;">No long-term goals registered.</li>`;
+            return;
+        }
+        longListEl.innerHTML = longGoals.map(g => `
+            <li class="custom-goal-item ${g.done ? 'done' : ''}" data-id="${g.id}">
+                <input type="checkbox" class="goal-checkbox" ${g.done ? 'checked' : ''} style="margin-right: 8px; cursor: pointer;">
+                <span class="goal-text-content">${escapeHtml(g.text)}</span>
+            </li>
+        `).join('');
     }
 
-    // ── GOAL ACTIONS ──
-    if (goalList) {
-        goalList.addEventListener('click', e => {
-            const id = parseInt(e.target.dataset.id);
-            if (!id) return;
-            const goal = goals.find(g => g.id === id);
-            if (!goal) return;
-            if (e.target.classList.contains('increment-goal-btn')) {
-                goal.progress = Math.min(100, (goal.progress || 0) + 10);
-            } else if (e.target.classList.contains('decrement-goal-btn')) {
-                goal.progress = Math.max(0, (goal.progress || 0) - 10);
-            } else if (e.target.classList.contains('delete-goal-btn')) {
-                goals = goals.filter(g => g.id !== id);
+    function renderDesires() {
+        if (!desireListEl) return;
+        if (desires.length === 0) {
+            desireListEl.innerHTML = `<li style="text-align:center;color:var(--ink-muted);font-family:var(--f-hand);font-size:0.85rem;padding:0.5rem 0;">No inner desires registered.</li>`;
+            return;
+        }
+        desireListEl.innerHTML = desires.map(g => `
+            <li class="custom-goal-item ${g.done ? 'done' : ''}" data-id="${g.id}">
+                <input type="checkbox" class="goal-checkbox" ${g.done ? 'checked' : ''} style="margin-right: 8px; cursor: pointer;">
+                <span class="goal-text-content">${escapeHtml(g.text)}</span>
+            </li>
+        `).join('');
+    }
+
+    // ── INTERACTIVE EVENTS (EVENT DELEGATION) ──
+    if (weekListEl) {
+        weekListEl.addEventListener('click', e => {
+            const item = e.target.closest('.custom-goal-item');
+            if (!item) return;
+            const id = parseInt(item.dataset.id);
+            const g = weekGoals.find(x => x.id === id);
+            if (g) {
+                if (e.target.classList.contains('goal-checkbox')) {
+                    g.done = e.target.checked;
+                } else {
+                    g.done = !g.done;
+                }
+                localStorage.setItem('scriptorium_week_goals', JSON.stringify(weekGoals));
+                renderWeekGoals();
             }
-            localStorage.setItem('scriptorium_goals', JSON.stringify(goals));
-            renderGoals();
         });
     }
 
-    // ── ACTIVITY FORM ──
-    if (activityForm) {
-        activityForm.addEventListener('submit', e => {
-            e.preventDefault();
-            const text = activityInput.value.trim();
-            if (!text) return;
-            activities.push({
-                id: Date.now(),
-                text,
-                priority: activityPriority ? activityPriority.value : 'medium',
-                done: false
-            });
-            localStorage.setItem('scriptorium_activities', JSON.stringify(activities));
-            activityInput.value = '';
-            renderActivities();
-        });
-    }
-
-    // ── ACTIVITY ACTIONS ──
-    if (activityList) {
-        activityList.addEventListener('click', e => {
-            const id = parseInt(e.target.dataset.id);
-            if (!id) return;
-            if (e.target.classList.contains('activity-checkbox')) {
-                const act = activities.find(a => a.id === id);
-                if (act) { act.done = e.target.checked; }
-            } else if (e.target.classList.contains('delete-activity-btn')) {
-                activities = activities.filter(a => a.id !== id);
+    if (longListEl) {
+        longListEl.addEventListener('click', e => {
+            const item = e.target.closest('.custom-goal-item');
+            if (!item) return;
+            const id = parseInt(item.dataset.id);
+            const g = longGoals.find(x => x.id === id);
+            if (g) {
+                if (e.target.classList.contains('goal-checkbox')) {
+                    g.done = e.target.checked;
+                } else {
+                    g.done = !g.done;
+                }
+                localStorage.setItem('scriptorium_long_goals', JSON.stringify(longGoals));
+                renderLongGoals();
             }
-            localStorage.setItem('scriptorium_activities', JSON.stringify(activities));
-            renderActivities();
         });
     }
 
-    // ── FILTER BUTTONS ──
-    filterBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            currentFilter = btn.dataset.filter;
-            filterBtns.forEach(b => b.classList.toggle('active', b === btn));
-            renderActivities();
+    if (desireListEl) {
+        desireListEl.addEventListener('click', e => {
+            const item = e.target.closest('.custom-goal-item');
+            if (!item) return;
+            const id = parseInt(item.dataset.id);
+            const g = desires.find(x => x.id === id);
+            if (g) {
+                if (e.target.classList.contains('goal-checkbox')) {
+                    g.done = e.target.checked;
+                } else {
+                    g.done = !g.done;
+                }
+                localStorage.setItem('scriptorium_desires', JSON.stringify(desires));
+                renderDesires();
+            }
         });
-    });
+    }
 
-    // Init render
-    renderGoals();
-    renderActivities();
+    // ── FREEFORM EDITOR WITH MARKDOWN SHORTCUTS ──
+    if (editorEl) {
+        // Load saved text from local storage
+        const savedText = localStorage.getItem('scriptorium_goals_freeform') || '';
+        editorEl.innerHTML = savedText;
+
+        // Auto-save on input
+        editorEl.addEventListener('input', () => {
+            localStorage.setItem('scriptorium_goals_freeform', editorEl.innerHTML);
+        });
+
+        // Keydown handling for '-' followed by space checkbox conversion
+        editorEl.addEventListener('keydown', (e) => {
+            if (e.key === ' ') { // Space bar pressed
+                const selection = window.getSelection();
+                if (!selection.rangeCount) return;
+                const range = selection.getRangeAt(0);
+                const textNode = range.startContainer;
+                
+                if (textNode.nodeType === Node.TEXT_NODE) {
+                    const text = textNode.nodeValue;
+                    const offset = range.startOffset;
+                    
+                    const beforeText = text.substring(0, offset);
+                    
+                    if (beforeText === '-' || beforeText.endsWith(' -') || beforeText.endsWith('\n-')) {
+                        e.preventDefault(); // Prevent standard space
+                        
+                        const dashIndex = beforeText.lastIndexOf('-');
+                        const beforeDash = beforeText.substring(0, dashIndex);
+                        
+                        const checkboxSpan = document.createElement('span');
+                        checkboxSpan.className = 'editor-checkbox-wrapper';
+                        checkboxSpan.contentEditable = 'false';
+                        checkboxSpan.style.marginRight = '8px';
+                        checkboxSpan.style.display = 'inline-block';
+                        checkboxSpan.style.verticalAlign = 'middle';
+                        
+                        const input = document.createElement('input');
+                        input.type = 'checkbox';
+                        input.style.cursor = 'pointer';
+                        input.addEventListener('change', () => {
+                            if (input.checked) input.setAttribute('checked', 'checked');
+                            else input.removeAttribute('checked');
+                            localStorage.setItem('scriptorium_goals_freeform', editorEl.innerHTML);
+                        });
+                        checkboxSpan.appendChild(input);
+                        
+                        const afterText = text.substring(offset);
+                        
+                        textNode.nodeValue = beforeDash;
+                        
+                        const parent = textNode.parentNode;
+                        const nextSibling = textNode.nextSibling;
+                        
+                        parent.insertBefore(checkboxSpan, nextSibling);
+                        
+                        const newTextNode = document.createTextNode('\u00A0' + afterText);
+                        parent.insertBefore(newTextNode, checkboxSpan.nextSibling);
+                        
+                        const newRange = document.createRange();
+                        newRange.setStart(newTextNode, 1);
+                        newRange.setEnd(newTextNode, 1);
+                        selection.removeAllRanges();
+                        selection.addRange(newRange);
+                        
+                        localStorage.setItem('scriptorium_goals_freeform', editorEl.innerHTML);
+                    }
+                }
+            }
+        });
+
+        // Intercept checked attribute for serialization on click
+        editorEl.addEventListener('click', (e) => {
+            if (e.target.tagName === 'INPUT' && e.target.type === 'checkbox') {
+                if (e.target.checked) {
+                    e.target.setAttribute('checked', 'checked');
+                } else {
+                    e.target.removeAttribute('checked');
+                }
+                localStorage.setItem('scriptorium_goals_freeform', editorEl.innerHTML);
+            }
+        });
+    }
+
+    // ── INITIAL RENDER ──
+    renderWeekGoals();
+    renderLongGoals();
+    renderDesires();
 
     function escapeHtml(text) {
         return text.replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;' }[c]));

@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alok | Personal Journal</title>
-    <meta name="description" content="A personal journal for daily thoughts, reflections, and writing.">
+    <title>Alok | Knowledge Almanac</title>
+    <meta name="description" content="A structured local database-backed personal Knowledge Base and Almanac.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="../shared/css/variables.css">
     <link rel="stylesheet" href="../shared/css/base.css">
     <link rel="stylesheet" href="../shared/css/book.css">
-    <link rel="stylesheet" href="journal.css">
+    <link rel="stylesheet" href="kb.css">
     <link rel="stylesheet" href="../shared/css/responsive.css">
 </head>
 
@@ -38,23 +38,23 @@
             <div class="open-book-view">
 
                 <!-- Bookmarks rail -->
-                <nav class="bookmarks-rail" aria-label="Journal sections">
+                <nav class="bookmarks-rail" aria-label="Almanac sections">
                     <a class="bookmark-tab" data-spread="reflection-study" href="../reflection/reflection.html">
                         <span class="bm-num">I</span><span class="bm-label">Reflection</span>
                     </a>
                     <a class="bookmark-tab" data-spread="deeds-goals" href="../goals/goals.html">
                         <span class="bm-num">II</span><span class="bm-label">Goals &amp; Tasks</span>
                     </a>
-                    <a class="bookmark-tab active" data-spread="chronicles" href="journal.html">
+                    <a class="bookmark-tab" data-spread="chronicles" href="../journal/journal.html">
                         <span class="bm-num">III</span><span class="bm-label">Journal</span>
                     </a>
-                    <a class="bookmark-tab" data-spread="kb" href="../knowledge_base/kb.html">
+                    <a class="bookmark-tab active" data-spread="kb" href="kb.html">
                         <span class="bm-num">IV</span><span class="bm-label">Almanac</span>
                     </a>
                     <a class="bookmark-tab" data-spread="settings" href="../settings/settings.html">
                         <span class="bm-num">V</span><span class="bm-label">Settings</span>
                     </a>
-                    <a class="bookmark-tab close-book-banner" href="../index.html" title="Close Journal">
+                    <a class="bookmark-tab close-book-banner" href="../index.html" title="Close Almanac">
                         <span class="bm-num">✕</span><span class="bm-label">Close</span>
                     </a>
                 </nav>
@@ -63,8 +63,8 @@
                 <div class="book-casing">
 
 
-                    <!-- SPREAD III: Journal -->
-                    <div class="book-spread active-spread" id="spread-chronicles">
+                    <!-- SPREAD IV: Almanac -->
+                    <div class="book-spread active-spread" id="spread-almanac">
 
                         <!-- LEFT PAGE -->
                         <div class="book-page page-left">
@@ -73,16 +73,15 @@
                             <div class="page-running-header">
                                 <span class="running-brand">Alok</span>
                                 <div class="page-date-badge" id="left-page-date-badge">
-                                    <span class="day-number" id="left-day-num">30</span>
-                                    <span class="month" id="left-month-name">May</span>
-                                    <span class="year" id="left-year-num">2026</span>
+
+                                    <span class="month" id="article-title-indicator"
+                                        style="font-family: var(--f-fancy); font-size: 0.8rem; text-transform: none; color: var(--ink);">Untitled</span>
                                 </div>
                             </div>
 
-
-
                             <div id="scrapbook-textarea" contenteditable="true" spellcheck="false"
-                                placeholder="Write your thoughts for today..." aria-label="Daily journal entry"></div>
+                                placeholder="Article Title (First Line)&#10;&#10;Write article details here..."
+                                aria-label="Almanac entry"></div>
 
                             <div class="scrapbook-footer">
                                 <span id="word-count">0 words</span>
@@ -96,16 +95,16 @@
                             <div class="page-texture"></div>
 
                             <div class="page-running-header">
-                                <span class="running-section">Daily Journal</span>
+                                <span class="running-section">Knowledge Base</span>
                                 <div class="page-date-badge">
-                                    <span class="day-number" id="right-day-num">30</span>
-                                    <span class="month" id="right-month-name">May</span>
-                                    <span class="year" id="right-year-num">2026</span>
+
+                                    <span class="month" id="article-index-indicator"
+                                        style="font-family: var(--f-head); font-size: 0.65rem;">1 / 1</span>
                                 </div>
                             </div>
 
-                            <div id="scrapbook-textarea-right" contenteditable="true" spellcheck="false" placeholder=""
-                                aria-label="Journal continued"></div>
+                            <div id="scrapbook-textarea-right" contenteditable="true" spellcheck="false"
+                                placeholder="Continued on right-hand page..." aria-label="Almanac continued"></div>
 
                         </div>
 
@@ -118,9 +117,12 @@
                         <div class="text-toolbar" id="text-toolbar">
                             <button class="fmt-btn" id="fmt-bold" title="Bold" data-cmd="bold"> <b>B</b></button>
                             <button class="fmt-btn" id="fmt-italic" title="Italic" data-cmd="italic"> <i>I</i></button>
-                            <button class="fmt-btn" id="fmt-underline" title="Underline" data-cmd="underline"><u>U</u></button>
-                            <button class="fmt-btn" id="fmt-strike" title="Strikethrough" data-cmd="strikeThrough"><s>S</s></button>
-                            <button class="fmt-btn" id="fmt-clear" title="Clear formatting" data-cmd="removeFormat">✕</button>
+                            <button class="fmt-btn" id="fmt-underline" title="Underline"
+                                data-cmd="underline"><u>U</u></button>
+                            <button class="fmt-btn" id="fmt-strike" title="Strikethrough"
+                                data-cmd="strikeThrough"><s>S</s></button>
+                            <button class="fmt-btn" id="fmt-clear" title="Clear formatting"
+                                data-cmd="removeFormat">✕</button>
 
                             <!-- Font Size Changer grouped with inline options -->
                             <div class="font-size-wrapper" style="display: flex; gap: 2px; margin-left: 2px;">
@@ -168,21 +170,53 @@
 
                         <!-- RIGHT: Page Select + Actions -->
                         <div class="page-nav-btns">
+                            <!-- Project Selector Dropdown -->
+                            <div class="project-selector-wrapper"
+                                style="display: inline-flex; align-items: center; position: relative;">
+                                <select class="sound-select" id="project-select" title="Active Project"
+                                    style="margin-right: 4px; min-width: 9rem;">
+                                    <option value="General" selected>General</option>
+                                    <option value="__NEW__">+ Create New Project...</option>
+                                </select>
+                            </div>
+
                             <!-- Custom Nested Spread Dropdown -->
                             <div class="spread-dropdown-wrapper">
                                 <button class="page-nav-btn dropdown-trigger-btn" id="spread-dropdown-trigger"
-                                    title="Jump to page spread">
+                                    title="Jump to article">
                                     Jump to... ▾
                                 </button>
                                 <div class="nested-spread-menu" id="nested-spread-menu">
-                                    <!-- Dynamic tree populated via journal.js -->
+                                    <!-- Dynamic tree populated via kb.js -->
                                 </div>
                             </div>
 
                             <button class="page-nav-btn tear-page-btn" id="tear-page-btn"
-                                title="Tear out this page spread permanently">Tear Page</button>
-                            <button class="page-nav-btn" id="prev-page-btn" disabled>← Prev</button>
-                            <button class="page-nav-btn" id="next-page-btn">New Page →</button>
+                                title="Tear out this article permanently">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" style="display: block;">
+                                    <path d="M3 6h18" />
+                                    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                                    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                                    <line x1="10" x2="10" y1="11" y2="17" />
+                                    <line x1="14" x2="14" y1="11" y2="17" />
+                                </svg>
+                            </button>
+                            <button class="page-nav-btn" id="prev-page-btn" disabled title="Previous Article">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                    stroke-linejoin="round" style="display: block;">
+                                    <path d="m15 18-6-6 6-6" />
+                                </svg>
+                            </button>
+                            <button class="page-nav-btn" id="next-page-btn" title="Next Article">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                    stroke-linejoin="round" style="display: block;">
+                                    <path d="m9 18 6-6-6-6" />
+                                </svg>
+                            </button>
                         </div>
 
                     </div>
@@ -192,7 +226,7 @@
     </div><!-- /desk-bg -->
 
     <script src="../shared/js/core.js"></script>
-    <script src="journal.js"></script>
+    <script src="kb.js"></script>
 </body>
 
 </html>

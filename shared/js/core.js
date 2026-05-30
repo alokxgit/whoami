@@ -6,6 +6,59 @@
 document.addEventListener('DOMContentLoaded', () => {
     const body = document.body;
 
+    // ── GLOBAL FONT SCALE INITIALIZATION ──
+    function applyGlobalFontScale(scale) {
+        document.documentElement.style.fontSize = scale;
+        localStorage.setItem('scriptorium_global_font_scale', scale);
+        fetch('/api/settings/save', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ scriptorium_global_font_scale: scale })
+        }).catch(e => console.warn("DB settings save error:", e));
+    }
+    const savedScale = localStorage.getItem('scriptorium_global_font_scale') || '100%';
+    applyGlobalFontScale(savedScale);
+    window.applyGlobalFontScale = applyGlobalFontScale;
+
+    // Specific Font Style Sizing Controls
+    function applySpecificFontScale(style, val) {
+        document.documentElement.style.setProperty(`--scale-${style}`, val);
+        localStorage.setItem(`scriptorium_scale_${style}`, val);
+        fetch('/api/settings/save', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ [`scriptorium_scale_${style}`]: val })
+        }).catch(e => console.warn("DB settings save error:", e));
+    }
+    window.applySpecificFontScale = applySpecificFontScale;
+
+    // Load initial specific scales
+    ['fancy', 'hand', 'head'].forEach(style => {
+        const val = localStorage.getItem(`scriptorium_scale_${style}`) || '1.0';
+        applySpecificFontScale(style, val);
+    });
+
+    // Specific Font Family Controls
+    function applySpecificFontFamily(style, family) {
+        document.documentElement.style.setProperty(`--font-${style}-family`, family);
+        localStorage.setItem(`scriptorium_font_${style}`, family);
+        fetch('/api/settings/save', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ [`scriptorium_font_${style}`]: family })
+        }).catch(e => console.warn("DB settings save error:", e));
+    }
+    window.applySpecificFontFamily = applySpecificFontFamily;
+
+    // Load initial specific font families
+    ['fancy', 'hand', 'head'].forEach(style => {
+        const defaultFamily = style === 'fancy' ? "'Cinzel Decorative', serif" :
+                              style === 'hand' ? "'Caveat', cursive" :
+                                                "'Marcellus', serif";
+        const val = localStorage.getItem(`scriptorium_font_${style}`) || defaultFamily;
+        document.documentElement.style.setProperty(`--font-${style}-family`, val);
+    });
+
     // ── DATE ──
     const dateNums   = document.querySelectorAll('.day-number');
     const dateMonths = document.querySelectorAll('.month');
@@ -33,6 +86,11 @@ document.addEventListener('DOMContentLoaded', () => {
         layoutBtns.forEach(b => b.classList.toggle('active', b.dataset.layout === layout));
         themeCards.forEach(c => c.classList.toggle('active', c.dataset.layout === layout));
         localStorage.setItem('scriptorium_layout', layout);
+        fetch('/api/settings/save', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ scriptorium_layout: layout })
+        }).catch(e => console.warn(e));
     }
 
     function initLayout() {
@@ -71,6 +129,11 @@ document.addEventListener('DOMContentLoaded', () => {
         window.isMuted = val;
         localStorage.setItem('scriptorium_muted', val ? 'true' : 'false');
         if (val) stopAllSounds();
+        fetch('/api/settings/save', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ scriptorium_muted: val ? 'true' : 'false' })
+        }).catch(e => console.warn(e));
     };
 
     // ── WEB AUDIO ──
@@ -266,4 +329,70 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch(e) {}
     }
     window.playPaperRustleSound = playPaperRustleSound;
+
+    // ── DATABASE SETTINGS SYNC ──
+    async function syncDatabaseSettings() {
+        try {
+            const res = await fetch('/api/settings');
+            if (res.ok) {
+                const settings = await res.json();
+                if (settings && Object.keys(settings).length > 0) {
+                    // Cache to LocalStorage
+                    Object.entries(settings).forEach(([key, val]) => {
+                        localStorage.setItem(key, String(val));
+                    });
+
+                    // Hot-reload components
+                    if (settings.scriptorium_global_font_scale) {
+                        applyGlobalFontScale(settings.scriptorium_global_font_scale);
+                    }
+                    if (settings.scriptorium_scale_fancy) {
+                        applySpecificFontScale('fancy', settings.scriptorium_scale_fancy);
+                    }
+                    if (settings.scriptorium_scale_hand) {
+                        applySpecificFontScale('hand', settings.scriptorium_scale_hand);
+                    }
+                    if (settings.scriptorium_scale_head) {
+                        applySpecificFontScale('head', settings.scriptorium_scale_head);
+                    }
+                    if (settings.scriptorium_layout) {
+                        applyLayout(settings.scriptorium_layout);
+                    }
+                    if (settings.scriptorium_muted !== undefined) {
+                        const val = settings.scriptorium_muted === 'true' || settings.scriptorium_muted === true;
+                        isMuted = val;
+                        window.isMuted = val;
+                        if (val) stopAllSounds();
+                        const muteToggle = document.getElementById('mute-ambient-audio-toggle');
+                        if (muteToggle) muteToggle.checked = val;
+                    }
+
+                    if (settings.scriptorium_font_fancy) {
+                        applySpecificFontFamily('fancy', settings.scriptorium_font_fancy);
+                    }
+                    if (settings.scriptorium_font_hand) {
+                        applySpecificFontFamily('hand', settings.scriptorium_font_hand);
+                    }
+                    if (settings.scriptorium_font_head) {
+                        applySpecificFontFamily('head', settings.scriptorium_font_head);
+                    }
+
+                    // Reload specific typography display labels and dropdown values on settings page
+                    ['fancy', 'hand', 'head'].forEach(style => {
+                        const label = document.getElementById(`scale-${style}-val`);
+                        if (label && settings[`scriptorium_scale_${style}`]) {
+                            label.textContent = parseFloat(settings[`scriptorium_scale_${style}`]).toFixed(1);
+                        }
+                        const select = document.getElementById(`font-${style}-select`);
+                        if (select && settings[`scriptorium_font_${style}`]) {
+                            select.value = settings[`scriptorium_font_${style}`];
+                        }
+                    });
+                }
+            }
+        } catch (e) {
+            console.warn("Failed to sync database settings:", e);
+        }
+    }
+    syncDatabaseSettings();
 });

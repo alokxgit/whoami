@@ -32,34 +32,34 @@
 }
 
 /* Premium custom scrollbar styling for the book pages */
-#spread-chronicles .book-page::-webkit-scrollbar {
+#spread-almanac .book-page::-webkit-scrollbar {
     width: 6px;
 }
 
-#spread-chronicles .book-page::-webkit-scrollbar-track {
+#spread-almanac .book-page::-webkit-scrollbar-track {
     background: transparent;
 }
 
-#spread-chronicles .book-page::-webkit-scrollbar-thumb {
+#spread-almanac .book-page::-webkit-scrollbar-thumb {
     background-color: rgba(133, 97, 68, 0.22);
     border-radius: 4px;
 }
 
-#spread-chronicles .book-page::-webkit-scrollbar-thumb:hover {
+#spread-almanac .book-page::-webkit-scrollbar-thumb:hover {
     background-color: rgba(133, 97, 68, 0.45);
 }
 
 /* Custom scrollbars for dark mode / ledger layout */
-body.layout-ledger #spread-chronicles .book-page::-webkit-scrollbar-thumb {
+body.layout-ledger #spread-almanac .book-page::-webkit-scrollbar-thumb {
     background-color: rgba(229, 195, 106, 0.15);
 }
 
-body.layout-ledger #spread-chronicles .book-page::-webkit-scrollbar-thumb:hover {
+body.layout-ledger #spread-almanac .book-page::-webkit-scrollbar-thumb:hover {
     background-color: rgba(229, 195, 106, 0.35);
 }
 
 /* Enable native scrolling on the book pages themselves */
-#spread-chronicles .book-page {
+#spread-almanac .book-page {
     overflow-y: auto;
 }
 
@@ -257,20 +257,30 @@ body.layout-ledger #spread-chronicles .book-page::-webkit-scrollbar-thumb:hover 
     font-family: var(--f-head);
     font-size: 0.7rem;
     letter-spacing: 0.05em;
-    padding: 0.28rem 0.9rem;
+    padding: 0.26rem 0.9rem;
     border: 1px solid rgba(229, 195, 106, 0.2);
-    border-radius: 5px;
-    background: none;
-    color: rgba(250, 245, 230, 0.5);
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.2);
+    color: rgba(250, 245, 230, 0.55);
     cursor: pointer;
     transition: all 0.2s;
     white-space: nowrap;
 }
 
 .page-nav-btn:hover:not(:disabled) {
-    border-color: var(--amber);
+    border-color: rgba(229, 195, 106, 0.4);
     color: var(--gold);
-    background: rgba(229, 195, 106, 0.06);
+    background: rgba(229, 195, 106, 0.05);
+}
+
+/* Make actual navigation and tear/delete buttons small, uniform square icon controls */
+.page-nav-btn:not(.dropdown-trigger-btn) {
+    width: 25px;
+    height: 25px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 !important;
 }
 
 .page-nav-btn:disabled {
@@ -382,7 +392,7 @@ body.layout-ledger #scrapbook-textarea-right {
 }
 
 /* ── Page fold 3D animation ── */
-#spread-chronicles {
+#spread-almanac {
     perspective: 1600px;
     overflow: visible;
 }
@@ -707,7 +717,6 @@ body {
 }
 
 /* Allow book pages to expand naturally to contain their growing textareas */
-#spread-chronicles .book-page,
 #spread-almanac .book-page {
     height: auto !important;
     min-height: 800px !important; /* Starts at an elegant physical book size */
@@ -812,24 +821,35 @@ body {
 }
 
 .dropdown-trigger-btn {
-    background: rgba(0, 0, 0, 0.25) !important;
-    border: 1px solid rgba(229, 195, 106, 0.25) !important;
-    color: rgba(250, 245, 230, 0.8) !important;
-    font-weight: 600;
+    background: rgba(0, 0, 0, 0.2) !important;
+    border: 1px solid rgba(229, 195, 106, 0.2) !important;
+    border-radius: 4px !important;
+    padding: 0.26rem 1.4rem 0.26rem 0.5rem !important;
+    font-size: 0.7rem !important;
+    font-family: var(--f-head) !important;
+    color: rgba(250, 245, 230, 0.65) !important;
+    font-weight: normal !important;
+    cursor: pointer;
+    outline: none;
     transition: all 0.2s ease;
-    margin-right: 0.8rem;
+    margin-right: 4px !important;
+    white-space: nowrap;
+    text-align: left;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .dropdown-trigger-btn:hover {
-    border-color: var(--amber) !important;
+    border-color: rgba(229, 195, 106, 0.4) !important;
     color: var(--gold) !important;
-    background: rgba(229, 195, 106, 0.08) !important;
+    background-color: rgba(229, 195, 106, 0.05) !important;
 }
 
 .nested-spread-menu {
     position: absolute;
     bottom: 100%;
-    right: 0.8rem;
+    right: 4px;
     margin-bottom: 10px;
     background: rgba(30, 11, 4, 0.98) !important;
     border: 1px solid rgba(229, 195, 106, 0.35) !important;
@@ -963,4 +983,22 @@ body {
     background: rgba(229, 195, 106, 0.22) !important;
     color: var(--gold) !important;
     font-weight: 600;
+}
+
+/* Custom style for the first line of the Knowledge Base Left Page to represent the Title */
+#scrapbook-textarea::first-line {
+    font-family: var(--f-fancy);
+    font-size: 1.3em;
+    font-weight: bold;
+    color: var(--amber);
+    letter-spacing: 0.03em;
+}
+
+#article-title-indicator {
+    max-width: 200px;
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: bottom;
 }
