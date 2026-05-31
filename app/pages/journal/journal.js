@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    const savedFont = localStorage.getItem('scriptorium_journal_font') || 'Caveat';
+    const savedFont = localStorage.getItem('scriptorium_journal_font') || 'Default Serif';
     if (fontSelect) fontSelect.value = savedFont;
     applyFont(savedFont);
 
@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ── Theme/Casing Style Selection ──
     const themeSelect = document.getElementById('theme-select');
     if (themeSelect) {
-        const savedLayout = localStorage.getItem('scriptorium_layout') || 'codex';
+        const savedLayout = localStorage.getItem('scriptorium_layout') || 'folio';
         themeSelect.value = savedLayout;
 
         themeSelect.addEventListener('change', (e) => {

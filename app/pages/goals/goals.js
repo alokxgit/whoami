@@ -32,23 +32,23 @@ document.addEventListener('DOMContentLoaded', () => {
     // Prepopulate with elegant realistic placeholders on first load
     if (weekGoals.length === 0) {
         weekGoals = [
-            { id: 1, text: "Complete the main web dashboard integration", done: false },
-            { id: 2, text: "Learn the fundamentals of Web Audio synthesizers", done: false }
+            { id: 1, text: "Weekly Focus: Add short-term tasks or objectives you aim to complete by the end of this week.", done: false },
+            { id: 2, text: "Micro-Milestones: Break down your larger commitments into bite-sized actions to accomplish here.", done: false }
         ];
         localStorage.setItem('scriptorium_week_goals', JSON.stringify(weekGoals));
     }
     if (longGoals.length === 0) {
         longGoals = [
-            { id: 1, text: "Secure a premium engineering job or internship", done: false },
-            { id: 2, text: "Build a strong, healthy and agile physique", done: false },
-            { id: 3, text: "Consistently practice and refine clear communication skills", done: false }
+            { id: 1, text: "Quarterly/Annual Goals: Outline the major life or professional milestones you are building toward.", done: false },
+            { id: 2, text: "Habit Formulation: List long-term routines you want to cultivate over months or years.", done: false },
+            { id: 3, text: "Creative Endeavors: Add personal projects, books to write, or deep skills you plan to master.", done: false }
         ];
         localStorage.setItem('scriptorium_long_goals', JSON.stringify(longGoals));
     }
     if (desires.length === 0) {
         desires = [
-            { id: 1, text: "Construct a gorgeous timber-frame country house", done: false },
-            { id: 2, text: "Travel and hike through the mountains in Kyoto, Japan", done: false }
+            { id: 1, text: "Passions & Dreams: Record your deepest life aspirations, travel dreams, or personal bucket list items.", done: false },
+            { id: 2, text: "Core Wants: Write about what brings you pure joy, peace, and ultimate fulfillment in life.", done: false }
         ];
         localStorage.setItem('scriptorium_desires', JSON.stringify(desires));
     }

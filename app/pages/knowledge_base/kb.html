@@ -19,6 +19,19 @@
 </head>
 
 <body class="layout-codex book-state-open">
+    <script>
+        (function () {
+            const layout = localStorage.getItem('scriptorium_layout') || 'folio';
+            document.body.className = document.body.className.replace(/layout-\w+/, 'layout-' + layout);
+            if (!document.body.classList.contains('layout-' + layout)) {
+                document.body.classList.add('layout-' + layout);
+            }
+            const hideLines = localStorage.getItem('scriptorium_hide_lines') === 'true';
+            if (hideLines) {
+                document.body.classList.add('hide-page-lines');
+            }
+        })();
+    </script>
 
     <svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
         <defs>
@@ -124,7 +137,13 @@
                             <button class="fmt-btn" id="fmt-clear" title="Clear formatting"
                                 data-cmd="removeFormat">✕</button>
                             <button class="fmt-btn" id="fmt-image" title="Upload & Insert Image">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: block;"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" style="display: block;">
+                                    <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
+                                    <circle cx="9" cy="9" r="2" />
+                                    <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
+                                </svg>
                             </button>
                             <input type="file" id="image-upload-input" accept="image/*" style="display: none;">
 
@@ -135,7 +154,8 @@
                             </div>
 
                             <!-- Toggle Page Lines -->
-                            <button class="fmt-btn" id="toggle-lines-btn" title="Toggle Page Lines" style="margin-left: 2px;">▤</button>
+                            <button class="fmt-btn" id="toggle-lines-btn" title="Toggle Page Lines"
+                                style="margin-left: 2px;">▤</button>
 
                             <div class="fmt-divider"></div>
 
@@ -143,11 +163,11 @@
                             <div class="font-selector-wrapper">
                                 <select class="font-select" id="font-select" title="Handwriting Font">
                                     <optgroup label="Printed Typeface (Non-Handwriting)">
-                                        <option value="Default Serif">Book Serif (Default)</option>
+                                        <option value="Default Serif" selected>Book Serif (Default)</option>
                                         <option value="Default Sans">Clean Sans-Serif</option>
                                     </optgroup>
                                     <optgroup label="Calligraphy & Script">
-                                        <option value="Caveat" selected>Caveat</option>
+                                        <option value="Caveat">Caveat</option>
                                         <option value="Dancing Script">Dancing Script</option>
                                         <option value="Pacifico">Pacifico</option>
                                         <option value="Satisfy">Satisfy Script</option>

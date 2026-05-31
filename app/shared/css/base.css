@@ -53,3 +53,55 @@ body {
     box-sizing: border-box;
     overflow: hidden;
 }
+
+/* ==========================================================================
+   THEME-SPECIFIC DESK BACKGROUNDS & GLOWS (UNIVERSAL)
+   ========================================================================== */
+
+/* ── Default / Monk's Codex ── */
+body.layout-codex .desk-bg {
+    background: radial-gradient(ellipse at 50% 30%, rgba(180, 90, 20, 0.12) 0%, transparent 70%), #0d0703 !important;
+}
+body.layout-codex .desk-glow {
+    background: radial-gradient(ellipse at 50% -10%, rgba(180, 100, 20, 0.12) 0%, transparent 70%) !important;
+}
+
+/* ── Traveler's Folio ── */
+body.layout-folio .desk-bg {
+    background: radial-gradient(ellipse at 50% 30%, rgba(120, 70, 15, 0.14) 0%, transparent 70%), #140e0a !important;
+}
+body.layout-folio .desk-glow {
+    background: radial-gradient(ellipse at 50% -10%, rgba(120, 70, 15, 0.12) 0%, transparent 70%) !important;
+}
+
+/* ── Scribe's Ledger ── */
+body.layout-ledger .desk-bg {
+    background: radial-gradient(ellipse at 50% 30%, rgba(30, 80, 150, 0.14) 0%, transparent 70%), #060b13 !important;
+}
+body.layout-ledger .desk-glow {
+    background: radial-gradient(ellipse at 50% -10%, rgba(40, 100, 180, 0.16) 0%, transparent 70%) !important;
+}
+
+/* ── Obsidian Light ── */
+body.layout-obsidian .desk-bg {
+    background: radial-gradient(ellipse at 50% 30%, rgba(122, 88, 244, 0.05) 0%, transparent 70%), #121316 !important;
+}
+body.layout-obsidian .desk-glow {
+    background: radial-gradient(ellipse at 50% -10%, rgba(122, 88, 244, 0.08) 0%, transparent 70%) !important;
+}
+
+/* ── Obsidian Dark ── */
+body.layout-obsidian-dark .desk-bg {
+    background: radial-gradient(ellipse at 50% 30%, rgba(167, 139, 250, 0.09) 0%, transparent 70%), #09090d !important;
+}
+body.layout-obsidian-dark .desk-glow {
+    background: radial-gradient(ellipse at 50% -10%, rgba(167, 139, 250, 0.16) 0%, transparent 70%) !important;
+}
+
+/* ── Midnight Violet ── */
+body.layout-midnight-violet .desk-bg {
+    background: radial-gradient(ellipse at 50% 30%, rgba(192, 132, 252, 0.12) 0%, transparent 70%), #030306 !important;
+}
+body.layout-midnight-violet .desk-glow {
+    background: radial-gradient(ellipse at 50% -10%, rgba(192, 132, 252, 0.22) 0%, transparent 70%) !important;
+}

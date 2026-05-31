@@ -327,20 +327,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ── WHO I AM RENDERING ENGINE ──
-    const defaultBio = "Driven by an insatiable curiosity and an enduring passion for creating beautiful digital experiences. I believe that technical mastery should always walk hand-in-hand with empathy, visual elegance, and clarity of purpose. An eternal student, seeking to bring order to complex systems through clean modular design and aesthetic harmony.";
+    const defaultBio = "Welcome to your Core Biography. This section is a space to capture your personal philosophy, core values, or a quote that defines your current stage of life. Use it to state who you are, what drives you, and what rules you live by.";
 
     const defaultGoodAt = [
-        "UI & Visual Craftsmanship: Designing interfaces with rich textures, elegant layouts, and beautiful typography.",
-        "Logical Problem Solving: Resolving tricky architectural issues, debugging cleanly, and maintaining codebase health.",
-        "Empathetic Collaboration: Working supportively through pair programming with active listening.",
-        "Meticulous Tidiness: Keeping files clean and preserving code standards without shortcuts."
+        "This section is for your core strengths and craftsmanship skills (one item per line).",
+        "What are your natural talents and abilities?",
+        "Which technical or creative skills have you spent years mastering?",
+        "What kind of problems or tasks do you solve best?"
     ];
 
     const defaultImprovements = [
-        "Perfectionist Over-refining: Learning when a solution is strong enough to avoid burning extra hours.",
-        "Context Segmentation: Sticking to current focus without being pulled away by neighboring code enhancements.",
-        "Velocity Balance: Striking the golden mean between perfect code structures and swift delivery.",
-        "Deep Post-Mortems: Carving out patient space to document edge cases after solving pressing bugs."
+        "This section is for your core areas of growth and improvement goals (one item per line).",
+        "What habits or tendencies are currently holding you back?",
+        "Which skills or concepts are you actively trying to develop?",
+        "Where do you want to build more discipline or focus?"
     ];
 
     function renderWhoAmIDefaults() {
@@ -388,15 +388,25 @@ document.addEventListener('DOMContentLoaded', () => {
     const profileFrameBtn = document.getElementById('profile-frame-btn');
     const profileFileInput = document.getElementById('profile-file-input');
     const profileDisplayImg = document.getElementById('profile-display-img');
+    
+    // A premium gold-accented classical traveler silhouette SVG for whoami's aesthetic
+    const DEFAULT_AVATAR = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%2327272a' stroke='%23e5c36a' stroke-width='2.5'/><circle cx='50' cy='45' r='16' fill='%23e5c36a'/><path d='M50 65c-18 0-28 8-28 16v3h56v-3c0-8-10-16-28-16z' fill='%23e5c36a'/></svg>";
 
     // Load existing profile picture from Local Cache or Server Settings
     function loadProfilePicture() {
         if (!profileDisplayImg) return;
 
+        // Ensure robust error handling if the file image fails to load
+        profileDisplayImg.addEventListener('error', () => {
+            profileDisplayImg.src = DEFAULT_AVATAR;
+        });
+
         // 1. Check local cache first for instant load
         const cachedPic = localStorage.getItem('scriptorium_profile_picture');
-        if (cachedPic) {
+        if (cachedPic && cachedPic !== '../../shared/images/default_portrait.png') {
             profileDisplayImg.src = cachedPic;
+        } else {
+            profileDisplayImg.src = DEFAULT_AVATAR;
         }
 
         // 2. Fetch from DB config
@@ -406,9 +416,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (settings && settings.scriptorium_profile_picture) {
                     profileDisplayImg.src = settings.scriptorium_profile_picture;
                     localStorage.setItem('scriptorium_profile_picture', settings.scriptorium_profile_picture);
+                } else {
+                    profileDisplayImg.src = DEFAULT_AVATAR;
                 }
             })
-            .catch(e => console.warn("Failed to sync profile picture settings:", e));
+            .catch(e => {
+                console.warn("Failed to sync profile picture settings:", e);
+                if (!profileDisplayImg.src || profileDisplayImg.src.includes('default_portrait.png')) {
+                    profileDisplayImg.src = DEFAULT_AVATAR;
+                }
+            });
     }
 
     if (profileFrameBtn && profileFileInput && profileDisplayImg) {

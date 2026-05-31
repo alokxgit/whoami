@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=EB+Garamond:ital,wght@0,400..700;1,400..700&family=IM+Fell+English:ital@0;1&family=Marcellus&family=Caveat:wght@400;600&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=EB+Garamond:ital,wght@0,400..700;1,400..700&family=IM+Fell+English:ital@0;1&family=Marcellus&family=Caveat:wght@400;600&family=Sacramento&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="../../shared/css/variables.css">
     <link rel="stylesheet" href="../../shared/css/base.css">
@@ -19,6 +19,19 @@
 </head>
 
 <body class="layout-codex book-state-open">
+    <script>
+        (function () {
+            const layout = localStorage.getItem('scriptorium_layout') || 'folio';
+            document.body.className = document.body.className.replace(/layout-\w+/, 'layout-' + layout);
+            if (!document.body.classList.contains('layout-' + layout)) {
+                document.body.classList.add('layout-' + layout);
+            }
+            const hideLines = localStorage.getItem('scriptorium_hide_lines') === 'true';
+            if (hideLines) {
+                document.body.classList.add('hide-page-lines');
+            }
+        })();
+    </script>
 
     <svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
         <defs>
@@ -104,11 +117,10 @@
                             <!-- Center-aligned paragraph about who I am -->
                             <div class="whoami-bio">
                                 <p class="bio-text">
-                                    "Driven by an insatiable curiosity and an enduring passion for creating beautiful
-                                    digital experiences. I believe that technical mastery should always walk
-                                    hand-in-hand with empathy, visual elegance, and clarity of purpose. An eternal
-                                    student, seeking to bring order to complex systems through clean modular design and
-                                    aesthetic harmony."
+                                    "Welcome to your Scriptorium Ledger's reflection space. This page is dedicated to
+                                    recording your core values, identity, and personal philosophy. Use this section to
+                                    define who you are, what drives your daily passion, and the principles you choose to
+                                    live by."
                                 </p>
                             </div>
 
@@ -118,14 +130,14 @@
                                 <div class="split-col split-left">
                                     <h3 class="split-title"><span class="split-title-icon"></span> Good At</h3>
                                     <ul class="split-list">
-                                        <li><strong>UI &amp; Visual Craftsmanship:</strong> Designing interfaces with
-                                            rich textures, elegant layouts, and beautiful typography.</li>
-                                        <li><strong>Logical Problem Solving:</strong> Resolving tricky architectural
-                                            issues, debugging cleanly, and maintaining codebase health.</li>
-                                        <li><strong>Empathetic Collaboration:</strong> Working supportively through pair
-                                            programming with active listening.</li>
-                                        <li><strong>Meticulous Tidiness:</strong> Keeping files clean and preserving
-                                            code standards without shortcuts.</li>
+                                        <li><strong>Core Strengths:</strong> Add your primary talents, skills, and areas
+                                            where you naturally excel.</li>
+                                        <li><strong>Professional Mastery:</strong> Detail your tech stacks, specialized
+                                            skills, or key domain knowledge.</li>
+                                        <li><strong>Soft Skills:</strong> Write about your emotional intelligence,
+                                            empathy, leadership, or active listening.</li>
+                                        <li><strong>Meticulous Craftsmanship:</strong> Describe your high-standards,
+                                            visual design flair, or architectural consistency.</li>
                                     </ul>
                                 </div>
 
@@ -137,14 +149,14 @@
                                     <h3 class="split-title"><span class="split-title-icon"></span> Needs Improvements
                                     </h3>
                                     <ul class="split-list">
-                                        <li><strong>Perfectionist Over-refining:</strong> Learning when a solution is
-                                            strong enough to avoid burning extra hours.</li>
-                                        <li><strong>Context Segmentation:</strong> Sticking to current focus without
-                                            being pulled away by neighboring code enhancements.</li>
-                                        <li><strong>Velocity Balance:</strong> Striking the golden mean between perfect
-                                            code structures and swift delivery.</li>
-                                        <li><strong>Deep Post-Mortems:</strong> Carving out patient space to document
-                                            edge cases after solving pressing bugs.</li>
+                                        <li><strong>Focus Areas:</strong> Identify behaviors or technical gaps you are
+                                            actively working to refine.</li>
+                                        <li><strong>Time Management:</strong> Add goals regarding balance, task
+                                            prioritization, or avoiding over-refining.</li>
+                                        <li><strong>Skill Gaps:</strong> List any new frameworks, concepts, or languages
+                                            you want to master.</li>
+                                        <li><strong>Mindfulness Habits:</strong> Write about stress-management, healthy
+                                            boundaries, or workflow pacing.</li>
                                     </ul>
                                 </div>
                             </div>

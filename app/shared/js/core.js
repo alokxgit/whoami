@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Load initial specific scales
     ['fancy', 'hand', 'head'].forEach(style => {
-        const val = localStorage.getItem(`scriptorium_scale_${style}`) || '1.0';
+        const val = localStorage.getItem(`scriptorium_scale_${style}`) || '1.3';
         applySpecificFontScale(style, val);
     });
 
@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Load initial specific font families
     ['fancy', 'hand', 'head'].forEach(style => {
         const defaultFamily = style === 'fancy' ? "'Cinzel Decorative', serif" :
-                              style === 'hand' ? "'Caveat', cursive" :
+                              style === 'hand' ? "'EB Garamond', serif" :
                                                 "'Marcellus', serif";
         const val = localStorage.getItem(`scriptorium_font_${style}`) || defaultFamily;
         document.documentElement.style.setProperty(`--font-${style}-family`, val);
@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function initLayout() {
-        const saved = localStorage.getItem('scriptorium_layout') || 'codex';
+        const saved = localStorage.getItem('scriptorium_layout') || 'folio';
         applyLayout(saved);
         
         const linesHidden = localStorage.getItem('scriptorium_hide_lines') === 'true';
@@ -552,11 +552,53 @@ document.addEventListener('DOMContentLoaded', () => {
                             select.value = settings[`scriptorium_font_${style}`];
                         }
                     });
+
+                    if (settings.scriptorium_user_name) {
+                        localStorage.setItem('scriptorium_user_name', settings.scriptorium_user_name);
+                        applyUserName(settings.scriptorium_user_name);
+                    }
                 }
             }
         } catch (e) {
             console.warn("Failed to sync database settings:", e);
         }
     }
+
+    // ── IDENTITY / NAME REPLACER ──
+    function applyUserName(userName) {
+        const nameToUse = userName || 'whoami';
+        
+        // 1. Update cover title
+        const coverTitle = document.querySelector('.cover-title');
+        if (coverTitle) {
+            coverTitle.textContent = nameToUse;
+        }
+
+        // 2. Update page title tag if it contains "Alok" or "whoami"
+        if (document.title.includes('Alok')) {
+            document.title = document.title.replace(/Alok/g, nameToUse);
+        } else if (document.title.includes('whoami') && nameToUse !== 'whoami') {
+            document.title = document.title.replace(/whoami/g, nameToUse);
+        }
+
+        // 3. Update all running brands
+        const runningBrands = document.querySelectorAll('.running-brand');
+        runningBrands.forEach(brand => {
+            const img = brand.querySelector('img');
+            if (img) {
+                brand.innerHTML = '';
+                brand.appendChild(img);
+                brand.appendChild(document.createTextNode(' ' + nameToUse));
+            } else {
+                brand.textContent = nameToUse;
+            }
+        });
+    }
+    window.applyUserName = applyUserName;
+
+    // Load initial user name
+    const initialName = localStorage.getItem('scriptorium_user_name') || 'whoami';
+    applyUserName(initialName);
+
     syncDatabaseSettings();
 });

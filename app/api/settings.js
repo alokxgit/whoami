@@ -11,7 +11,96 @@ export function handleSettingsApi(req, res, next) {
     fs.mkdirSync(settingsDir, { recursive: true });
   }
 
-  // ── API: Load settings ──
+  // ── API: Export Backup ──
+  if (req.url === '/api/settings/backup/export' && req.method === 'GET') {
+    try {
+      const dbDir = getDatabaseDir();
+      
+      function readDirRecursive(baseDir, currentDir = '') {
+        const dirPath = path.join(baseDir, currentDir);
+        let results = {};
+        if (!fs.existsSync(dirPath)) return results;
+        const items = fs.readdirSync(dirPath);
+        for (const item of items) {
+          const relativePath = path.join(currentDir, item);
+          const fullPath = path.join(baseDir, relativePath);
+          if (fs.statSync(fullPath).isDirectory()) {
+            results = { ...results, ...readDirRecursive(baseDir, relativePath) };
+          } else {
+            results[relativePath] = fs.readFileSync(fullPath, 'utf-8');
+          }
+        }
+        return results;
+      }
+
+      const files = readDirRecursive(dbDir);
+      const backupData = {
+        type: 'whoami_database_backup',
+        exportedAt: new Date().toISOString(),
+        files: files
+      };
+
+      res.writeHead(200, {
+        'Content-Type': 'application/json',
+        'Content-Disposition': `attachment; filename="whoami-backup-${new Date().toISOString().slice(0, 10)}.json"`
+      });
+      res.end(JSON.stringify(backupData, null, 2));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: err.message }));
+    }
+    return true;
+  }
+
+  // ── API: Reset Database Folder ──
+  if (req.url === '/api/settings/backup/reset' && req.method === 'POST') {
+    try {
+      const dbDir = getDatabaseDir();
+      
+      function deleteDirRecursive(dirPath) {
+        if (fs.existsSync(dirPath)) {
+          const items = fs.readdirSync(dirPath);
+          for (const item of items) {
+            const curPath = path.join(dirPath, item);
+            if (fs.lstatSync(curPath).isDirectory()) {
+              deleteDirRecursive(curPath);
+            } else {
+              fs.unlinkSync(curPath);
+            }
+          }
+          fs.rmdirSync(dirPath);
+        }
+      }
+
+      if (fs.existsSync(dbDir)) {
+        const items = fs.readdirSync(dbDir);
+        for (const item of items) {
+          const curPath = path.join(dbDir, item);
+          if (fs.lstatSync(curPath).isDirectory()) {
+            deleteDirRecursive(curPath);
+          } else {
+            fs.unlinkSync(curPath);
+          }
+        }
+      }
+
+      // Recreate empty subdirectories
+      const subdirs = ['journal', 'settings', 'knowledge_base', 'reflection', 'goals'];
+      for (const subdir of subdirs) {
+        const fullPath = path.join(dbDir, subdir);
+        if (!fs.existsSync(fullPath)) {
+          fs.mkdirSync(fullPath, { recursive: true });
+        }
+      }
+
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: true }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: err.message }));
+    }
+    return true;
+  }
   if (req.url === '/api/settings' && req.method === 'GET') {
     let settings = {};
     if (fs.existsSync(settingsPath)) {

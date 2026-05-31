@@ -40,40 +40,31 @@ document.addEventListener('DOMContentLoaded', () => {
     // ── EXPORT BACKUP ──
     if (exportBtn) {
         exportBtn.addEventListener('click', () => {
-            const data = {
-                weekGoals: JSON.parse(localStorage.getItem('scriptorium_week_goals') || '[]'),
-                longGoals: JSON.parse(localStorage.getItem('scriptorium_long_goals') || '[]'),
-                desires: JSON.parse(localStorage.getItem('scriptorium_desires') || '[]'),
-                ledgerTasks: JSON.parse(localStorage.getItem('scriptorium_ledger_tasks') || '[]'),
-                journal: localStorage.getItem('scriptorium_journal') || '',
-                mindset: localStorage.getItem('scriptorium_mindset') || '',
-                layout: localStorage.getItem('scriptorium_layout') || 'codex',
-                exportedAt: new Date().toISOString()
-            };
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
-            a.href = url;
-            a.download = `scriptorium-backup-${new Date().toISOString().slice(0, 10)}.json`;
+            a.href = '/api/settings/backup/export';
+            a.download = `whoami-backup-${new Date().toISOString().slice(0, 10)}.json`;
             a.click();
-            URL.revokeObjectURL(url);
         });
     }
 
     // ── RESET DATA ──
     if (resetBtn) {
         resetBtn.addEventListener('click', () => {
-            if (confirm('⚠️ This will permanently erase ALL your journal data (goals, tasks, journal entries). Are you absolutely sure?')) {
-                localStorage.removeItem('scriptorium_week_goals');
-                localStorage.removeItem('scriptorium_long_goals');
-                localStorage.removeItem('scriptorium_desires');
-                localStorage.removeItem('scriptorium_ledger_tasks');
-                localStorage.removeItem('scriptorium_journal');
-                localStorage.removeItem('scriptorium_mindset');
-                localStorage.removeItem('scriptorium_layout');
-                localStorage.removeItem('scriptorium_weekly_locked_week');
-                alert('Journal data has been cleared.');
-                window.location.href = '../../index.html';
+            if (confirm('⚠️ This will permanently erase ALL your journal entries, knowledge items, goals, and settings inside the selected database folder. Are you absolutely sure?')) {
+                fetch('/api/settings/backup/reset', { method: 'POST' })
+                    .then(res => {
+                        if (res.ok) {
+                            localStorage.clear();
+                            alert('All database files and cached settings have been successfully reset.');
+                            window.location.href = '../../index.html';
+                        } else {
+                            alert('Failed to reset server database.');
+                        }
+                    })
+                    .catch(err => {
+                        console.error("Database reset error:", err);
+                        alert('An error occurred during database reset.');
+                    });
             }
         });
     }
@@ -511,7 +502,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const incBtn = document.getElementById(`scale-${style}-inc`);
         const valLabel = document.getElementById(`scale-${style}-val`);
 
-        let currentVal = localStorage.getItem(`scriptorium_scale_${style}`) || '1.0';
+        let currentVal = localStorage.getItem(`scriptorium_scale_${style}`) || '1.3';
 
         function updateScale() {
             if (valLabel) valLabel.textContent = parseFloat(currentVal).toFixed(1);
@@ -529,7 +520,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (decBtn && incBtn) {
             decBtn.addEventListener('click', () => {
                 let idx = scaleSteps.indexOf(parseFloat(currentVal).toFixed(1));
-                if (idx === -1) idx = scaleSteps.indexOf('1.0');
+                if (idx === -1) idx = scaleSteps.indexOf('1.3');
                 if (idx > 0) {
                     currentVal = scaleSteps[idx - 1];
                     updateScale();
@@ -538,7 +529,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             incBtn.addEventListener('click', () => {
                 let idx = scaleSteps.indexOf(parseFloat(currentVal).toFixed(1));
-                if (idx === -1) idx = scaleSteps.indexOf('1.0');
+                if (idx === -1) idx = scaleSteps.indexOf('1.3');
                 if (idx < scaleSteps.length - 1) {
                     currentVal = scaleSteps[idx + 1];
                     updateScale();
@@ -555,7 +546,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const select = document.getElementById(`font-${style}-select`);
         if (select) {
             const defaultFamily = style === 'fancy' ? "'Cinzel Decorative', serif" :
-                style === 'hand' ? "'Caveat', cursive" :
+                style === 'hand' ? "'EB Garamond', serif" :
                     "'Marcellus', serif";
             const savedFamily = localStorage.getItem(`scriptorium_font_${style}`) || defaultFamily;
             select.value = savedFamily;
@@ -686,26 +677,82 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // ── IDENTITY / PROFILE NAME BINDING ──
+    const userNameInput = document.getElementById('settings-user-name-input');
+    const userNameSaveBtn = document.getElementById('settings-user-name-save-btn');
+
+    if (userNameInput && userNameSaveBtn) {
+        // Load initial name
+        const currentName = localStorage.getItem('scriptorium_user_name') || 'whoami';
+        userNameInput.value = currentName;
+
+        // Save name handler
+        userNameSaveBtn.addEventListener('click', () => {
+            const newName = userNameInput.value.trim();
+            const nameToSave = newName || 'whoami';
+
+            // Optimistically update locally
+            localStorage.setItem('scriptorium_user_name', nameToSave);
+            if (typeof window.applyUserName === 'function') {
+                window.applyUserName(nameToSave);
+            }
+
+            // Save to Backend Config
+            fetch('/api/settings/save', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ scriptorium_user_name: nameToSave })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        // Play satisfying rustle sound
+                        if (typeof playPaperRustleSound === 'function') {
+                            playPaperRustleSound();
+                        }
+                        
+                        // Show premium subtle feedback
+                        const originalText = userNameSaveBtn.innerHTML;
+                        userNameSaveBtn.innerHTML = '✨ Saved!';
+                        userNameSaveBtn.style.background = 'rgba(46, 125, 50, 0.2)';
+                        userNameSaveBtn.style.borderColor = '#2e7d32';
+                        
+                        setTimeout(() => {
+                            userNameSaveBtn.innerHTML = originalText;
+                            userNameSaveBtn.style.background = '';
+                            userNameSaveBtn.style.borderColor = '';
+                        }, 2000);
+                    } else {
+                        alert('Failed to save name on server: ' + (data.error || 'Unknown error'));
+                    }
+                })
+                .catch(err => {
+                    console.error("Error saving user name settings:", err);
+                    alert("Error connecting to server: " + err.message);
+                });
+        });
+    }
+
     // ── WHO I AM CONFIGURATION LOADER & SAVER ──
     const whoamiBioInput = document.getElementById('settings-whoami-bio');
     const whoamiGoodInput = document.getElementById('settings-whoami-good');
     const whoamiImprovementsInput = document.getElementById('settings-whoami-improvements');
     const whoamiSaveBtn = document.getElementById('settings-whoami-save-btn');
 
-    const defaultBio = "Driven by an insatiable curiosity and an enduring passion for creating beautiful digital experiences. I believe that technical mastery should always walk hand-in-hand with empathy, visual elegance, and clarity of purpose.";
+    const defaultBio = "Welcome to your Core Biography. This section is a space to capture your personal philosophy, core values, or a quote that defines your current stage of life. Use it to state who you are, what drives you, and what rules you live by.";
 
     const defaultGoodAt = [
-        "UI & Visual Craftsmanship",
-        "Logical Problem Solving",
-        "Empathetic Collaboration",
-        "Meticulous Tidiness"
+        "This section is for your core strengths and craftsmanship skills (one item per line).",
+        "What are your natural talents and abilities?",
+        "Which technical or creative skills have you spent years mastering?",
+        "What kind of problems or tasks do you solve best?"
     ];
 
     const defaultImprovements = [
-        "Perfectionist Over-refining",
-        "Context Segmentation",
-        "Velocity Balance",
-        "Deep Post-Mortems"
+        "This section is for your core areas of growth and improvement goals (one item per line).",
+        "What habits or tendencies are currently holding you back?",
+        "Which skills or concepts are you actively trying to develop?",
+        "Where do you want to build more discipline or focus?"
     ];
 
     function loadWhoAmISettings() {
