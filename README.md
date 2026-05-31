@@ -1,6 +1,6 @@
 # whoami - Personal Intelligence System
 
-whoami is a secure, offline-first desktop application built to make you understand yourself through behavioral data — not just manage your tasks.
+whoami is a secure, offline-first desktop application built to make you understand yourself through behavioral data.
 
 The gap between what you planned and what you did, what you committed to and what you abandoned, what you believe about yourself and what the data shows — that gap is where self-knowledge lives. whoami is engineered to make that gap visible.
 
@@ -8,15 +8,39 @@ Built with Electron and Vite, all data is stored locally with absolute privacy.
 
 ---
 
+## Download
+
+| Platform | Download |
+|----------|----------|
+| Linux | [Whoami-1.0.0.AppImage](https://github.com/alokxgit/whoami/releases/tag/v1.0.0) |
+| Windows | Coming soon |
+| Mac | Coming soon |
+
+---
+
+## Screenshots
+
+| Feature | Screenshot |
+|----------|----------|
+| Cover / Identity Casing | ![Cover Page](public/screenshots/cover.png) |
+| Reflection & Identity | ![Reflection & Identity](public/screenshots/reflection.png) |
+| Goals & Commitments | ![Goals & Commitments](public/screenshots/goals.png) |
+| Journaling | ![Journaling](public/screenshots/journal.png) |
+| Knowledge Base | ![Knowledge Base](public/screenshots/kb.png) |
+| Settings | ![Settings](public/screenshots/settings.png) |
+| Shortcuts | ![Shortcuts](public/screenshots/shortcuts.png) |
+
+---
+
 ## Key Features
 
-*   **Reflection & Identity**: A structured whoami page mapping your strengths, blind spots, and active commitments — with drift detection to surface what you've abandoned without closure.
+*   **Reflection & Identity**: A structured profile page mapping your strengths, growth areas, and active commitments — with built-in drift detection warning badges to surface when a commitment has been neglected (inactive for 7+ days) or marked stagnant in check-ins.
 *   **Journaling**: Distraction-free text editor with formatting controls, customizable handwriting fonts, and a local image upload pipeline supporting drag-and-drop and size adjustments.
-*   **Goals & Commitments**: A tabbed registry to manage weekly goals, long-term ambitions, and active commitments — with commitment-to-goal linking to keep your daily actions connected to your bigger direction.
+*   **Goals & Commitments**: A tabbed registry to manage weekly goals, long-term ambitions, and active commitments — with dynamic commitment-to-goal progress syncing to keep daily milestones connected to your larger objectives.
 *   **Knowledge Base**: A hierarchical workspace to organize reference notes, problem-solving patterns, and personal learnings with fluid page-turn transitions.
 *   **Vim Keybindings Mode**: Integrated Vim-inspired motions supporting normal, insert, visual, and character replacement modes via a customizable configuration dashboard.
 *   **Settings & Customization**:
-    *   Dynamic themes supporting light, dark, and warm parchment workspace styles.
+    *   Six dynamic workspace themes (Monk's Codex, Traveler's Folio, Scribe's Ledger, Obsidian Light, Obsidian Dark, and Midnight Violet) supporting light, dark, and warm-toned styles.
     *   Configurable local database path with automatic content migration helper.
     *   Optional white-noise generator with adjustable soundscapes and volume controls.
     *   Local backup tools for single-click data export and reset operations.
@@ -42,20 +66,20 @@ Built with Electron and Vite, all data is stored locally with absolute privacy.
 ### Installation
 
 1.  Clone the repository:
-```bash
+    ```bash
     git clone <repository-url>
     cd whoami
-```
+    ```
 
 2.  Install the required dependencies:
-```bash
+    ```bash
     npm install
-```
+    ```
 
 3.  Launch the application in development mode:
-```bash
+    ```bash
     npm start
-```
+    ```
 
 ### Initial Configuration
 
@@ -81,4 +105,4 @@ On the first launch, the application will prompt you to select a local directory
 
 ## Privacy & Security
 
-whoami is an offline-first desktop application. No telemetry, personal logs, plans, or images are transmitted to external servers. All personal records remain secured locally on your own machine in your chosen database directory.is an offline-first desktop application. No telemetry, personal logs, plans, or images are transmitted to external servers. All personal records remain secured locally on your own machine in your chosen database directory.
+whoami is an offline-first desktop application. No telemetry, personal logs, plans, or images are transmitted to external servers. All personal records remain secured locally on your own machine in your chosen database directory.
