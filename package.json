@@ -8,7 +8,7 @@
     "dev": "vite --port 3000 --host",
     "start": "electron .",
     "build": "vite build && npm run copy-assets",
-    "copy-assets": "cp -r app/shared dist/app/shared && cp app/pages/settings/settings.js dist/app/pages/settings/ && cp app/pages/journal/journal.js dist/app/pages/journal/ && cp app/pages/reflection/reflection.js dist/app/pages/reflection/ && cp app/pages/knowledge_base/kb.js dist/app/pages/knowledge_base/ && cp app/pages/goals/goals.js dist/app/pages/goals/",
+    "copy-assets": "cp -r app/shared dist/app/shared && cp app/pages/settings/settings.js dist/app/pages/settings/ && cp app/pages/journal/journal.js dist/app/pages/journal/ && cp app/pages/reflection/reflection.js dist/app/pages/reflection/ && cp app/pages/knowledge_base/kb.js dist/app/pages/knowledge_base/ && cp app/pages/goals/goals.js dist/app/pages/goals/ && mkdir -p dist/app/pages/shortcuts && cp app/pages/shortcuts/shortcuts.js dist/app/pages/shortcuts/",
     "preview": "vite preview",
     "dist": "electron-builder"
   },

@@ -44,6 +44,7 @@ export default defineConfig({
         journal: resolve(__dirname, 'app/pages/journal/journal.html'),
         kb: resolve(__dirname, 'app/pages/knowledge_base/kb.html'),
         settings: resolve(__dirname, 'app/pages/settings/settings.html'),
+        shortcuts: resolve(__dirname, 'app/pages/shortcuts/shortcuts.html'),
       }
     }
   }

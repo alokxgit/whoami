@@ -1,0 +1,248 @@
+/* Scriptorium Keybindings Configuration CSS */
+
+.shortcuts-container {
+    padding: 0 1rem;
+    height: calc(var(--book-height, 42rem) - 15rem);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.scrollable-area {
+    overflow-y: auto;
+    padding-right: 0.5rem;
+    flex-grow: 1;
+}
+
+/* Custom Premium Scrollbar */
+.scrollable-area::-webkit-scrollbar {
+    width: 4px;
+}
+
+.scrollable-area::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.scrollable-area::-webkit-scrollbar-thumb {
+    background: rgba(var(--ink-rgb, 43, 34, 27), 0.15);
+    border-radius: 4px;
+    transition: background 0.3s ease;
+}
+
+.scrollable-area::-webkit-scrollbar-thumb:hover {
+    background: rgba(var(--ink-rgb, 43, 34, 27), 0.35);
+}
+
+/* Control Grid & Row Styling */
+.control-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.shortcut-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 0.6rem;
+    border-bottom: 1px dashed rgba(var(--ink-rgb, 43, 34, 27), 0.08);
+    border-radius: 6px;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.shortcut-row:hover {
+    background: rgba(var(--ink-rgb, 43, 34, 27), 0.03);
+    padding-left: 0.8rem;
+    padding-right: 0.4rem;
+}
+
+.shortcut-info {
+    flex: 1;
+    padding-right: 1rem;
+}
+
+.shortcut-label {
+    font-family: 'Marcellus', serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: 0.02em;
+    margin: 0;
+}
+
+.shortcut-desc {
+    font-family: 'EB Garamond', serif;
+    font-size: 0.76rem;
+    font-style: italic;
+    color: rgba(var(--ink-rgb, 43, 34, 27), 0.65);
+    margin: 0.1rem 0 0 0;
+}
+
+/* Input Fields styling */
+.shortcut-input {
+    width: 8rem;
+    font-family: 'Marcellus', serif;
+    font-size: 0.82rem;
+    text-align: center;
+    padding: 0.4rem 0.6rem;
+    border: 1px solid rgba(var(--ink-rgb, 43, 34, 27), 0.2);
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.4);
+    color: var(--ink);
+    cursor: pointer;
+    outline: none;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.shortcut-input:hover {
+    border-color: rgba(var(--ink-rgb, 43, 34, 27), 0.45);
+    background: rgba(255, 255, 255, 0.6);
+}
+
+.shortcut-input:focus {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: var(--accent, #b45309);
+    box-shadow: 0 0 4px rgba(var(--accent-rgb, 180, 83, 9), 0.25), inset 1px 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* Recording State (Pulsing Glow) */
+.shortcut-input.recording {
+    animation: recording-glow 1.5s infinite ease-in-out;
+    background: rgba(180, 83, 9, 0.08) !important;
+    border-color: var(--accent, #b45309) !important;
+    color: var(--accent, #b45309) !important;
+    font-weight: bold;
+    box-shadow: 0 0 8px rgba(180, 83, 9, 0.3);
+}
+
+@keyframes recording-glow {
+    0% {
+        box-shadow: 0 0 4px rgba(180, 83, 9, 0.2);
+        opacity: 0.85;
+    }
+    50% {
+        box-shadow: 0 0 10px rgba(180, 83, 9, 0.65);
+        opacity: 1;
+    }
+    100% {
+        box-shadow: 0 0 4px rgba(180, 83, 9, 0.2);
+        opacity: 0.85;
+    }
+}
+
+/* Premium Button Actions */
+.action-btn {
+    font-family: 'Marcellus', serif;
+    font-size: 0.78rem;
+    padding: 0.55rem 1.1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.primary-btn {
+    background: var(--accent, #b45309);
+    color: #fdfaf2;
+    border: 1px solid var(--accent, #b45309);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.primary-btn:hover {
+    background: var(--accent-hover, #92400e);
+    border-color: var(--accent-hover, #92400e);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.primary-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.secondary-btn {
+    background: transparent;
+    color: rgba(var(--ink-rgb, 43, 34, 27), 0.7);
+    border: 1px solid rgba(var(--ink-rgb, 43, 34, 27), 0.25);
+}
+
+.secondary-btn:hover {
+    color: var(--ink);
+    border-color: rgba(var(--ink-rgb, 43, 34, 27), 0.65);
+    background: rgba(var(--ink-rgb, 43, 34, 27), 0.02);
+}
+
+/* Premium Custom Toast styling */
+.custom-toast-container {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 10000;
+    pointer-events: none;
+    transform: translateY(1.5rem);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.custom-toast-container.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.toast-content {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.8rem 1.4rem;
+    background: rgba(var(--bg-card-rgb, 253, 250, 242), 0.85);
+    backdrop-filter: blur(12px) saturate(120%);
+    -webkit-backdrop-filter: blur(12px) saturate(120%);
+    border: 1px solid rgba(var(--accent-rgb, 180, 83, 9), 0.25);
+    border-radius: 8px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.12), 0 8px 16px -8px rgba(0, 0, 0, 0.08);
+}
+
+.toast-icon {
+    font-size: 1.1rem;
+    animation: spin-sparkle 1.8s ease-in-out infinite alternate;
+}
+
+.toast-message {
+    font-family: 'Marcellus', serif;
+    font-size: 0.8rem;
+    color: var(--ink);
+    letter-spacing: 0.01em;
+}
+
+@keyframes spin-sparkle {
+    0% { transform: scale(0.9) rotate(-10deg); }
+    100% { transform: scale(1.1) rotate(15deg); }
+}
+
+/* Dark theme and special Obsidian modifications */
+body.layout-obsidian-dark .shortcut-input,
+body.layout-midnight-violet .shortcut-input {
+    background: rgba(15, 23, 42, 0.4);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+body.layout-obsidian-dark .shortcut-input:hover,
+body.layout-midnight-violet .shortcut-input:hover {
+    background: rgba(15, 23, 42, 0.6);
+    border-color: rgba(255, 255, 255, 0.25);
+}
+
+body.layout-obsidian-dark .shortcut-input:focus,
+body.layout-midnight-violet .shortcut-input:focus {
+    background: rgba(15, 23, 42, 0.85);
+}
+
+body.layout-obsidian-dark .toast-content,
+body.layout-midnight-violet .toast-content {
+    background: rgba(15, 23, 42, 0.88);
+    border-color: rgba(168, 85, 247, 0.4);
+}

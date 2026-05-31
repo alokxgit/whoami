@@ -7,8 +7,88 @@ export function handleSettingsApi(req, res, next) {
   const settingsDir = path.join(dbDir, 'settings');
   const settingsPath = path.join(settingsDir, 'config.json');
 
+  const shortcutsPath = path.join(settingsDir, 'shortcut_config.json');
+
   if (!fs.existsSync(settingsDir)) {
     fs.mkdirSync(settingsDir, { recursive: true });
+  }
+
+  // ── API: Get shortcuts config ──
+  if (req.url === '/api/settings/shortcuts' && req.method === 'GET') {
+    let shortcuts = {};
+    if (fs.existsSync(shortcutsPath)) {
+      try {
+        shortcuts = JSON.parse(fs.readFileSync(shortcutsPath, 'utf-8'));
+      } catch (e) {
+        shortcuts = {};
+      }
+    }
+    
+    // Merge with defaults to ensure all keys exist
+    const defaults = {
+      vim: {
+        move_left: "h",
+        move_down: "j",
+        move_up: "k",
+        move_right: "l",
+        word_forward: "w",
+        word_backward: "b",
+        line_start: "0",
+        line_end: "$",
+        insert_mode: "i",
+        append_mode: "a",
+        open_below: "o",
+        open_above: "O",
+        visual_mode: "v",
+        yank: "y",
+        paste: "p",
+        delete_char: "x",
+        undo: "u",
+        delete_action: "d",
+        doc_start: "g",
+        doc_end: "G",
+        word_end: "e",
+        change_mode: "c",
+        replace_char: "r"
+      },
+      nav: {
+        nav_reflection: "Alt+r",
+        nav_goals: "Alt+g",
+        nav_journal: "Alt+j",
+        nav_kb: "Alt+k",
+        nav_settings: "Alt+s",
+        nav_shortcuts: "Alt+c",
+        nav_close: "Alt+x"
+      }
+    };
+    
+    const merged = {
+      vim: { ...defaults.vim, ...shortcuts.vim },
+      nav: { ...defaults.nav, ...shortcuts.nav }
+    };
+    
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(merged));
+    return true;
+  }
+
+  // ── API: Save shortcuts config ──
+  if (req.url === '/api/settings/shortcuts' && req.method === 'POST') {
+    let body = '';
+    req.on('data', chunk => { body += chunk; });
+    req.on('end', () => {
+      try {
+        const data = JSON.parse(body);
+        fs.writeFileSync(shortcutsPath, JSON.stringify(data, null, 2), 'utf-8');
+
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: true, shortcuts: data }));
+      } catch (err) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: err.message }));
+      }
+    });
+    return true;
   }
 
   // ── API: Export Backup ──

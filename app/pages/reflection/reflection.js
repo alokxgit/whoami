@@ -142,6 +142,36 @@ document.addEventListener('DOMContentLoaded', () => {
             const li = document.createElement('li');
             li.className = `commitment-card`;
 
+            // ── Drift Detection logic ──
+            let isDrifting = false;
+            let driftReason = '';
+            
+            if (item.lastTouched && item.lastTouched !== 'Never') {
+                try {
+                    const lastDate = new Date(item.lastTouched);
+                    const diffTime = Math.abs(new Date() - lastDate);
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    if (diffDays > 7) {
+                        isDrifting = true;
+                        driftReason = `Inactive for ${diffDays} days`;
+                    }
+                } catch(e) {}
+            }
+            
+            // Check if latest check-in is stagnant
+            const commitmentCheckins = checkins.filter(c => c.commitmentId === item.id);
+            if (commitmentCheckins.length > 0) {
+                const latestCheckin = commitmentCheckins[commitmentCheckins.length - 1];
+                if (latestCheckin.forward === 'No') {
+                    isDrifting = true;
+                    driftReason = 'Marked as stagnant in check-in';
+                }
+            }
+
+            const driftBadge = isDrifting 
+                ? `<span class="drift-badge" title="${driftReason}" style="background:rgba(220, 95, 95, 0.15); color: #dc5f5f; border: 1px solid rgba(220, 95, 95, 0.3); font-size: 0.65rem; font-family: var(--f-head); padding: 1px 6px; border-radius: 10px; text-transform: uppercase; font-weight: 600; margin-left: 8px; display: inline-block; vertical-align: middle; line-height: 1.2;">⚠️ Drifting</span>`
+                : '';
+
             const progressContent = (item.progress && item.progress.length > 0)
                 ? `<div style="display:flex; flex-wrap:wrap; align-items:center; gap:0.5rem;">
                      ${item.progress.map((p, idx) => `
@@ -154,8 +184,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 : `<span style="color:var(--ink-muted); font-style:italic; font-family:var(--f-hand); font-size:0.92rem;">No progress steps recorded yet. Complete connected weekly goals to add steps!</span>`;
 
             li.innerHTML = `
-                <div class="commitment-card-header" style="margin-bottom: 0.4rem;">
+                <div class="commitment-card-header" style="margin-bottom: 0.4rem; display: flex; align-items: center; flex-wrap: wrap;">
                     <span class="commitment-title-text" style="font-size: 1.25rem; color: var(--terracotta); font-weight: 900; font-family: var(--f-head);">${index + 1}. ${escapeHtml(item.title)}</span>
+                    ${driftBadge}
                 </div>
                 <div class="commitment-why-text" style="font-family: var(--f-hand); font-size: 1.05rem; margin-bottom: 0.4rem;"><strong>Why:</strong> ${escapeHtml(item.why)}</div>
                 <div class="commitment-dates-row" style="margin-bottom:0.8rem; font-size: 0.8rem; opacity: 0.8;">

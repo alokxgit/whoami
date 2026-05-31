@@ -600,5 +600,106 @@ document.addEventListener('DOMContentLoaded', () => {
     const initialName = localStorage.getItem('scriptorium_user_name') || 'whoami';
     applyUserName(initialName);
 
+    // ── GLOBAL NAVIGATION KEYBINDINGS ENGINE ──
+    let navShortcuts = {
+        nav_reflection: "Alt+r",
+        nav_goals: "Alt+g",
+        nav_journal: "Alt+j",
+        nav_kb: "Alt+k",
+        nav_settings: "Alt+s",
+        nav_shortcuts: "Alt+c",
+        nav_close: "Alt+x"
+    };
+
+    // Try to load cached shortcuts
+    const cachedNav = localStorage.getItem('scriptorium_nav_shortcuts');
+    if (cachedNav) {
+        try { navShortcuts = JSON.parse(cachedNav); } catch(e) {}
+    }
+
+    // Load from server and sync
+    async function syncShortcutConfig() {
+        try {
+            const res = await fetch('/api/settings/shortcuts');
+            if (res.ok) {
+                const data = await res.json();
+                if (data && data.nav) {
+                    navShortcuts = data.nav;
+                    localStorage.setItem('scriptorium_nav_shortcuts', JSON.stringify(data.nav));
+                }
+                if (data && data.vim) {
+                    localStorage.setItem('scriptorium_vim_shortcuts', JSON.stringify(data.vim));
+                }
+            }
+        } catch(e) {
+            console.warn("Failed to sync shortcuts:", e);
+        }
+    }
+    syncShortcutConfig();
+
+    function matchShortcut(e, shortcutStr) {
+        if (!shortcutStr) return false;
+        const parts = shortcutStr.split('+');
+        const key = parts[parts.length - 1].toLowerCase();
+        
+        const hasAlt = parts.some(p => p.toLowerCase() === 'alt');
+        const hasCtrl = parts.some(p => p.toLowerCase() === 'ctrl' || p.toLowerCase() === 'control');
+        const hasShift = parts.some(p => p.toLowerCase() === 'shift');
+        const hasMeta = parts.some(p => p.toLowerCase() === 'meta' || p.toLowerCase() === 'cmd' || p.toLowerCase() === 'win');
+
+        if (e.altKey !== hasAlt) return false;
+        if (e.ctrlKey !== hasCtrl) return false;
+        if (e.shiftKey !== hasShift) return false;
+        if (e.metaKey !== hasMeta) return false;
+
+        return e.key.toLowerCase() === key;
+    }
+
+    window.addEventListener('keydown', (e) => {
+        // ── Open Ledger with Space Bar on Closed Cover ──
+        if (e.key === ' ' || e.key === 'Spacebar') {
+            const openBtn = document.getElementById('main-open-book-btn');
+            if (openBtn) {
+                e.preventDefault();
+                openBtn.click();
+                return;
+            }
+        }
+
+        // Don't trigger page navigation shortcuts if user is typing in a text input or contenteditable
+        const target = e.target;
+        if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) {
+            // But if it is Alt+something, we CAN still allow navigation!
+            if (!e.altKey && !e.ctrlKey && !e.metaKey) {
+                return;
+            }
+        }
+
+        let isNested = window.location.pathname.includes('/pages/');
+
+        if (matchShortcut(e, navShortcuts.nav_reflection)) {
+            e.preventDefault();
+            window.location.href = isNested ? '../reflection/reflection.html' : 'pages/reflection/reflection.html';
+        } else if (matchShortcut(e, navShortcuts.nav_goals)) {
+            e.preventDefault();
+            window.location.href = isNested ? '../goals/goals.html' : 'pages/goals/goals.html';
+        } else if (matchShortcut(e, navShortcuts.nav_journal)) {
+            e.preventDefault();
+            window.location.href = isNested ? '../journal/journal.html' : 'pages/journal/journal.html';
+        } else if (matchShortcut(e, navShortcuts.nav_kb)) {
+            e.preventDefault();
+            window.location.href = isNested ? '../knowledge_base/kb.html' : 'pages/knowledge_base/kb.html';
+        } else if (matchShortcut(e, navShortcuts.nav_settings)) {
+            e.preventDefault();
+            window.location.href = isNested ? '../settings/settings.html' : 'pages/settings/settings.html';
+        } else if (matchShortcut(e, navShortcuts.nav_shortcuts)) {
+            e.preventDefault();
+            window.location.href = isNested ? '../shortcuts/shortcuts.html' : 'pages/shortcuts/shortcuts.html';
+        } else if (matchShortcut(e, navShortcuts.nav_close)) {
+            e.preventDefault();
+            window.location.href = isNested ? '../../index.html' : 'index.html';
+        }
+    });
+
     syncDatabaseSettings();
 });

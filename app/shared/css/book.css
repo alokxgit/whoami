@@ -106,6 +106,11 @@
     /* Deep Prussian Blue */
 }
 
+.bookmark-tab[data-spread="shortcuts"] {
+    background: #6b21a8;
+    /* Luxury Deep Royal Amethyst */
+}
+
 .bm-num {
     font-family: 'Marcellus', serif;
     font-size: 0.72rem;
@@ -536,6 +541,12 @@ body.layout-obsidian .bookmark-tab[data-spread="settings"],
 body.layout-obsidian-dark .bookmark-tab[data-spread="settings"],
 body.layout-midnight-violet .bookmark-tab[data-spread="settings"] {
     background: #1e1b4b !important;
+}
+
+body.layout-obsidian .bookmark-tab[data-spread="shortcuts"],
+body.layout-obsidian-dark .bookmark-tab[data-spread="shortcuts"],
+body.layout-midnight-violet .bookmark-tab[data-spread="shortcuts"] {
+    background: #a21caf !important; /* Beautiful cosmic royal magenta */
 }
 
 /* ── Theme-Specific Active Glowing Tab Overrides ── */

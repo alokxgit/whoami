@@ -1,108 +1,84 @@
-# ✒️ whoami: Your Personal Open-Book Journal & Ledger
+# whoami - Personal Intelligence System
 
-Welcome to **whoami**, a highly personal, premium desktop workspace designed to resemble a physical, tactile ancient-modern leather codex book. Combining rich sensory immersion with powerful modern productivity mechanics, **whoami** integrates journaling, self-portrait reflection, habit/goal registry, and a modular knowledge base into one cohesive environment.
+whoami is a secure, offline-first desktop application built to make you understand yourself through behavioral data — not just manage your tasks.
 
-Built natively on **Electron**, **Vite**, and **HTML5/CSS3**, the application delivers a premium distraction-free experience with gorgeous visual aesthetics, dynamic themes, soundscapes, and absolute data privacy.
+The gap between what you planned and what you did, what you committed to and what you abandoned, what you believe about yourself and what the data shows — that gap is where self-knowledge lives. whoami is engineered to make that gap visible.
 
----
-
-## ✨ Core Features
-
-### 📖 1. The Chronicle (Journal)
-*   **Tactile Open-Book Layout**: Experience writing inside an open-book interface with physical page boundaries, real line guides, and aged paper textures.
-*   **Rich Text Editor**: A tailored WYSIWYG editing experience optimized for distraction-free writing.
-*   **Integrated Asset Pipeline**: Drag-and-drop or upload images directly into your journal entries, complete with integrated size controls (25%, 50%, 75%, 100%) and instant deletion menus.
-*   **Typographic Controls**: Switch between multiple handwriting fonts, featuring **Book Serif (`EB Garamond`)** as the premium, highly-legible system fallback.
-
-### 🧭 2. Reflection & Study
-*   **Who I Am (Self Portrait)**: Map out your core life biography, write personal philosophy principles, and specify current values or stages of life.
-*   **Personal Audits**: Track what you are naturally good at alongside key areas of character improvements.
-
-### ✒️ Goals & Tasks (Deeds Registry)
-*   **Tabbed Deeds Ledger**: Seamlessly register daily tasks, active commitments, and recurring habits.
-*   **Interactive Controls**: Complete goals and habits directly from your registry, watching progress update dynamically.
-
-### 📚 The Codex (Knowledge Base)
-*   **Wisdom Library**: Keep notes, specialized directories, and study compilations categorized by dynamic title badges.
-*   **Tactile Page-Flip Transitions**: Fluid, organic UI responses that feel like turning real paper.
-
-### ⚙️ 3. Premium Settings & Controls
-*   **👤 Custom Identity Profiling**: Personalize your registry by specifying your profile name. It dynamically updates browser titles, cover engravings, and page running headers, defaulting gracefully to `whoami`.
-*   **💾 Configurable Database Location**: Change your storage location directly from settings. Features an automatic migration mechanism that copies your existing database assets to the new target folder.
-*   **🎨 Dynamic Casing Themes**: Select from premium physical styles:
-    *   `Codex` (Classic warm parchment)
-    *   `Folio` (Premium tan leather)
-    *   `Ledger` (Deep navy with gold accents)
-    *   `Obsidian Light` (Sleek modern minimalist light)
-    *   `Obsidian Dark` (Deep charcoal slate with violet neon elements)
-*   **🔊 Audio Soundscapes**: Features an optional built-in white noise synthesizer generating relaxing natural ambiance, complete with smooth muting controls.
-*   **📤 Data Backups**: Export a unified JSON archive of your entire database or reset folders with a single click.
+Built with Electron and Vite, all data is stored locally with absolute privacy.
 
 ---
 
-## 🛠️ Technology Stack
+## Key Features
+
+*   **Reflection & Identity**: A structured whoami page mapping your strengths, blind spots, and active commitments — with drift detection to surface what you've abandoned without closure.
+*   **Journaling**: Distraction-free text editor with formatting controls, customizable handwriting fonts, and a local image upload pipeline supporting drag-and-drop and size adjustments.
+*   **Goals & Commitments**: A tabbed registry to manage weekly goals, long-term ambitions, and active commitments — with commitment-to-goal linking to keep your daily actions connected to your bigger direction.
+*   **Knowledge Base**: A hierarchical workspace to organize reference notes, problem-solving patterns, and personal learnings with fluid page-turn transitions.
+*   **Vim Keybindings Mode**: Integrated Vim-inspired motions supporting normal, insert, visual, and character replacement modes via a customizable configuration dashboard.
+*   **Settings & Customization**:
+    *   Dynamic themes supporting light, dark, and warm parchment workspace styles.
+    *   Configurable local database path with automatic content migration helper.
+    *   Optional white-noise generator with adjustable soundscapes and volume controls.
+    *   Local backup tools for single-click data export and reset operations.
+
+---
+
+## Technology Stack
 
 *   **Runtime Shell**: Electron
-*   **Build Tool**: Vite
-*   **Frontend Engine**: HTML5 / JavaScript (ES6+)
-*   **Styling System**: Vanilla CSS3 (Custom Variables, Flexbox, Grids, 3D Transforms)
-*   **Database**: File-system based JSON store with assets directories
+*   **Build System**: Vite
+*   **Frontend**: HTML5, Vanilla JavaScript (ES6+), and CSS3 Custom Properties
+*   **Database**: Local file-system JSON storage with custom assets directories
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
-Make sure you have [Node.js](https://nodejs.org/) installed on your computer.
+
+*   Node.js (v18 or higher recommended)
+*   npm
 
 ### Installation
-1. Clone the repository to your local workspace:
-   ```bash
-   git clone <repository-url>
-   cd whoami
-   ```
 
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
+1.  Clone the repository:
+```bash
+    git clone <repository-url>
+    cd whoami
+```
 
-3. Launch the desktop application:
-   ```bash
-   npm start
-   ```
+2.  Install the required dependencies:
+```bash
+    npm install
+```
 
-### First-Time Initialization
-When the application first boots, it will guide you using a native folders-selection dialog to select a folder on your computer. This folder will be your secure, active database location. All journal entries, settings, images, and collections are saved locally in this folder, ensuring absolute privacy.
+3.  Launch the application in development mode:
+```bash
+    npm start
+```
+
+### Initial Configuration
+
+On the first launch, the application will prompt you to select a local directory. This folder acts as your secure, active database location. All journal entries, settings, images, and data backups will be saved exclusively within this folder.
 
 ---
 
-## 📁 File Structure
+## Project Structure
 
 ```text
 ├── app/
-│   ├── api/                    # Server-side mock endpoints & config logic
-│   │   ├── db.js               # Database directory resolution helper
-│   │   ├── settings.js         # Settings save, reset, and path-migration api
-│   │   └── ...
-│   ├── index.html              # Main application entry (Closed Book Cover)
-│   ├── pages/                  # Page-specific assets & layouts
-│   │   ├── cover/
-│   │   ├── goals/
-│   │   ├── journal/
-│   │   ├── knowledge_base/
-│   │   ├── reflection/
-│   │   └── settings/
-│   └── shared/                 # Common elements shared by all modules
-│       ├── css/                # Base variables, page casing, and responsiveness
-│       └── js/                 # Scriptorium core engine & ambient audio
-├── public/                     # Static assets, local logos, & favicons
-├── main.js                     # Electron main process controller
-├── package.json                # Project dependencies and script bindings
-└── vite.config.js              # Vite server & API router config
+│   ├── api/                    # Server-side mock API endpoints and settings handlers
+│   ├── index.html              # Main application entry point (Cover view)
+│   ├── pages/                  # Page-specific assets and views (Goals, Journal, KB, Reflection, Settings)
+│   └── shared/                 # Shared resources (Core engine logic, ambient audio, global styling)
+├── public/                     # Static media and app assets
+├── main.js                     # Electron main process configuration
+├── package.json                # Project dependencies and script declarations
+└── vite.config.js              # Vite server and local dev proxy routing
 ```
 
 ---
 
-## 🔒 absolute Privacy
-**whoami** is fully offline first. Absolutely none of your journal entries, photos, plans, or personal records are uploaded to external clouds. Your identity and thoughts remain safely stored right inside your local machine in the database folder you selected.
+## Privacy & Security
+
+whoami is an offline-first desktop application. No telemetry, personal logs, plans, or images are transmitted to external servers. All personal records remain secured locally on your own machine in your chosen database directory.is an offline-first desktop application. No telemetry, personal logs, plans, or images are transmitted to external servers. All personal records remain secured locally on your own machine in your chosen database directory.

@@ -1286,6 +1286,38 @@ document.addEventListener('DOMContentLoaded', () => {
     let vimState = 'insert'; // 'normal', 'visual', or 'insert'
     let vimLastKey = '';
     let vimLeaderPressed = false;
+    let vimStateBeforeReplace = 'normal';
+
+    let vimShortcuts = {
+        move_left: "h",
+        move_down: "j",
+        move_up: "k",
+        move_right: "l",
+        word_forward: "w",
+        word_backward: "b",
+        line_start: "0",
+        line_end: "$",
+        insert_mode: "i",
+        append_mode: "a",
+        open_below: "o",
+        open_above: "O",
+        visual_mode: "v",
+        yank: "y",
+        paste: "p",
+        delete_char: "x",
+        undo: "u",
+        delete_action: "d",
+        doc_start: "g",
+        doc_end: "G",
+        word_end: "e",
+        change_mode: "c",
+        replace_char: "r"
+    };
+
+    const cachedVim = localStorage.getItem('scriptorium_vim_shortcuts');
+    if (cachedVim) {
+        try { vimShortcuts = { ...vimShortcuts, ...JSON.parse(cachedVim) }; } catch(e) {}
+    }
 
     const vimToggle = document.createElement('button');
     vimToggle.className = 'fmt-btn vim-toggle-btn';
@@ -1317,6 +1349,11 @@ document.addEventListener('DOMContentLoaded', () => {
             rightTA.classList.add('vim-normal-caret');
             vimToggle.className = 'fmt-btn vim-toggle-btn active-vim vim-state-visual';
             vimToggle.textContent = 'VIM: VISUAL';
+        } else if (state === 'replace') {
+            leftTA.classList.add('vim-normal-caret');
+            rightTA.classList.add('vim-normal-caret');
+            vimToggle.className = 'fmt-btn vim-toggle-btn active-vim vim-state-normal';
+            vimToggle.textContent = 'VIM: REPLACE';
         } else {
             leftTA.classList.remove('vim-normal-caret');
             rightTA.classList.remove('vim-normal-caret');
@@ -1352,6 +1389,37 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        if (vimState === 'replace') {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const key = e.key;
+            if (key.length === 1 || key === 'Enter') {
+                const replaceChar = (key === 'Enter') ? '\n' : key;
+                const sel = window.getSelection();
+                if (sel.rangeCount > 0) {
+                    if (vimStateBeforeReplace === 'visual' && !sel.isCollapsed) {
+                        const selectedText = sel.toString();
+                        const replacement = selectedText.split('\n').map(line => replaceChar.repeat(line.length)).join('\n');
+                        document.execCommand('insertText', false, replacement);
+                    } else {
+                        sel.modify("extend", "forward", "character");
+                        const selectedStr = sel.toString();
+                        if (selectedStr.length > 0 && selectedStr !== '\n') {
+                            document.execCommand('insertText', false, replaceChar);
+                            sel.modify("move", "backward", "character");
+                        } else {
+                            sel.collapseToStart();
+                        }
+                    }
+                    persist();
+                    updateWordCount();
+                }
+                setVimState('normal');
+            }
+            return;
+        }
+
         if (vimState === 'normal' || vimState === 'visual') {
             e.preventDefault();
             e.stopPropagation();
@@ -1362,19 +1430,19 @@ document.addEventListener('DOMContentLoaded', () => {
             if (vimLeaderPressed) {
                 vimLeaderPressed = false; // Reset leader key state
 
-                if (key === 'h') {
+                if (key === vimShortcuts.move_left) {
                     leftTA.focus();
                     return;
                 }
-                if (key === 'l') {
+                if (key === vimShortcuts.move_right) {
                     rightTA.focus();
                     return;
                 }
-                if (key === 'j') {
+                if (key === vimShortcuts.move_down) {
                     window.scrollBy({ top: 150, behavior: 'smooth' });
                     return;
                 }
-                if (key === 'k') {
+                if (key === vimShortcuts.move_up) {
                     window.scrollBy({ top: -150, behavior: 'smooth' });
                     return;
                 }
@@ -1414,13 +1482,20 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // ── Visual Mode Toggle ──
-            if (key === 'v' && vimState === 'normal') {
+            if (key === vimShortcuts.visual_mode && vimState === 'normal') {
                 setVimState('visual');
                 return;
             }
 
+            // ── Replace Character ──
+            if (key === vimShortcuts.replace_char && (vimState === 'normal' || vimState === 'visual')) {
+                vimStateBeforeReplace = vimState;
+                setVimState('replace');
+                return;
+            }
+
             // ── Yank (y) / Copy ──
-            if (key === 'y') {
+            if (key === vimShortcuts.yank) {
                 document.execCommand('copy');
                 window.getSelection().collapseToEnd();
                 setVimState('normal');
@@ -1428,7 +1503,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // ── Paste (p) ──
-            if (key === 'p' && vimState === 'normal') {
+            if (key === vimShortcuts.paste && vimState === 'normal') {
                 navigator.clipboard.readText().then(text => {
                     if (text) {
                         document.execCommand('insertText', false, text);
@@ -1443,17 +1518,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // ── Insert Transitions (Normal Mode Only) ──
             if (vimState === 'normal') {
-                if (key === 'i') {
+                if (key === vimShortcuts.insert_mode) {
                     setVimState('insert');
                     return;
                 }
-                if (key === 'a') {
+                if (key === vimShortcuts.append_mode) {
                     const sel = window.getSelection();
                     if (sel.rangeCount > 0) sel.modify("move", "forward", "character");
                     setVimState('insert');
                     return;
                 }
-                if (key === 'o') {
+                if (key === vimShortcuts.open_below) {
                     const sel = window.getSelection();
                     if (sel.rangeCount > 0) {
                         sel.modify("move", "forward", "lineboundary");
@@ -1462,7 +1537,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     setVimState('insert');
                     return;
                 }
-                if (key === 'O') {
+                if (key === vimShortcuts.open_above) {
                     const sel = window.getSelection();
                     if (sel.rangeCount > 0) {
                         sel.modify("move", "backward", "lineboundary");
@@ -1478,53 +1553,101 @@ document.addEventListener('DOMContentLoaded', () => {
             const alter = (vimState === 'visual') ? 'extend' : 'move';
             const sel = window.getSelection();
 
-            if (key === 'h') {
+            if (key === vimShortcuts.move_left) {
                 if (sel.rangeCount > 0) sel.modify(alter, "backward", "character");
                 return;
             }
-            if (key === 'l') {
+            if (key === vimShortcuts.move_right) {
                 if (sel.rangeCount > 0) sel.modify(alter, "forward", "character");
                 return;
             }
-            if (key === 'j') {
+            if (key === vimShortcuts.move_down) {
                 if (sel.rangeCount > 0) sel.modify(alter, "forward", "line");
                 return;
             }
-            if (key === 'k') {
+            if (key === vimShortcuts.move_up) {
                 if (sel.rangeCount > 0) sel.modify(alter, "backward", "line");
                 return;
             }
-            if (key === 'w') {
+            if (key === vimShortcuts.word_forward) {
+                if (vimState === 'normal' && vimLastKey === vimShortcuts.delete_action) {
+                    if (sel.rangeCount > 0) {
+                        sel.modify("extend", "forward", "word");
+                        document.execCommand('delete');
+                        persist();
+                        updateWordCount();
+                    }
+                    vimLastKey = '';
+                    return;
+                }
+                if (vimState === 'normal' && vimLastKey === vimShortcuts.change_mode) {
+                    if (sel.rangeCount > 0) {
+                        sel.modify("extend", "forward", "word");
+                        document.execCommand('delete');
+                        persist();
+                        updateWordCount();
+                    }
+                    setVimState('insert');
+                    vimLastKey = '';
+                    return;
+                }
                 if (sel.rangeCount > 0) sel.modify(alter, "forward", "word");
                 return;
             }
-            if (key === 'b') {
+            if (key === vimShortcuts.word_backward) {
                 if (sel.rangeCount > 0) sel.modify(alter, "backward", "word");
                 return;
             }
-            if (key === '0') {
+            if (key === vimShortcuts.line_start) {
                 if (sel.rangeCount > 0) sel.modify(alter, "backward", "lineboundary");
                 return;
             }
-            if (key === '$') {
+            if (key === vimShortcuts.line_end) {
                 if (sel.rangeCount > 0) sel.modify(alter, "forward", "lineboundary");
+                return;
+            }
+            if (key === vimShortcuts.doc_start) {
+                if (vimLastKey === vimShortcuts.doc_start) {
+                    if (sel.rangeCount > 0) {
+                        sel.collapse(ta.firstChild || ta, 0);
+                        ta.focus();
+                    }
+                    vimLastKey = '';
+                } else {
+                    vimLastKey = vimShortcuts.doc_start;
+                }
+                return;
+            }
+            if (key === vimShortcuts.doc_end) {
+                if (sel.rangeCount > 0) {
+                    const range = document.createRange();
+                    range.selectNodeContents(ta);
+                    range.collapse(false);
+                    sel.removeAllRanges();
+                    sel.addRange(range);
+                    ta.focus();
+                }
+                return;
+            }
+            if (key === vimShortcuts.word_end) {
+                if (sel.rangeCount > 0) sel.modify(alter, "forward", "word");
                 return;
             }
 
             // ── Deletions / Undo ──
-            if (key === 'x' && vimState === 'normal') {
+            if (key === vimShortcuts.delete_char && vimState === 'normal') {
                 document.execCommand('delete');
                 persist();
                 updateWordCount();
                 return;
             }
-            if (key === 'u' && vimState === 'normal') {
+            if (key === vimShortcuts.undo && vimState === 'normal') {
                 document.execCommand('undo');
                 persist();
                 updateWordCount();
                 return;
             }
-            if (key === 'd') {
+            if (key === vimShortcuts.delete_action) {
                 if (vimState === 'visual') {
                     document.execCommand('delete');
                     persist();
@@ -1533,7 +1656,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
                 if (vimState === 'normal') {
-                    if (vimLastKey === 'd') {
+                    if (vimLastKey === vimShortcuts.delete_action) {
                         if (sel.rangeCount > 0) {
                             sel.modify("move", "backward", "lineboundary");
                             sel.modify("extend", "forward", "lineboundary");
@@ -1544,7 +1667,32 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                         vimLastKey = '';
                     } else {
-                        vimLastKey = 'd';
+                        vimLastKey = vimShortcuts.delete_action;
+                    }
+                }
+                return;
+            }
+            if (key === vimShortcuts.change_mode) {
+                if (vimState === 'visual') {
+                    document.execCommand('delete');
+                    persist();
+                    updateWordCount();
+                    setVimState('insert');
+                    return;
+                }
+                if (vimState === 'normal') {
+                    if (vimLastKey === vimShortcuts.change_mode) {
+                        if (sel.rangeCount > 0) {
+                            sel.modify("move", "backward", "lineboundary");
+                            sel.modify("extend", "forward", "lineboundary");
+                            document.execCommand('delete');
+                            persist();
+                            updateWordCount();
+                        }
+                        setVimState('insert');
+                        vimLastKey = '';
+                    } else {
+                        vimLastKey = vimShortcuts.change_mode;
                     }
                 }
                 return;

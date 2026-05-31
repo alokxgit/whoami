@@ -4,16 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alok | Goals &amp; Tasks</title>
-    <meta name="description" content="Manage your goals and daily tasks in your personal journal.">
+    <title>Alok | Shortcuts Configuration</title>
+    <meta name="description" content="Configure custom keybindings for Vim mode and global page navigation.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=EB+Garamond:ital,wght@0,400..700;1,400..700&family=IM+Fell+English:ital@0;1&family=Marcellus&family=Caveat:wght@400;600&family=Sacramento&display=swap"
         rel="stylesheet">
-  <link rel="stylesheet" crossorigin href="../../../assets/goals-KNPVFqRm.css">
-  <link rel="stylesheet" crossorigin href="../../../assets/base-CI9A1Z5Y.css">
-  <link rel="stylesheet" crossorigin href="../../../assets/responsive-B1XBFbAb.css">
+    <link rel="stylesheet" href="../../shared/css/variables.css">
+    <link rel="stylesheet" href="../../shared/css/base.css">
+    <link rel="stylesheet" href="../../shared/css/book.css">
+    <link rel="stylesheet" href="shortcuts.css">
+    <link rel="stylesheet" href="../../shared/css/responsive.css">
 </head>
 
 <body class="layout-codex book-state-open">
@@ -53,7 +55,7 @@
                     <a class="bookmark-tab" data-spread="reflection-study" href="../reflection/reflection.html">
                         <span class="bm-num">I</span><span class="bm-label">Reflection</span>
                     </a>
-                    <a class="bookmark-tab active" data-spread="deeds-goals" href="goals.html">
+                    <a class="bookmark-tab" data-spread="deeds-goals" href="../goals/goals.html">
                         <span class="bm-num">II</span><span class="bm-label">Goals &amp; Tasks</span>
                     </a>
                     <a class="bookmark-tab" data-spread="chronicles" href="../journal/journal.html">
@@ -65,7 +67,7 @@
                     <a class="bookmark-tab" data-spread="settings" href="../settings/settings.html">
                         <span class="bm-num">V</span><span class="bm-label">Settings</span>
                     </a>
-                    <a class="bookmark-tab" data-spread="shortcuts" href="../shortcuts/shortcuts.html">
+                    <a class="bookmark-tab active" data-spread="shortcuts" href="shortcuts.html">
                         <span class="bm-num">VI</span><span class="bm-label">Shortcuts</span>
                     </a>
                     <a class="bookmark-tab close-book-banner" href="../../index.html" title="Close Journal">
@@ -76,68 +78,50 @@
                 <!-- Book casing -->
                 <div class="book-casing">
 
+                    <!-- SPREAD VI: Shortcuts -->
+                    <div class="book-spread active-spread" id="spread-shortcuts">
 
-                    <!-- SPREAD II: Goals & Tasks -->
-                    <div class="book-spread active-spread" id="spread-deeds-goals">
-
-                        <!-- LEFT PAGE: Ambitions & Desires -->
+                        <!-- LEFT PAGE: Vim Keybindings -->
                         <div class="book-page page-left">
                             <div class="page-texture"></div>
 
-
                             <div class="page-running-header">
                                 <span class="running-brand">Alok</span>
-                                <div class="page-date-badge">
-                                    <span class="day-number">30</span>
-                                    <span class="month">May</span>
-                                    <span class="year">2026</span>
+                                <div class="running-switcher">
+                                    <div class="page-date-badge">
+                                        <span class="day-number">30</span>
+                                        <span class="month">May</span>
+                                        <span class="year">2026</span>
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="page-header">
-                                <h1>Ambitions &amp; Desires</h1>
-
+                                <h1>Vim Keybindings</h1>
+                                <p class="page-header-sub">Custom keyboard bindings for editors</p>
                             </div>
 
-                            <div class="goals-container-scrollable">
-                                <!-- Section 1: Weekly Goals -->
-                                <div class="goal-section">
-                                    <div class="section-title-wrap">
-                                        <h2>✦ Weekly Goals</h2>
+                            <div class="section-divider">
+                                <div class="divider-rule"></div>
 
-                                    </div>
-                                    <ul class="goals-custom-list" id="week-goals-list"></ul>
-                                </div>
+                                <div class="divider-rule"></div>
+                            </div>
 
-                                <!-- Section 2: Long-Term Goals -->
-                                <div class="goal-section">
-                                    <div class="section-title-wrap">
-                                        <h2>✦ Long-Term Goals</h2>
-
-                                    </div>
-                                    <ul class="goals-custom-list" id="long-term-goals-list"></ul>
-                                </div>
-
-                                <!-- Section 3: Inner Desires -->
-                                <div class="goal-section">
-                                    <div class="section-title-wrap">
-                                        <h2>✦ Inner Desires</h2>
-
-                                    </div>
-                                    <ul class="goals-custom-list" id="inner-desires-list"></ul>
+                            <div class="shortcuts-container scrollable-area">
+                                <!-- Vim motions form controls -->
+                                <div class="control-grid" id="vim-shortcuts-grid">
+                                    <!-- Populated dynamically via JS -->
                                 </div>
                             </div>
 
                         </div>
 
-
-                        <!-- RIGHT PAGE: Daily Tasks in Page Style -->
+                        <!-- RIGHT PAGE: Website Navigation Keybindings -->
                         <div class="book-page page-right">
                             <div class="page-texture"></div>
 
-
                             <div class="page-running-header">
-                                <span class="running-section">Goals &amp; Tasks</span>
+                                <span class="running-section">Global Shortcuts</span>
                                 <div class="page-date-badge">
                                     <span class="day-number">30</span>
                                     <span class="month">May</span>
@@ -146,21 +130,30 @@
                             </div>
 
                             <div class="page-header">
-                                <h1>The Daily Ledger</h1>
-
+                                <h1>Navigation</h1>
+                                <p class="page-header-sub">Move swiftly across the journal spreads</p>
                             </div>
 
-                            <!-- Free-form Journal-Style Editor without lines -->
-                            <div class="goals-freeform-editor" id="goals-freeform-editor" contenteditable="true"
-                                spellcheck="false"
-                                placeholder="Write anything... Start a line with '-' to create an interactive checkbox.">
+                            <div class="section-divider">
+                                <div class="divider-rule"></div>
+
+                                <div class="divider-rule"></div>
                             </div>
 
-                            <!-- Save & Reset Button -->
-                            <div style="margin-top: 1rem; text-align: center;">
-                                <button class="goals-save-reset-btn" id="daily-save-reset-btn">Save &amp; Reset</button>
-                            </div>
+                            <div class="shortcuts-container scrollable-area">
+                                <!-- Navigation keybinds form controls -->
+                                <div class="control-grid" id="nav-shortcuts-grid">
+                                    <!-- Populated dynamically via JS -->
+                                </div>
 
+                                <div class="actions-row"
+                                    style="margin-top: 1.5rem; display: flex; gap: 0.8rem; justify-content: center; padding: 0 0.8rem 1rem 0.8rem;">
+                                    <button class="action-btn secondary-btn" id="reset-defaults-btn">Reset
+                                        Defaults</button>
+                                    <button class="action-btn primary-btn" id="save-shortcuts-btn">Save
+                                        Keybindings</button>
+                                </div>
+                            </div>
 
                         </div>
 
@@ -170,8 +163,16 @@
         </div><!-- /book-wrapper -->
     </div><!-- /desk-bg -->
 
+    <!-- Premium custom Toast notification container -->
+    <div id="shortcuts-toast" class="custom-toast-container" aria-live="polite">
+        <div class="toast-content">
+            <span class="toast-icon">✨</span>
+            <span class="toast-message">Keybindings saved to your ledger.</span>
+        </div>
+    </div>
+
     <script src="../../shared/js/core.js"></script>
-    <script src="goals.js"></script>
+    <script src="shortcuts.js"></script>
 </body>
 
 </html>
