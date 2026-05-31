@@ -4,18 +4,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alok | Scriptorium Journal</title>
+    <title>Alok | whoami Journal</title>
     <meta name="description" content="A personal journal and dashboard.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=EB+Garamond:ital,wght@0,400..700;1,400..700&family=IM+Fell+English:ital@0;1&family=Marcellus&family=Caveat:wght@400;600&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=EB+Garamond:ital,wght@0,400..700;1,400..700&family=IM+Fell+English:ital@0;1&family=Marcellus&family=Caveat:wght@400;600&family=Sacramento&display=swap"
         rel="stylesheet">
-  <link rel="stylesheet" crossorigin href="/assets/main-DSDGI9JS.css">
-  <link rel="stylesheet" crossorigin href="/assets/base-DGOlCpgw.css">
+  <link rel="stylesheet" crossorigin href="../assets/main-CxRZwYMN.css">
+  <link rel="stylesheet" crossorigin href="../assets/base-CI9A1Z5Y.css">
 </head>
 
 <body class="layout-codex book-state-closed">
+    <script>
+        (function () {
+            const layout = localStorage.getItem('scriptorium_layout') || 'folio';
+            document.body.className = document.body.className.replace(/layout-\w+/, 'layout-' + layout);
+            if (!document.body.classList.contains('layout-' + layout)) {
+                document.body.classList.add('layout-' + layout);
+            }
+            const hideLines = localStorage.getItem('scriptorium_hide_lines') === 'true';
+            if (hideLines) {
+                document.body.classList.add('hide-page-lines');
+            }
+        })();
+    </script>
 
     <svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
         <defs>
@@ -47,12 +60,14 @@
                 <div class="brass-corner bl"></div>
                 <div class="brass-corner br"></div>
                 <div class="cover-body">
-                    <div class="medallion"><span class="medallion-icon">✒️</span></div>
-                    <h2 class="cover-title">Alok</h2>
+                    <div class="medallion"><img src="../logo01.png" alt="logo" class="medallion-img"
+                            style="width:100%; height:100%; border-radius:50%; object-fit:cover;"></div>
+                    <h2 class="cover-title">whoami</h2>
                     <div class="cover-rule"></div>
-                    <p class="cover-tagline">My Daily Journal &amp; Tasks</p>
-                    <a href="pages/reflection/reflection.html" class="open-btn" style="text-decoration:none" id="main-open-book-btn">
-                        <span>Open Me</span><span>📖</span>
+                    <p class="cover-tagline">In these pages, find yourself.</p>
+                    <a href="pages/reflection/reflection.html" class="open-btn" style="text-decoration:none"
+                        id="main-open-book-btn">
+                        <span>Unfold</span><span></span>
                     </a>
                 </div>
                 <div class="cover-clasp">

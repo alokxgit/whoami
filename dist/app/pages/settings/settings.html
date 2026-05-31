@@ -9,14 +9,27 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=EB+Garamond:ital,wght@0,400..700;1,400..700&family=IM+Fell+English:ital@0;1&family=Marcellus&family=Caveat:wght@400;600&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=EB+Garamond:ital,wght@0,400..700;1,400..700&family=IM+Fell+English:ital@0;1&family=Marcellus&family=Caveat:wght@400;600&family=Sacramento&display=swap"
         rel="stylesheet">
-  <link rel="stylesheet" crossorigin href="/assets/settings-B1_Gqo2N.css">
-  <link rel="stylesheet" crossorigin href="/assets/base-DGOlCpgw.css">
-  <link rel="stylesheet" crossorigin href="/assets/responsive-DF4Nphwx.css">
+  <link rel="stylesheet" crossorigin href="../../../assets/settings-BQrfk2TP.css">
+  <link rel="stylesheet" crossorigin href="../../../assets/base-CI9A1Z5Y.css">
+  <link rel="stylesheet" crossorigin href="../../../assets/responsive-B8xuxQHh.css">
 </head>
 
 <body class="layout-codex book-state-open">
+    <script>
+        (function () {
+            const layout = localStorage.getItem('scriptorium_layout') || 'folio';
+            document.body.className = document.body.className.replace(/layout-\w+/, 'layout-' + layout);
+            if (!document.body.classList.contains('layout-' + layout)) {
+                document.body.classList.add('layout-' + layout);
+            }
+            const hideLines = localStorage.getItem('scriptorium_hide_lines') === 'true';
+            if (hideLines) {
+                document.body.classList.add('hide-page-lines');
+            }
+        })();
+    </script>
 
     <svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
         <defs>
@@ -92,38 +105,33 @@
                                 <div class="divider-rule"></div>
                             </div>
 
-                            <div class="settings-control-row"
-                                style="flex-direction: column; align-items: stretch; gap: 0.4rem; padding: 0.5rem 0.8rem; margin-bottom: 0.6rem;">
+                            <div class="settings-control-row whoami-textarea-row">
                                 <div>
                                     <div class="settings-control-label">Core Biography Quote</div>
                                     <div class="settings-control-desc">Paragraph reflecting your character and values
                                     </div>
                                 </div>
-                                <textarea id="settings-whoami-bio" rows="3" placeholder="Core biography quote..."
-                                    style="width: 100%; background: rgba(255,255,255,0.45); border: 1px solid var(--gold-dim); border-radius: 5px; padding: 0.4rem 0.6rem; font-family: var(--f-hand); font-size: 0.95rem; color: var(--ink); outline: none; resize: vertical; margin-top: 0.2rem;"></textarea>
+                                <textarea id="settings-whoami-bio" class="whoami-textarea" rows="3"
+                                    placeholder="Core biography quote..."></textarea>
                             </div>
 
-                            <div class="settings-control-row"
-                                style="flex-direction: column; align-items: stretch; gap: 0.4rem; padding: 0.5rem 0.8rem; margin-bottom: 0.6rem;">
+                            <div class="settings-control-row whoami-textarea-row">
                                 <div>
                                     <div class="settings-control-label">Good At (One item per line)</div>
                                     <div class="settings-control-desc">Your core strengths and craftsmanship skills
                                     </div>
                                 </div>
-                                <textarea id="settings-whoami-good" rows="4"
-                                    placeholder="e.g. UI & Visual Craftsmanship: Designing interfaces with rich textures..."
-                                    style="width: 100%; background: rgba(255,255,255,0.45); border: 1px solid var(--gold-dim); border-radius: 5px; padding: 0.4rem 0.6rem; font-family: var(--f-hand); font-size: 0.95rem; color: var(--ink); outline: none; resize: vertical; margin-top: 0.2rem;"></textarea>
+                                <textarea id="settings-whoami-good" class="whoami-textarea" rows="4"
+                                    placeholder="e.g. UI & Visual Craftsmanship: Designing interfaces with rich textures..."></textarea>
                             </div>
 
-                            <div class="settings-control-row"
-                                style="flex-direction: column; align-items: stretch; gap: 0.4rem; padding: 0.5rem 0.8rem; margin-bottom: 0.6rem;">
+                            <div class="settings-control-row whoami-textarea-row">
                                 <div>
                                     <div class="settings-control-label">Needs Improvements (One item per line)</div>
                                     <div class="settings-control-desc">Your core goals and areas of growth</div>
                                 </div>
-                                <textarea id="settings-whoami-improvements" rows="4"
-                                    placeholder="e.g. Perfectionist Over-refining: Learning when a solution is strong enough..."
-                                    style="width: 100%; background: rgba(255,255,255,0.45); border: 1px solid var(--gold-dim); border-radius: 5px; padding: 0.4rem 0.6rem; font-family: var(--f-hand); font-size: 0.95rem; color: var(--ink); outline: none; resize: vertical; margin-top: 0.2rem;"></textarea>
+                                <textarea id="settings-whoami-improvements" class="whoami-textarea" rows="4"
+                                    placeholder="e.g. Perfectionist Over-refining: Learning when a solution is strong enough..."></textarea>
                             </div>
 
                             <div style="padding: 0 0.8rem; margin-bottom: 0.8rem;">
@@ -177,33 +185,27 @@
                                     <div id="settings-commitments-tab-content"
                                         style="display: none; flex-direction: column; gap: 0.8rem; width: 100%;">
                                         <form id="add-commitment-form" class="settings-commitment-form"
-                                            style="display:flex; flex-direction:column; gap:0.65rem; background:rgba(229, 195, 106, 0.03); border:1px solid rgba(229, 195, 106, 0.15); border-radius:8px; padding:0.75rem;">
+                                            style="display:flex; flex-direction:column; gap:0.65rem; border-radius:8px; padding:0.75rem;">
                                             <div style="display:flex; flex-direction:column; gap:0.2rem;">
                                                 <label class="form-label"
                                                     style="font-family:var(--f-head); font-size:0.78rem; color:var(--terracotta); text-transform:uppercase; letter-spacing:0.04em; font-weight:600;"
                                                     for="commitment-title">The Commitment</label>
                                                 <input type="text" id="commitment-title"
-                                                    placeholder="What exactly you committed to..."
-                                                    style="background:rgba(255,255,255,0.45); border:1px solid var(--gold-dim); border-radius:5px; padding:0.35rem 0.6rem; font-family:var(--f-hand); font-size:0.92rem; color:var(--ink); outline:none;"
-                                                    required>
+                                                    placeholder="What exactly you committed to..." required>
                                             </div>
                                             <div style="display:flex; flex-direction:column; gap:0.2rem;">
                                                 <label class="form-label"
                                                     style="font-family:var(--f-head); font-size:0.78rem; color:var(--terracotta); text-transform:uppercase; letter-spacing:0.04em; font-weight:600;"
                                                     for="commitment-why">The Purpose</label>
                                                 <input type="text" id="commitment-why"
-                                                    placeholder="One line, why you decided this..."
-                                                    style="background:rgba(255,255,255,0.45); border:1px solid var(--gold-dim); border-radius:5px; padding:0.35rem 0.6rem; font-family:var(--f-hand); font-size:0.92rem; color:var(--ink); outline:none;"
-                                                    required>
+                                                    placeholder="One line, why you decided this..." required>
                                             </div>
                                             <div style="display:flex; flex-direction:column; gap:0.2rem;">
                                                 <label class="form-label"
                                                     style="font-family:var(--f-head); font-size:0.78rem; color:var(--terracotta); text-transform:uppercase; letter-spacing:0.04em; font-weight:600;"
                                                     for="commitment-category">Category</label>
                                                 <input type="text" id="commitment-category"
-                                                    placeholder="e.g. Work, Health..."
-                                                    style="background:rgba(255,255,255,0.45); border:1px solid var(--gold-dim); border-radius:5px; padding:0.35rem 0.6rem; font-family:var(--f-hand); font-size:0.92rem; color:var(--ink); outline:none;"
-                                                    required>
+                                                    placeholder="e.g. Work, Health..." required>
                                             </div>
                                             <button type="submit" class="settings-action-btn"
                                                 style="width:100%; margin-top:0.25rem; padding:0.4rem 1rem;">✒️ Bind
@@ -247,6 +249,29 @@
                             <div class="page-header">
                                 <h1>Preferences</h1>
                                 <p class="page-header-sub">Configure your experience</p>
+                            </div>
+
+                            <div class="section-divider">
+                                <div class="divider-rule"></div>
+                                <span class="divider-icon">👤</span>
+                                <span class="section-sub">Identity</span>
+                                <div class="divider-rule"></div>
+                            </div>
+
+                            <div class="settings-control-row"
+                                style="flex-direction: column; align-items: stretch; gap: 0.4rem; padding: 0.5rem 0.8rem; margin-bottom: 0.6rem;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <div class="settings-control-label">Your Profile Name</div>
+                                        <div class="settings-control-desc">Displayed on cover page and running headers</div>
+                                    </div>
+                                </div>
+                                <div style="display: flex; gap: 0.5rem; margin-top: 0.2rem; width: 100%;">
+                                    <input type="text" id="settings-user-name-input" placeholder="whoami"
+                                        style="flex: 1;">
+                                    <button class="settings-action-btn" id="settings-user-name-save-btn"
+                                        style="width: auto; padding: 0 0.8rem; font-size: 0.75rem; white-space: nowrap;">💾 Save Name</button>
+                                </div>
                             </div>
 
                             <div class="section-divider">
@@ -296,7 +321,7 @@
                             <div class="settings-control-row">
                                 <div>
                                     <div class="settings-control-label">Journal &amp; Ledger Text Size</div>
-                                    <div class="settings-control-desc">Caveat entries and daily task ledger</div>
+                                    <div class="settings-control-desc">Book Serif entries and daily task ledger</div>
                                 </div>
                                 <div class="font-scale-adjuster">
                                     <button class="font-scale-btn" id="scale-hand-dec" title="Decrease size">A−</button>
@@ -310,8 +335,9 @@
                                     <div class="settings-control-desc">Choose handwritten chronicle typeface</div>
                                 </div>
                                 <select class="settings-select" id="font-hand-select">
-                                    <option value="'Caveat', cursive">Caveat (Default)</option>
+                                    <option value="'EB Garamond', serif">Book Serif (Default)</option>
                                     <option value="'Sacramento', cursive">Sacramento</option>
+                                    <option value="'Caveat', cursive">Caveat</option>
                                     <option value="'Architects Daughter', cursive">Architects Daughter</option>
                                     <option value="'Homemade Apple', cursive">Homemade Apple</option>
                                     <option value="'Kalam', cursive">Kalam</option>
@@ -378,80 +404,26 @@
                                 <button class="theme-card-option" data-layout="obsidian" id="theme-obsidian">
                                     <div class="theme-swatch theme-obsidian-swatch"></div>
                                     <div class="theme-card-info">
-                                        <div class="theme-card-name">🔮 Obsidian Lavender</div>
-                                        <div class="theme-card-desc">Sleek light digital workspace with modern violet accents</div>
+                                        <div class="theme-card-name">💎 Obsidian Light</div>
+                                        <div class="theme-card-desc">Sleek off-white with violet accent elements</div>
                                     </div>
                                     <span class="theme-active-badge">Active</span>
                                 </button>
-                                <button class="theme-card-option" data-layout="vellum" id="theme-vellum">
-                                    <div class="theme-swatch theme-vellum-swatch"></div>
+                                <button class="theme-card-option" data-layout="obsidian-dark" id="theme-obsidian-dark">
+                                    <div class="theme-swatch theme-obsidian-dark-swatch"></div>
                                     <div class="theme-card-info">
-                                        <div class="theme-card-name">👑 Royal Vellum</div>
-                                        <div class="theme-card-desc">Warm cream page with burgundy cover style</div>
+                                        <div class="theme-card-name">🔮 Obsidian Dark</div>
+                                        <div class="theme-card-desc">Deep charcoal slate with violet neon elements</div>
                                     </div>
                                     <span class="theme-active-badge">Active</span>
                                 </button>
-                                <button class="theme-card-option" data-layout="grimoire" id="theme-grimoire">
-                                    <div class="theme-swatch theme-grimoire-swatch"></div>
+                                <button class="theme-card-option" data-layout="midnight-violet"
+                                    id="theme-midnight-violet">
+                                    <div class="theme-swatch theme-midnight-violet-swatch"></div>
                                     <div class="theme-card-info">
-                                        <div class="theme-card-name">🌳 Emerald Grimoire</div>
-                                        <div class="theme-card-desc">Mystical sage green with gold borders</div>
-                                    </div>
-                                    <span class="theme-active-badge">Active</span>
-                                </button>
-                                <button class="theme-card-option" data-layout="alchemist" id="theme-alchemist">
-                                    <div class="theme-swatch theme-alchemist-swatch"></div>
-                                    <div class="theme-card-info">
-                                        <div class="theme-card-name">🧪 Alchemist Folio</div>
-                                        <div class="theme-card-desc">Pitch dark bronze paper with glowing gold</div>
-                                    </div>
-                                    <span class="theme-active-badge">Active</span>
-                                </button>
-                                <button class="theme-card-option" data-layout="atlas" id="theme-atlas">
-                                    <div class="theme-swatch theme-atlas-swatch"></div>
-                                    <div class="theme-card-info">
-                                        <div class="theme-card-name">🧭 Oceanic Atlas</div>
-                                        <div class="theme-card-desc">Deep sea navy cover with soft teal print</div>
-                                    </div>
-                                    <span class="theme-active-badge">Active</span>
-                                </button>
-                                <button class="theme-card-option" data-layout="zen" id="theme-zen">
-                                    <div class="theme-swatch theme-zen-swatch"></div>
-                                    <div class="theme-card-info">
-                                        <div class="theme-card-name">🍃 Zen Sanctuary</div>
-                                        <div class="theme-card-desc">Soft linen, calming moss accent, charcoal ink</div>
-                                    </div>
-                                    <span class="theme-active-badge">Active</span>
-                                </button>
-                                <button class="theme-card-option" data-layout="poet" id="theme-poet">
-                                    <div class="theme-swatch theme-poet-swatch"></div>
-                                    <div class="theme-card-info">
-                                        <div class="theme-card-name">🌌 Midnight Poet</div>
-                                        <div class="theme-card-desc">Starry indigo pages with glowing gold print</div>
-                                    </div>
-                                    <span class="theme-active-badge">Active</span>
-                                </button>
-                                <button class="theme-card-option" data-layout="cyber" id="theme-cyber">
-                                    <div class="theme-swatch theme-cyber-swatch"></div>
-                                    <div class="theme-card-info">
-                                        <div class="theme-card-name">⚡ Cyberpunk CRT</div>
-                                        <div class="theme-card-desc">Terminal gray with glowing retro phosphor orange</div>
-                                    </div>
-                                    <span class="theme-active-badge">Active</span>
-                                </button>
-                                <button class="theme-card-option" data-layout="autumn" id="theme-autumn">
-                                    <div class="theme-swatch theme-autumn-swatch"></div>
-                                    <div class="theme-card-info">
-                                        <div class="theme-card-name">🍂 Autumn Cozy</div>
-                                        <div class="theme-card-desc">Pumpkin rust parchment with rich mahogany ink</div>
-                                    </div>
-                                    <span class="theme-active-badge">Active</span>
-                                </button>
-                                <button class="theme-card-option" data-layout="sakura" id="theme-sakura">
-                                    <div class="theme-swatch theme-sakura-swatch"></div>
-                                    <div class="theme-card-info">
-                                        <div class="theme-card-name">🌸 Sakura Breeze</div>
-                                        <div class="theme-card-desc">Cherry blossom pink pages with sweet berry print</div>
+                                        <div class="theme-card-name">🌌 Midnight Violet</div>
+                                        <div class="theme-card-desc">Deep slate violet background with bright neon
+                                            violet accents</div>
                                     </div>
                                     <span class="theme-active-badge">Active</span>
                                 </button>
@@ -502,9 +474,9 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div style="display: flex; gap: 0.5rem; margin-top: 0.2rem;">
+                                <div style="display: flex; gap: 0.5rem; margin-top: 0.2rem; width: 100%;">
                                     <input type="text" id="settings-db-path-input" placeholder="Loading current path..."
-                                        style="flex: 1; background: rgba(255,255,255,0.45); border: 1px solid var(--gold-dim); border-radius: 5px; padding: 0.35rem 0.6rem; font-family: var(--f-head); font-size: 0.78rem; color: var(--ink); outline: none;">
+                                        style="flex: 1;">
                                     <button class="settings-action-btn" id="settings-db-path-save-btn"
                                         style="width: auto; padding: 0 0.8rem; font-size: 0.75rem; white-space: nowrap;">💾
                                         Save Path</button>

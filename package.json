@@ -2,15 +2,49 @@
   "name": "whoami",
   "version": "1.0.0",
   "description": "whoami: Your Personal Journal & Dashboard",
+  "author": "Alok",
   "main": "main.js",
   "scripts": {
     "dev": "vite --port 3000 --host",
     "start": "electron .",
-    "build": "vite build",
-    "preview": "vite preview"
+    "build": "vite build && npm run copy-assets",
+    "copy-assets": "cp -r app/shared dist/app/shared && cp app/pages/settings/settings.js dist/app/pages/settings/ && cp app/pages/journal/journal.js dist/app/pages/journal/ && cp app/pages/reflection/reflection.js dist/app/pages/reflection/ && cp app/pages/knowledge_base/kb.js dist/app/pages/knowledge_base/ && cp app/pages/goals/goals.js dist/app/pages/goals/",
+    "preview": "vite preview",
+    "dist": "electron-builder"
+  },
+  "build": {
+    "appId": "com.alok.whoami",
+    "productName": "Whoami",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "main.js",
+      "server.js",
+      "dist/**/*",
+      "app/api/**/*",
+      "public/**/*"
+    ],
+    "linux": {
+      "target": "AppImage",
+      "icon": "build/icons/",
+      "category": "Utility",
+      "desktop": {
+        "entry": {
+          "Name": "Whoami",
+          "Comment": "Your Personal Journal & Dashboard",
+          "StartupWMClass": "Whoami"
+        }
+      }
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "icon.png"
+    }
   },
   "devDependencies": {
     "electron": "^41.0.0",
+    "electron-builder": "^26.8.1",
     "vite": "^5.2.0"
   }
 }

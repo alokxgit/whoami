@@ -34,15 +34,16 @@ const localJournalPlugin = () => ({
 
 export default defineConfig({
   plugins: [localJournalPlugin()],
+  base: './',
   build: {
     rollupOptions: {
       input: {
-        main:       resolve(__dirname, 'app/index.html'),
+        main: resolve(__dirname, 'app/index.html'),
         reflection: resolve(__dirname, 'app/pages/reflection/reflection.html'),
-        goals:      resolve(__dirname, 'app/pages/goals/goals.html'),
-        journal:    resolve(__dirname, 'app/pages/journal/journal.html'),
-        kb:         resolve(__dirname, 'app/pages/knowledge_base/kb.html'),
-        settings:   resolve(__dirname, 'app/pages/settings/settings.html'),
+        goals: resolve(__dirname, 'app/pages/goals/goals.html'),
+        journal: resolve(__dirname, 'app/pages/journal/journal.html'),
+        kb: resolve(__dirname, 'app/pages/knowledge_base/kb.html'),
+        settings: resolve(__dirname, 'app/pages/settings/settings.html'),
       }
     }
   }

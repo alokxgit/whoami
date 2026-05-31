@@ -1,13 +1,19 @@
 const { app, BrowserWindow, dialog, nativeImage } = require('electron');
+app.setName('Whoami');
 const { spawn } = require('child_process');
 const http = require('http');
 const path = require('path');
 const fs = require('fs');
 
-app.name = 'whoami';
+app.name = 'Whoami';
 
-const configPath = path.join(__dirname, 'whoami.config.json');
-let serverProcess = null;
+const isPacked = app.isPackaged;
+
+const configPath = isPacked
+    ? path.join(app.getPath('userData'), 'whoami.config.json')
+    : path.join(__dirname, 'whoami.config.json');
+
+let serverStarted = false;
 
 function ensureDatabaseConfigured() {
     let configured = false;
@@ -23,7 +29,6 @@ function ensureDatabaseConfigured() {
     }
 
     if (!configured) {
-        // Show native folder selection dialog
         const result = dialog.showOpenDialogSync({
             title: 'Select whoami Database Folder',
             message: 'Please choose a local folder where your personal journals and commitments should be securely stored.',
@@ -42,11 +47,10 @@ function ensureDatabaseConfigured() {
                 app.quit();
             }
         } else {
-            // User cancelled
             dialog.showMessageBoxSync({
                 type: 'warning',
                 title: 'Database Folder Required',
-                message: 'The whoami application requires a database storage folder to save your journal entries and settings. The application will now close.',
+                message: 'The whoami application requires a database storage folder. The application will now close.',
                 buttons: ['OK']
             });
             app.quit();
@@ -56,53 +60,19 @@ function ensureDatabaseConfigured() {
     return configured;
 }
 
-function checkServerReady(callback) {
-    http.get('http://localhost:3000/app/index.html', (res) => {
-        if (res.statusCode === 200) {
-            callback(true);
-        } else {
-            callback(false);
-        }
+function checkServerReady(url, callback) {
+    http.get(url, (res) => {
+        callback(res.statusCode === 200);
     }).on('error', () => {
         callback(false);
     });
 }
 
-function startServerAndOpenWindow() {
-    checkServerReady((ready) => {
-        if (ready) {
-            createWindow();
-        } else {
-            console.log('Spawning whoami Vite server...');
-            // Start the Vite server using npm run dev
-            serverProcess = spawn('npm', ['run', 'dev'], {
-                cwd: __dirname,
-                shell: true
-            });
+function createWindow(url) {
+    const iconPath = isPacked
+        ? path.join(process.resourcesPath, 'app', 'public', 'logo_icon.png')
+        : path.join(__dirname, 'public', 'logo_icon.png');
 
-            serverProcess.stdout.on('data', (data) => {
-                console.log(`[Vite Server]: ${data}`);
-            });
-
-            serverProcess.stderr.on('data', (data) => {
-                console.error(`[Vite Server Error]: ${data}`);
-            });
-
-            // Poll until server is ready
-            const pollInterval = setInterval(() => {
-                checkServerReady((readyNow) => {
-                    if (readyNow) {
-                        clearInterval(pollInterval);
-                        createWindow();
-                    }
-                });
-            }, 300);
-        }
-    });
-}
-
-function createWindow() {
-    const iconPath = path.join(__dirname, 'public', 'logo_icon.png');
     const win = new BrowserWindow({
         width: 1440,
         height: 900,
@@ -117,14 +87,84 @@ function createWindow() {
 
     try {
         const img = nativeImage.createFromPath(iconPath);
-        if (!img.isEmpty()) {
-            win.setIcon(img);
-        }
+        if (!img.isEmpty()) win.setIcon(img);
     } catch (e) {
-        console.error('Failed to set native window icon:', e);
+        console.error('Failed to set icon:', e);
     }
 
-    win.loadURL('http://localhost:3000/app/index.html');
+    win.loadURL(url);
+}
+
+function startServerAndOpenWindow() {
+    if (isPacked) {
+        // PRODUCTION: require server.js directly in this process (no spawn)
+        process.env.PORT = '3000';
+        process.env.WHOAMI_CONFIG = configPath;
+        process.env.WHOAMI_DIST = path.join(__dirname, 'dist');
+        process.env.WHOAMI_APP_DIR = __dirname;
+
+        try {
+            require('./server.js');
+        } catch (err) {
+            dialog.showErrorBox('Server Error', `Failed to load server:\n${err.message}\n\n${err.stack}`);
+            app.quit();
+            return;
+        }
+
+        // Poll until server is ready
+        let attempts = 0;
+        const maxAttempts = 30; // 9 seconds max
+        const pollInterval = setInterval(() => {
+            attempts++;
+            if (attempts > maxAttempts) {
+                clearInterval(pollInterval);
+                dialog.showErrorBox('Server Timeout', 'Server took too long to start.');
+                app.quit();
+                return;
+            }
+            checkServerReady('http://localhost:3000/', (ready) => {
+                if (ready) {
+                    clearInterval(pollInterval);
+                    createWindow('http://localhost:3000/app/index.html');
+                }
+            });
+        }, 300);
+
+    } else {
+        // DEV: use Vite as before
+        checkServerReady('http://localhost:3000/app/index.html', (ready) => {
+            if (ready) {
+                createWindow('http://localhost:3000/app/index.html');
+            } else {
+                console.log('Spawning Vite dev server...');
+                const serverProcess = spawn('npm', ['run', 'dev'], {
+                    cwd: __dirname,
+                    shell: true
+                });
+
+                serverProcess.stdout.on('data', (data) => console.log(`[Vite]: ${data}`));
+                serverProcess.stderr.on('data', (data) => console.error(`[Vite Error]: ${data}`));
+
+                let attempts = 0;
+                const maxAttempts = 60;
+                const pollInterval = setInterval(() => {
+                    attempts++;
+                    if (attempts > maxAttempts) {
+                        clearInterval(pollInterval);
+                        dialog.showErrorBox('Dev Server Timeout', 'Vite server took too long to start.');
+                        app.quit();
+                        return;
+                    }
+                    checkServerReady('http://localhost:3000/app/index.html', (ready) => {
+                        if (ready) {
+                            clearInterval(pollInterval);
+                            createWindow('http://localhost:3000/app/index.html');
+                        }
+                    });
+                }, 300);
+            }
+        });
+    }
 }
 
 app.whenReady().then(() => {
@@ -134,18 +174,5 @@ app.whenReady().then(() => {
 });
 
 app.on('window-all-closed', () => {
-    // Clean up whoami Vite server process on exit
-    if (serverProcess) {
-        if (process.platform === 'win32') {
-            spawn("taskkill", ["/pid", serverProcess.pid, '/f', '/t']);
-        } else {
-            // Send SIGINT or SIGKILL to kill spawned process group
-            try {
-                process.kill(-serverProcess.pid, 'SIGINT');
-            } catch (e) {
-                serverProcess.kill('SIGINT');
-            }
-        }
-    }
     app.quit();
 });

@@ -7,11 +7,13 @@ node_modules/
 jspm_packages/
 web_modules/
 
-# Production builds
+# Production builds and packaging
 dist/
 dist-ssr/
 out/
-build/
+release/
+build/*
+!build/icons/
 
 # Vite and development caches
 .vite/
