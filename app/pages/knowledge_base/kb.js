@@ -50,8 +50,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ── Font initialization ────────────────────────────────────────────────
     function applyFont(fontName) {
-        leftTA.style.fontFamily = `"${fontName}", cursive, sans-serif`;
-        rightTA.style.fontFamily = `"${fontName}", cursive, sans-serif`;
+        if (fontName === 'Default Serif') {
+            leftTA.style.fontFamily = `'EB Garamond', serif`;
+            rightTA.style.fontFamily = `'EB Garamond', serif`;
+        } else if (fontName === 'Default Sans') {
+            leftTA.style.fontFamily = `system-ui, -apple-system, sans-serif`;
+            rightTA.style.fontFamily = `system-ui, -apple-system, sans-serif`;
+        } else {
+            leftTA.style.fontFamily = `"${fontName}", cursive, sans-serif`;
+            rightTA.style.fontFamily = `"${fontName}", cursive, sans-serif`;
+        }
     }
 
     const savedFont = localStorage.getItem('scriptorium_kb_font') || 'Caveat';
@@ -112,11 +120,27 @@ document.addEventListener('DOMContentLoaded', () => {
         themeSelect.addEventListener('change', (e) => {
             const layout = e.target.value;
             const body = document.body;
-            body.className = body.className.replace(/layout-\w+/, `layout-${layout}`);
+            body.className = body.className.replace(/layout-[\w-]+/, `layout-${layout}`);
             if (!body.className.includes('layout-')) {
                 body.classList.add(`layout-${layout}`);
             }
             localStorage.setItem('scriptorium_layout', layout);
+        });
+    }
+
+    // ── Toggle Page Lines ──
+    const toggleLinesBtn = document.getElementById('toggle-lines-btn');
+    if (toggleLinesBtn) {
+        const linesHidden = localStorage.getItem('scriptorium_hide_lines') === 'true';
+        if (linesHidden) {
+            document.body.classList.add('hide-page-lines');
+            toggleLinesBtn.classList.add('active');
+        }
+
+        toggleLinesBtn.addEventListener('click', () => {
+            const isHidden = document.body.classList.toggle('hide-page-lines');
+            localStorage.setItem('scriptorium_hide_lines', isHidden);
+            toggleLinesBtn.classList.toggle('active', isHidden);
         });
     }
 
@@ -840,6 +864,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ── Keyboard: backspace at start of right → return to left ─────────────
     rightTA.addEventListener('keydown', e => {
         if (e.key === 'Backspace' && isSelectionAtStart(rightTA)) {
+            if (localStorage.getItem('scriptorium_backspace_nav_enabled') === 'false') return;
             e.preventDefault();
             setCaretToEnd(leftTA);
         }
@@ -848,6 +873,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ── Keyboard: backspace at start of left on non-first spread → prev ────
     leftTA.addEventListener('keydown', e => {
         if (e.key === 'Backspace' && isSelectionAtStart(leftTA) && currentIdx > 0) {
+            if (localStorage.getItem('scriptorium_backspace_nav_enabled') === 'false') return;
             e.preventDefault();
             goTo(currentIdx - 1, 'right');
         }

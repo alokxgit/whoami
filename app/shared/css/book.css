@@ -116,6 +116,37 @@ body.layout-ledger .book-casing {
     border-radius: 5px;
 }
 
+body.layout-obsidian .book-casing {
+    background: radial-gradient(circle at 50% 50%, #f1f5f9 0%, #cbd5e1 100%);
+    border: 8px solid #94a3b8;
+    border-radius: 8px;
+    box-shadow: 
+        0 10px 28px rgba(0, 0, 0, 0.06),
+        -18px 30px 65px rgba(0, 0, 0, 0.12),
+        inset 0 0 30px rgba(255, 255, 255, 0.8);
+}
+
+body.layout-obsidian-dark .book-casing {
+    background: radial-gradient(circle at 50% 50%, #1e1e24 0%, #0f0f11 100%);
+    border: 8px solid #2d2d34;
+    border-radius: 8px;
+    box-shadow: 
+        0 10px 28px rgba(0, 0, 0, 0.4),
+        -18px 30px 65px rgba(0, 0, 0, 0.75),
+        inset 0 0 35px rgba(0, 0, 0, 0.9);
+}
+
+body.layout-midnight-violet .book-casing {
+    background: radial-gradient(circle at 50% 50%, #0e0e1a 0%, #040408 100%);
+    border: 8px solid #4a4a68; /* Gorgeous light violet-slate color for book bordering! */
+    border-radius: 8px;
+    box-shadow: 
+        0 10px 28px rgba(0, 0, 0, 0.7),
+        -18px 30px 65px rgba(0, 0, 0, 0.9),
+        inset 0 0 35px rgba(0, 0, 0, 0.95),
+        0 0 15px rgba(192, 132, 252, 0.15); /* Soft premium exterior glow */
+}
+
 /* ── Close tab in sidebar ── */
 .bookmark-tab.close-book-banner {
     margin-top: auto;
@@ -347,4 +378,121 @@ body.layout-ledger .book-casing {
 .checkins-container-scrollable {
     scrollbar-width: thin;
     scrollbar-color: var(--gold-dim) transparent;
+}
+
+/* ── Obsidian Glow & Spine Overrides ── */
+body.layout-obsidian .desk-bg {
+    background: radial-gradient(ellipse at 50% 30%, rgba(122, 88, 244, 0.04) 0%, transparent 70%), var(--desk) !important;
+}
+body.layout-obsidian .desk-glow {
+    background: radial-gradient(ellipse at 50% -10%, rgba(122, 88, 244, 0.08) 0%, transparent 70%) !important;
+}
+
+body.layout-obsidian-dark .desk-bg {
+    background: radial-gradient(ellipse at 50% 30%, rgba(167, 139, 250, 0.07) 0%, transparent 70%), var(--desk) !important;
+}
+body.layout-obsidian-dark .desk-glow {
+    background: radial-gradient(ellipse at 50% -10%, rgba(167, 139, 250, 0.15) 0%, transparent 70%) !important;
+}
+
+body.layout-obsidian .page-spine {
+    background: linear-gradient(to right,
+            rgba(0, 0, 0, 0.12) 0%,
+            rgba(0, 0, 0, 0.05) 30%,
+            rgba(255, 255, 255, 0.15) 50%,
+            rgba(0, 0, 0, 0.05) 70%,
+            rgba(0, 0, 0, 0.12) 100%) !important;
+}
+
+body.layout-obsidian .page-spine::before {
+    background: repeating-linear-gradient(to bottom,
+            transparent 0px,
+            transparent 18px,
+            rgba(122, 88, 244, 0.04) 18px,
+            rgba(122, 88, 244, 0.04) 19px) !important;
+}
+
+body.layout-obsidian-dark .page-spine {
+    background: linear-gradient(to right,
+            rgba(0, 0, 0, 0.55) 0%,
+            rgba(0, 0, 0, 0.25) 30%,
+            rgba(255, 255, 255, 0.04) 50%,
+            rgba(0, 0, 0, 0.25) 70%,
+            rgba(0, 0, 0, 0.55) 100%) !important;
+}
+
+body.layout-obsidian-dark .page-spine::before {
+    background: repeating-linear-gradient(to bottom,
+            transparent 0px,
+            transparent 18px,
+            rgba(167, 139, 250, 0.04) 18px,
+            rgba(167, 139, 250, 0.04) 19px) !important;
+}
+
+body.layout-midnight-violet .desk-bg {
+    background: radial-gradient(ellipse at 50% 30%, rgba(192, 132, 252, 0.08) 0%, transparent 70%), var(--desk) !important;
+}
+body.layout-midnight-violet .desk-glow {
+    background: radial-gradient(ellipse at 50% -10%, rgba(192, 132, 252, 0.16) 0%, transparent 70%) !important;
+}
+
+body.layout-midnight-violet .page-spine {
+    background: linear-gradient(to right,
+            rgba(0, 0, 0, 0.6) 0%,
+            rgba(0, 0, 0, 0.3) 30%,
+            rgba(255, 255, 255, 0.05) 50%,
+            rgba(0, 0, 0, 0.3) 70%,
+            rgba(0, 0, 0, 0.6) 100%) !important;
+}
+
+body.layout-midnight-violet .page-spine::before {
+    background: repeating-linear-gradient(to bottom,
+            transparent 0px,
+            transparent 18px,
+            rgba(192, 132, 252, 0.04) 18px,
+            rgba(192, 132, 252, 0.04) 19px) !important;
+}
+
+/* ── Obsidian & Midnight Violet Layouts Bookmarks Overrides ── */
+body.layout-obsidian .bookmark-tab,
+body.layout-obsidian-dark .bookmark-tab,
+body.layout-midnight-violet .bookmark-tab {
+    color: #ffffff !important;
+}
+
+body.layout-obsidian .bookmark-tab[data-spread="reflection-study"],
+body.layout-obsidian-dark .bookmark-tab[data-spread="reflection-study"],
+body.layout-midnight-violet .bookmark-tab[data-spread="reflection-study"] {
+    background: #5b21b6 !important;
+}
+
+body.layout-obsidian .bookmark-tab[data-spread="deeds-goals"],
+body.layout-obsidian-dark .bookmark-tab[data-spread="deeds-goals"],
+body.layout-midnight-violet .bookmark-tab[data-spread="deeds-goals"] {
+    background: #4f46e5 !important;
+}
+
+body.layout-obsidian .bookmark-tab[data-spread="chronicles"],
+body.layout-obsidian-dark .bookmark-tab[data-spread="chronicles"],
+body.layout-midnight-violet .bookmark-tab[data-spread="chronicles"] {
+    background: #7c3aed !important;
+}
+
+body.layout-obsidian .bookmark-tab[data-spread="kb"],
+body.layout-obsidian-dark .bookmark-tab[data-spread="kb"],
+body.layout-midnight-violet .bookmark-tab[data-spread="kb"] {
+    background: #2563eb !important;
+}
+
+body.layout-obsidian .bookmark-tab[data-spread="settings"],
+body.layout-obsidian-dark .bookmark-tab[data-spread="settings"],
+body.layout-midnight-violet .bookmark-tab[data-spread="settings"] {
+    background: #1e1b4b !important;
+}
+
+/* ── Hide paper texture to achieve a perfectly flat, solid background ── */
+body.layout-midnight-violet .page-texture {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
 }

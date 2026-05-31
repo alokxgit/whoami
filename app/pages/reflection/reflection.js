@@ -155,9 +155,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             li.innerHTML = `
                 <div class="commitment-card-header" style="margin-bottom: 0.4rem;">
-                    <span class="commitment-title-text" style="font-size: 1.15rem; color: var(--terracotta); font-weight: 700; font-family: var(--f-head);">${index + 1}. ${escapeHtml(item.title)}</span>
+                    <span class="commitment-title-text" style="font-size: 1.25rem; color: var(--terracotta); font-weight: 900; font-family: var(--f-head);">${index + 1}. ${escapeHtml(item.title)}</span>
                 </div>
-                <div class="commitment-why-text" style="font-family: var(--f-hand); font-size: 1.05rem; margin-bottom: 0.4rem;"><strong>Why:</strong> "${escapeHtml(item.why)}"</div>
+                <div class="commitment-why-text" style="font-family: var(--f-hand); font-size: 1.05rem; margin-bottom: 0.4rem;"><strong>Why:</strong> ${escapeHtml(item.why)}</div>
                 <div class="commitment-dates-row" style="margin-bottom:0.8rem; font-size: 0.8rem; opacity: 0.8;">
                     <span><strong>Started:</strong> ${item.started}</span>
                     <span><strong>Last touched:</strong> <span class="touched-date">${item.lastTouched || 'Never'}</span></span>

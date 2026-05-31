@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const themeCards = document.querySelectorAll('.theme-card-option');
 
     function applyLayout(layout) {
-        body.className = body.className.replace(/layout-\w+/, `layout-${layout}`);
+        body.className = body.className.replace(/layout-[\w-]+/, `layout-${layout}`);
         if (!body.className.includes('layout-')) {
             body.classList.add(`layout-${layout}`);
         }
@@ -96,6 +96,11 @@ document.addEventListener('DOMContentLoaded', () => {
     function initLayout() {
         const saved = localStorage.getItem('scriptorium_layout') || 'codex';
         applyLayout(saved);
+        
+        const linesHidden = localStorage.getItem('scriptorium_hide_lines') === 'true';
+        if (linesHidden) {
+            body.classList.add('hide-page-lines');
+        }
     }
     initLayout();
 
@@ -225,6 +230,163 @@ document.addEventListener('DOMContentLoaded', () => {
         playingSources['wind'] = { node: gain, sources: [source] };
     }
 
+    function startOceanSound() {
+        const ctx = getAudioCtx();
+        const bufferSize = ctx.sampleRate * 4;
+        const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+        for (let i = 0; i < bufferSize; i++) {
+            const white = Math.random() * 2 - 1;
+            b0 = 0.99886 * b0 + white * 0.0555179;
+            b1 = 0.99332 * b1 + white * 0.0750759;
+            b2 = 0.96900 * b2 + white * 0.1538520;
+            b3 = 0.86650 * b3 + white * 0.3104856;
+            b4 = 0.55000 * b4 + white * 0.5329522;
+            b5 = -0.7616 * b5 - white * 0.0168980;
+            data[i] = b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362;
+            data[i] *= 0.11;
+            b6 = white * 0.115926;
+        }
+
+        const source = ctx.createBufferSource();
+        source.buffer = buffer;
+        source.loop = true;
+
+        const filter = ctx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.value = 350;
+
+        const gain = ctx.createGain();
+        gain.gain.value = 0.12;
+
+        source.connect(filter);
+        filter.connect(gain);
+        gain.connect(ctx.destination);
+        source.start();
+
+        let t = 0;
+        const interval = setInterval(() => {
+            if (!playingSources['ocean']) return;
+            t += 0.05;
+            const freq = 380 + Math.sin(t) * 230;
+            filter.frequency.setValueAtTime(freq, ctx.currentTime);
+            const vol = 0.095 + Math.sin(t) * 0.065;
+            gain.gain.setValueAtTime(vol, ctx.currentTime);
+        }, 50);
+
+        playingSources['ocean'] = { node: gain, sources: [source], interval };
+    }
+
+    function startForestSound() {
+        const ctx = getAudioCtx();
+        const gain = ctx.createGain();
+        gain.gain.value = 0.06;
+        gain.connect(ctx.destination);
+
+        let forestSources = [];
+        
+        const bufferSize = ctx.sampleRate * 2;
+        const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+            data[i] = Math.random() * 2 - 1;
+        }
+        const noiseSrc = ctx.createBufferSource();
+        noiseSrc.buffer = buffer;
+        noiseSrc.loop = true;
+        
+        const bpFilter = ctx.createBiquadFilter();
+        bpFilter.type = 'bandpass';
+        bpFilter.frequency.value = 4500;
+        bpFilter.Q.value = 15;
+        
+        const modGain = ctx.createGain();
+        modGain.gain.value = 0.08;
+        
+        const modOsc = ctx.createOscillator();
+        modOsc.type = 'triangle';
+        modOsc.frequency.value = 14;
+        
+        const modOscGain = ctx.createGain();
+        modOscGain.gain.value = 0.06;
+        
+        modOsc.connect(modOscGain);
+        modOscGain.connect(modGain.gain);
+        
+        noiseSrc.connect(bpFilter);
+        bpFilter.connect(modGain);
+        modGain.connect(gain);
+        
+        noiseSrc.start();
+        modOsc.start();
+        forestSources.push(noiseSrc, modOsc);
+
+        const interval = setInterval(() => {
+            if (!playingSources['forest']) return;
+            if (Math.random() > 0.4) return;
+            
+            const now = ctx.currentTime;
+            
+            const osc1 = ctx.createOscillator();
+            const osc2 = ctx.createOscillator();
+            const owlGain = ctx.createGain();
+            
+            osc1.type = 'sine';
+            osc1.frequency.setValueAtTime(260, now);
+            osc1.frequency.quadraticRampToValueAtTime(280, now + 0.15);
+            osc1.frequency.exponentialRampToValueAtTime(240, now + 0.45);
+            
+            osc2.type = 'sine';
+            osc2.frequency.setValueAtTime(262, now);
+            osc2.frequency.quadraticRampToValueAtTime(282, now + 0.15);
+            osc2.frequency.exponentialRampToValueAtTime(242, now + 0.45);
+            
+            owlGain.gain.setValueAtTime(0, now);
+            owlGain.gain.linearRampToValueAtTime(0.35, now + 0.15);
+            owlGain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+            
+            osc1.connect(owlGain);
+            osc2.connect(owlGain);
+            owlGain.connect(gain);
+            
+            osc1.start(now);
+            osc2.start(now);
+            osc1.stop(now + 0.5);
+            osc2.stop(now + 0.5);
+            
+            const osc3 = ctx.createOscillator();
+            const osc4 = ctx.createOscillator();
+            const owlGain2 = ctx.createGain();
+            const delay = 0.55;
+            
+            osc3.type = 'sine';
+            osc3.frequency.setValueAtTime(250, now + delay);
+            osc3.frequency.quadraticRampToValueAtTime(270, now + delay + 0.2);
+            osc3.frequency.exponentialRampToValueAtTime(230, now + delay + 0.6);
+            
+            osc4.type = 'sine';
+            osc4.frequency.setValueAtTime(252, now + delay);
+            osc4.frequency.quadraticRampToValueAtTime(272, now + delay + 0.2);
+            osc4.frequency.exponentialRampToValueAtTime(232, now + delay + 0.6);
+            
+            owlGain2.gain.setValueAtTime(0, now + delay);
+            owlGain2.gain.linearRampToValueAtTime(0.35, now + delay + 0.2);
+            owlGain2.gain.exponentialRampToValueAtTime(0.001, now + delay + 0.6);
+            
+            osc3.connect(owlGain2);
+            osc4.connect(owlGain2);
+            owlGain2.connect(gain);
+            
+            osc3.start(now + delay);
+            osc4.start(now + delay);
+            osc3.stop(now + delay + 0.7);
+            osc4.stop(now + delay + 0.7);
+        }, 8000);
+
+        playingSources['forest'] = { node: gain, sources: forestSources, interval };
+    }
+
     function startChimesSound() {
         const ctx = getAudioCtx();
         const freqs = [523.25, 659.25, 783.99, 1046.5];
@@ -258,6 +420,8 @@ document.addEventListener('DOMContentLoaded', () => {
         else if (type === 'rain')   startRainSound();
         else if (type === 'wind')   startWindSound();
         else if (type === 'chimes') startChimesSound();
+        else if (type === 'ocean')  startOceanSound();
+        else if (type === 'forest') startForestSound();
     }
 
     function stopSound(type) {
@@ -277,7 +441,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function stopAllSounds() {
-        ['fire', 'rain', 'wind', 'chimes'].forEach(type => {
+        ['fire', 'rain', 'wind', 'chimes', 'ocean', 'forest'].forEach(type => {
             stopSound(type);
             const btn = document.getElementById(`btn-${type}`);
             if (btn) btn.classList.remove('playing');

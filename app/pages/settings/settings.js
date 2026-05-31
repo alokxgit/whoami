@@ -18,6 +18,25 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // ── KEYBINDINGS ──
+    const vimToggle = document.getElementById('settings-vim-mode-toggle');
+    const backspaceToggle = document.getElementById('settings-backspace-nav-toggle');
+
+    if (vimToggle) {
+        vimToggle.checked = localStorage.getItem('scriptorium_vim_enabled') === 'true';
+        vimToggle.addEventListener('change', e => {
+            localStorage.setItem('scriptorium_vim_enabled', e.target.checked ? 'true' : 'false');
+        });
+    }
+
+    if (backspaceToggle) {
+        const savedBackspace = localStorage.getItem('scriptorium_backspace_nav_enabled') !== 'false';
+        backspaceToggle.checked = savedBackspace;
+        backspaceToggle.addEventListener('change', e => {
+            localStorage.setItem('scriptorium_backspace_nav_enabled', e.target.checked ? 'true' : 'false');
+        });
+    }
+
     // ── EXPORT BACKUP ──
     if (exportBtn) {
         exportBtn.addEventListener('click', () => {

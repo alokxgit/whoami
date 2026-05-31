@@ -9,12 +9,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=EB+Garamond:ital,wght@0,400..700;1,400..700&family=IM+Fell+English:ital@0;1&family=Marcellus&family=Caveat:wght@400;600&family=Sacramento&family=Architects+Daughter&family=Homemade+Apple&family=Kalam:wght@300;400;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=EB+Garamond:ital,wght@0,400..700;1,400..700&family=IM+Fell+English:ital@0;1&family=Marcellus&family=Caveat:wght@400;600&family=Sacramento&family=Architects+Daughter&family=Homemade+Apple&family=Kalam:wght@300;400;700&family=Marck+Script&family=Dancing+Script:wght@400..700&family=Pacifico&family=Reenie+Beanie&family=Love+Ya+Like+A+Sister&family=Satisfy&family=Gloria+Hallelujah&family=Kaushan+Script&family=Permanent+Marker&family=Indie+Flower&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="../../shared/css/variables.css">
     <link rel="stylesheet" href="../../shared/css/base.css">
     <link rel="stylesheet" href="../../shared/css/book.css">
-    <link rel="stylesheet" href="kb.css">
+    <link rel="stylesheet" href="./kb.css">
     <link rel="stylesheet" href="../../shared/css/responsive.css">
 </head>
 
@@ -134,16 +134,37 @@
                                 <button class="fmt-btn" id="fs-inc" title="Increase Font Size">A+</button>
                             </div>
 
+                            <!-- Toggle Page Lines -->
+                            <button class="fmt-btn" id="toggle-lines-btn" title="Toggle Page Lines" style="margin-left: 2px;">▤</button>
+
                             <div class="fmt-divider"></div>
 
                             <!-- Font Selector Dropdown -->
                             <div class="font-selector-wrapper">
                                 <select class="font-select" id="font-select" title="Handwriting Font">
-                                    <option value="Caveat" selected>Caveat</option>
-                                    <option value="Sacramento">Sacramento</option>
-                                    <option value="Architects Daughter">Architects</option>
-                                    <option value="Homemade Apple">Homemade Apple</option>
-                                    <option value="Kalam">Kalam</option>
+                                    <optgroup label="Printed Typeface (Non-Handwriting)">
+                                        <option value="Default Serif">Book Serif (Default)</option>
+                                        <option value="Default Sans">Clean Sans-Serif</option>
+                                    </optgroup>
+                                    <optgroup label="Calligraphy & Script">
+                                        <option value="Caveat" selected>Caveat</option>
+                                        <option value="Dancing Script">Dancing Script</option>
+                                        <option value="Pacifico">Pacifico</option>
+                                        <option value="Satisfy">Satisfy Script</option>
+                                        <option value="Marck Script">Marck Script</option>
+                                        <option value="Sacramento">Sacramento</option>
+                                        <option value="Kaushan Script">Kaushan Script</option>
+                                    </optgroup>
+                                    <optgroup label="Casual Handwriting">
+                                        <option value="Indie Flower">Indie Flower</option>
+                                        <option value="Reenie Beanie">Reenie Beanie</option>
+                                        <option value="Love Ya Like A Sister">Sketchy Pen</option>
+                                        <option value="Gloria Hallelujah">Marker Pen</option>
+                                        <option value="Permanent Marker">Bold Marker</option>
+                                        <option value="Architects Daughter">Architects</option>
+                                        <option value="Homemade Apple">Homemade Apple</option>
+                                        <option value="Kalam">Kalam</option>
+                                    </optgroup>
                                 </select>
                             </div>
 
@@ -155,6 +176,9 @@
                                     <option value="codex">Codex</option>
                                     <option value="folio">Folio</option>
                                     <option value="ledger">Ledger</option>
+                                    <option value="obsidian">Obsidian</option>
+                                    <option value="obsidian-dark">Obsidian Dark</option>
+                                    <option value="midnight-violet">Midnight Violet</option>
                                 </select>
                             </div>
 
@@ -168,6 +192,8 @@
                                     <option value="rain">Rain</option>
                                     <option value="wind">Wind</option>
                                     <option value="chimes">Chimes</option>
+                                    <option value="ocean">Ocean Waves</option>
+                                    <option value="forest">Forest Night</option>
                                 </select>
                             </div>
                         </div>

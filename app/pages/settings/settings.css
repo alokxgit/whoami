@@ -69,6 +69,9 @@
 .theme-codex-swatch  { background: linear-gradient(135deg, #faf5e6, #9a3512); }
 .theme-folio-swatch  { background: linear-gradient(135deg, #edd39e, #8a4a20); }
 .theme-ledger-swatch { background: linear-gradient(135deg, #1c2733, #e5c36a); }
+.theme-obsidian-swatch { background: linear-gradient(135deg, #f5f6f8, #7a58f4); }
+.theme-obsidian-dark-swatch { background: linear-gradient(135deg, #1c1c26, #a78bfa); }
+.theme-midnight-violet-swatch { background: linear-gradient(135deg, #161622, #c084fc); }
 .theme-card-info { flex: 1; }
 .theme-card-name { font-size: 0.85rem; font-weight: 600; color: var(--ink); }
 .theme-card-desc { font-size: 0.72rem; color: var(--ink-muted); margin-top: 0.1rem; }

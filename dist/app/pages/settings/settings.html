@@ -11,9 +11,9 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=EB+Garamond:ital,wght@0,400..700;1,400..700&family=IM+Fell+English:ital@0;1&family=Marcellus&family=Caveat:wght@400;600&display=swap"
         rel="stylesheet">
-  <link rel="stylesheet" crossorigin href="/assets/settings-Sgsoq0Mu.css">
-  <link rel="stylesheet" crossorigin href="/assets/base-DVgYjijg.css">
-  <link rel="stylesheet" crossorigin href="/assets/responsive-MIPLCLEB.css">
+  <link rel="stylesheet" crossorigin href="/assets/settings-B1_Gqo2N.css">
+  <link rel="stylesheet" crossorigin href="/assets/base-DGOlCpgw.css">
+  <link rel="stylesheet" crossorigin href="/assets/responsive-DF4Nphwx.css">
 </head>
 
 <body class="layout-codex book-state-open">
@@ -67,58 +67,68 @@
                         <!-- LEFT PAGE: Theme Selection -->
                         <div class="book-page page-left">
                             <div class="page-texture"></div>
-                            <div class="flourish top">❧</div>
+
 
                             <div class="page-running-header">
                                 <span class="running-brand">Alok</span>
                                 <div class="running-switcher">
-                                    <div class="layout-switcher-mini">
-                                        <button class="switcher-btn" data-layout="codex"
-                                            title="Monk's Codex">📖</button>
-                                        <button class="switcher-btn" data-layout="folio"
-                                            title="Traveler's Folio">💼</button>
-                                        <button class="switcher-btn" data-layout="ledger"
-                                            title="Scribe's Ledger">📜</button>
+                                    <div class="page-date-badge">
+                                        <span class="day-number">30</span>
+                                        <span class="month">May</span>
+                                        <span class="year">2026</span>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="page-header">
-                                <h1>Journal Theme</h1>
-                                <p class="page-header-sub">Choose your casing style</p>
+                                <h1>Who I Am</h1>
+                                <p class="page-header-sub">Configure your persona details</p>
                             </div>
 
                             <div class="section-divider">
                                 <div class="divider-rule"></div>
-                                <span class="divider-icon">🎨</span>
-                                <span class="section-sub">Visual Style</span>
+                                <span class="divider-icon">🧭</span>
+                                <span class="section-sub">Who I Am</span>
                                 <div class="divider-rule"></div>
                             </div>
 
-                            <div class="theme-selector-panel">
-                                <button class="theme-card-option active" data-layout="codex" id="theme-codex">
-                                    <div class="theme-swatch theme-codex-swatch"></div>
-                                    <div class="theme-card-info">
-                                        <div class="theme-card-name">📖 Monk's Codex</div>
-                                        <div class="theme-card-desc">Classic warm parchment with sepia ink</div>
+                            <div class="settings-control-row"
+                                style="flex-direction: column; align-items: stretch; gap: 0.4rem; padding: 0.5rem 0.8rem; margin-bottom: 0.6rem;">
+                                <div>
+                                    <div class="settings-control-label">Core Biography Quote</div>
+                                    <div class="settings-control-desc">Paragraph reflecting your character and values
                                     </div>
-                                    <span class="theme-active-badge">Active</span>
-                                </button>
-                                <button class="theme-card-option" data-layout="folio" id="theme-folio">
-                                    <div class="theme-swatch theme-folio-swatch"></div>
-                                    <div class="theme-card-info">
-                                        <div class="theme-card-name">💼 Traveler's Folio</div>
-                                        <div class="theme-card-desc">Aged kraft paper with earthy tones</div>
+                                </div>
+                                <textarea id="settings-whoami-bio" rows="3" placeholder="Core biography quote..."
+                                    style="width: 100%; background: rgba(255,255,255,0.45); border: 1px solid var(--gold-dim); border-radius: 5px; padding: 0.4rem 0.6rem; font-family: var(--f-hand); font-size: 0.95rem; color: var(--ink); outline: none; resize: vertical; margin-top: 0.2rem;"></textarea>
+                            </div>
+
+                            <div class="settings-control-row"
+                                style="flex-direction: column; align-items: stretch; gap: 0.4rem; padding: 0.5rem 0.8rem; margin-bottom: 0.6rem;">
+                                <div>
+                                    <div class="settings-control-label">Good At (One item per line)</div>
+                                    <div class="settings-control-desc">Your core strengths and craftsmanship skills
                                     </div>
-                                    <span class="theme-active-badge">Active</span>
-                                </button>
-                                <button class="theme-card-option" data-layout="ledger" id="theme-ledger">
-                                    <div class="theme-swatch theme-ledger-swatch"></div>
-                                    <div class="theme-card-info">
-                                        <div class="theme-card-name">📜 Scribe's Ledger</div>
-                                        <div class="theme-card-desc">Dark midnight slate with gold accents</div>
-                                    </div>
-                                    <span class="theme-active-badge">Active</span>
+                                </div>
+                                <textarea id="settings-whoami-good" rows="4"
+                                    placeholder="e.g. UI & Visual Craftsmanship: Designing interfaces with rich textures..."
+                                    style="width: 100%; background: rgba(255,255,255,0.45); border: 1px solid var(--gold-dim); border-radius: 5px; padding: 0.4rem 0.6rem; font-family: var(--f-hand); font-size: 0.95rem; color: var(--ink); outline: none; resize: vertical; margin-top: 0.2rem;"></textarea>
+                            </div>
+
+                            <div class="settings-control-row"
+                                style="flex-direction: column; align-items: stretch; gap: 0.4rem; padding: 0.5rem 0.8rem; margin-bottom: 0.6rem;">
+                                <div>
+                                    <div class="settings-control-label">Needs Improvements (One item per line)</div>
+                                    <div class="settings-control-desc">Your core goals and areas of growth</div>
+                                </div>
+                                <textarea id="settings-whoami-improvements" rows="4"
+                                    placeholder="e.g. Perfectionist Over-refining: Learning when a solution is strong enough..."
+                                    style="width: 100%; background: rgba(255,255,255,0.45); border: 1px solid var(--gold-dim); border-radius: 5px; padding: 0.4rem 0.6rem; font-family: var(--f-hand); font-size: 0.95rem; color: var(--ink); outline: none; resize: vertical; margin-top: 0.2rem;"></textarea>
+                            </div>
+
+                            <div style="padding: 0 0.8rem; margin-bottom: 0.8rem;">
+                                <button class="settings-action-btn" id="settings-whoami-save-btn" style="width: 100%;">
+                                    Save Who I Am
                                 </button>
                             </div>
 
@@ -141,15 +151,21 @@
                                 </div>
 
                                 <div class="manager-content">
-                                    <form class="settings-goal-add-form" id="settings-goal-form" style="display:flex; flex-direction:column; gap:0.5rem; width:100%;">
+                                    <form class="settings-goal-add-form" id="settings-goal-form"
+                                        style="display:flex; flex-direction:column; gap:0.5rem; width:100%;">
                                         <div style="display:flex; gap:0.5rem; width:100%;">
-                                            <input type="text" id="settings-goal-input" placeholder="Add new weekly goal..."
-                                                autocomplete="off" required style="flex:1;">
+                                            <input type="text" id="settings-goal-input"
+                                                placeholder="Add new weekly goal..." autocomplete="off" required
+                                                style="flex:1;">
                                             <button type="submit" style="width:auto; padding:0 1rem;">✒ Add</button>
                                         </div>
-                                        <div id="weekly-commitment-select-container" style="display:flex; align-items:center; gap:0.5rem; width:100%;">
-                                            <label for="goal-commitment-select" style="font-family:var(--f-head); font-size:0.75rem; color:var(--ink-muted); white-space:nowrap;">Connect to Commitment:</label>
-                                            <select id="goal-commitment-select" style="flex:1; padding:4px 8px; font-family:var(--f-head); font-size:0.75rem; border:1px dashed var(--gold-dim); background:rgba(0,0,0,0.1); color:var(--ink); border-radius:4px; cursor:pointer;">
+                                        <div id="weekly-commitment-select-container"
+                                            style="display:flex; align-items:center; gap:0.5rem; width:100%;">
+                                            <label for="goal-commitment-select"
+                                                style="font-family:var(--f-head); font-size:0.75rem; color:var(--ink-muted); white-space:nowrap;">Connect
+                                                to Commitment:</label>
+                                            <select id="goal-commitment-select"
+                                                style="flex:1; padding:4px 8px; font-family:var(--f-head); font-size:0.75rem; border:1px dashed var(--gold-dim); background:rgba(0,0,0,0.1); color:var(--ink); border-radius:4px; cursor:pointer;">
                                                 <option value="">-- None --</option>
                                             </select>
                                         </div>
@@ -157,40 +173,52 @@
                                     <ul class="settings-goals-list" id="settings-goals-list">
                                         <!-- Dynamically populated -->
                                     </ul>
-                                    
-                                    <div id="settings-commitments-tab-content" style="display: none; flex-direction: column; gap: 0.8rem; width: 100%;">
-                                        <form id="add-commitment-form" class="settings-commitment-form" style="display:flex; flex-direction:column; gap:0.65rem; background:rgba(229, 195, 106, 0.03); border:1px solid rgba(229, 195, 106, 0.15); border-radius:8px; padding:0.75rem;">
+
+                                    <div id="settings-commitments-tab-content"
+                                        style="display: none; flex-direction: column; gap: 0.8rem; width: 100%;">
+                                        <form id="add-commitment-form" class="settings-commitment-form"
+                                            style="display:flex; flex-direction:column; gap:0.65rem; background:rgba(229, 195, 106, 0.03); border:1px solid rgba(229, 195, 106, 0.15); border-radius:8px; padding:0.75rem;">
                                             <div style="display:flex; flex-direction:column; gap:0.2rem;">
-                                                <label class="form-label" style="font-family:var(--f-head); font-size:0.78rem; color:var(--terracotta); text-transform:uppercase; letter-spacing:0.04em; font-weight:600;" for="commitment-title">The Commitment</label>
-                                                <input type="text" id="commitment-title" placeholder="What exactly you committed to..." style="background:rgba(255,255,255,0.45); border:1px solid var(--gold-dim); border-radius:5px; padding:0.35rem 0.6rem; font-family:var(--f-hand); font-size:0.92rem; color:var(--ink); outline:none;" required>
+                                                <label class="form-label"
+                                                    style="font-family:var(--f-head); font-size:0.78rem; color:var(--terracotta); text-transform:uppercase; letter-spacing:0.04em; font-weight:600;"
+                                                    for="commitment-title">The Commitment</label>
+                                                <input type="text" id="commitment-title"
+                                                    placeholder="What exactly you committed to..."
+                                                    style="background:rgba(255,255,255,0.45); border:1px solid var(--gold-dim); border-radius:5px; padding:0.35rem 0.6rem; font-family:var(--f-hand); font-size:0.92rem; color:var(--ink); outline:none;"
+                                                    required>
                                             </div>
                                             <div style="display:flex; flex-direction:column; gap:0.2rem;">
-                                                <label class="form-label" style="font-family:var(--f-head); font-size:0.78rem; color:var(--terracotta); text-transform:uppercase; letter-spacing:0.04em; font-weight:600;" for="commitment-why">The Purpose</label>
-                                                <input type="text" id="commitment-why" placeholder="One line, why you decided this..." style="background:rgba(255,255,255,0.45); border:1px solid var(--gold-dim); border-radius:5px; padding:0.35rem 0.6rem; font-family:var(--f-hand); font-size:0.92rem; color:var(--ink); outline:none;" required>
+                                                <label class="form-label"
+                                                    style="font-family:var(--f-head); font-size:0.78rem; color:var(--terracotta); text-transform:uppercase; letter-spacing:0.04em; font-weight:600;"
+                                                    for="commitment-why">The Purpose</label>
+                                                <input type="text" id="commitment-why"
+                                                    placeholder="One line, why you decided this..."
+                                                    style="background:rgba(255,255,255,0.45); border:1px solid var(--gold-dim); border-radius:5px; padding:0.35rem 0.6rem; font-family:var(--f-hand); font-size:0.92rem; color:var(--ink); outline:none;"
+                                                    required>
                                             </div>
-                                            <div style="display:flex; gap:0.5rem;">
-                                                <div style="flex:1; display:flex; flex-direction:column; gap:0.2rem;">
-                                                    <label class="form-label" style="font-family:var(--f-head); font-size:0.78rem; color:var(--terracotta); text-transform:uppercase; letter-spacing:0.04em; font-weight:600;" for="commitment-category">Category</label>
-                                                    <input type="text" id="commitment-category" placeholder="e.g. Work, Health..." style="background:rgba(255,255,255,0.45); border:1px solid var(--gold-dim); border-radius:5px; padding:0.35rem 0.6rem; font-family:var(--f-hand); font-size:0.92rem; color:var(--ink); outline:none;" required>
-                                                </div>
-                                                <div style="flex:1; display:flex; flex-direction:column; gap:0.2rem;">
-                                                    <label class="form-label" style="font-family:var(--f-head); font-size:0.78rem; color:var(--terracotta); text-transform:uppercase; letter-spacing:0.04em; font-weight:600;" for="commitment-status">Status</label>
-                                                    <select id="commitment-status" style="background:rgba(255,255,255,0.45); border:1px solid var(--gold-dim); border-radius:5px; padding:0.35rem 0.6rem; font-family:var(--f-hand); font-size:0.92rem; color:var(--ink); outline:none; width:100%;">
-                                                        <option value="In Progress">🎯 In Progress</option>
-                                                        <option value="Abandoned">🥀 Abandoned</option>
-                                                        <option value="Done">🏆 Done</option>
-                                                    </select>
-                                                </div>
+                                            <div style="display:flex; flex-direction:column; gap:0.2rem;">
+                                                <label class="form-label"
+                                                    style="font-family:var(--f-head); font-size:0.78rem; color:var(--terracotta); text-transform:uppercase; letter-spacing:0.04em; font-weight:600;"
+                                                    for="commitment-category">Category</label>
+                                                <input type="text" id="commitment-category"
+                                                    placeholder="e.g. Work, Health..."
+                                                    style="background:rgba(255,255,255,0.45); border:1px solid var(--gold-dim); border-radius:5px; padding:0.35rem 0.6rem; font-family:var(--f-hand); font-size:0.92rem; color:var(--ink); outline:none;"
+                                                    required>
                                             </div>
-                                            <button type="submit" class="settings-action-btn" style="width:100%; margin-top:0.25rem; padding:0.4rem 1rem;">✒️ Bind Commitment</button>
+                                            <button type="submit" class="settings-action-btn"
+                                                style="width:100%; margin-top:0.25rem; padding:0.4rem 1rem;">✒️ Bind
+                                                Commitment</button>
                                         </form>
-                                        
-                                        <h3 style="font-family:var(--f-head); font-size:0.8rem; color:var(--terracotta); text-transform:uppercase; margin-top:0.6rem; border-bottom:1px solid rgba(229,195,106,0.2); padding-bottom:4px; letter-spacing:0.04em; font-weight:600;">Active Commitments</h3>
-                                        <ul class="settings-goals-list" id="settings-commitments-list" style="margin-top: 0; max-height: 250px; overflow-y: auto;">
+
+                                        <h3
+                                            style="font-family:var(--f-head); font-size:0.8rem; color:var(--terracotta); text-transform:uppercase; margin-top:0.6rem; border-bottom:1px solid rgba(229,195,106,0.2); padding-bottom:4px; letter-spacing:0.04em; font-weight:600;">
+                                            Active Commitments</h3>
+                                        <ul class="settings-goals-list" id="settings-commitments-list"
+                                            style="margin-top: 0; max-height: 250px; overflow-y: auto;">
                                             <!-- Dynamically populated commitments -->
                                         </ul>
                                     </div>
-                                    
+
                                     <button class="settings-action-btn" id="settings-goals-save-reset-btn"
                                         style="width: 100%; margin-top: 0.8rem; display: flex; align-items: center; justify-content: center; gap: 6px;">
                                         Save &amp; Reset Active Registry Tab
@@ -205,7 +233,7 @@
                         <!-- RIGHT PAGE: Controls & Data -->
                         <div class="book-page page-right">
                             <div class="page-texture"></div>
-                            <div class="flourish top">❧</div>
+
 
                             <div class="page-running-header">
                                 <span class="running-section">Settings</span>
@@ -218,7 +246,7 @@
 
                             <div class="page-header">
                                 <h1>Preferences</h1>
-                                <p class="page-header-sub">Audio and data controls</p>
+                                <p class="page-header-sub">Configure your experience</p>
                             </div>
 
                             <div class="section-divider">
@@ -317,21 +345,169 @@
 
                             <div class="section-divider" style="margin-top:1.2rem;">
                                 <div class="divider-rule"></div>
+                                <span class="divider-icon">🎨</span>
+                                <span class="section-sub">Journal Theme</span>
+                                <div class="divider-rule"></div>
+                            </div>
+
+                            <div class="theme-selector-panel" style="padding: 0 0.8rem;">
+                                <button class="theme-card-option active" data-layout="codex" id="theme-codex">
+                                    <div class="theme-swatch theme-codex-swatch"></div>
+                                    <div class="theme-card-info">
+                                        <div class="theme-card-name">📖 Monk's Codex</div>
+                                        <div class="theme-card-desc">Classic warm parchment with sepia ink</div>
+                                    </div>
+                                    <span class="theme-active-badge">Active</span>
+                                </button>
+                                <button class="theme-card-option" data-layout="folio" id="theme-folio">
+                                    <div class="theme-swatch theme-folio-swatch"></div>
+                                    <div class="theme-card-info">
+                                        <div class="theme-card-name">💼 Traveler's Folio</div>
+                                        <div class="theme-card-desc">Aged kraft paper with earthy tones</div>
+                                    </div>
+                                    <span class="theme-active-badge">Active</span>
+                                </button>
+                                <button class="theme-card-option" data-layout="ledger" id="theme-ledger">
+                                    <div class="theme-swatch theme-ledger-swatch"></div>
+                                    <div class="theme-card-info">
+                                        <div class="theme-card-name">📜 Scribe's Ledger</div>
+                                        <div class="theme-card-desc">Dark midnight slate with gold accents</div>
+                                    </div>
+                                    <span class="theme-active-badge">Active</span>
+                                </button>
+                                <button class="theme-card-option" data-layout="obsidian" id="theme-obsidian">
+                                    <div class="theme-swatch theme-obsidian-swatch"></div>
+                                    <div class="theme-card-info">
+                                        <div class="theme-card-name">🔮 Obsidian Lavender</div>
+                                        <div class="theme-card-desc">Sleek light digital workspace with modern violet accents</div>
+                                    </div>
+                                    <span class="theme-active-badge">Active</span>
+                                </button>
+                                <button class="theme-card-option" data-layout="vellum" id="theme-vellum">
+                                    <div class="theme-swatch theme-vellum-swatch"></div>
+                                    <div class="theme-card-info">
+                                        <div class="theme-card-name">👑 Royal Vellum</div>
+                                        <div class="theme-card-desc">Warm cream page with burgundy cover style</div>
+                                    </div>
+                                    <span class="theme-active-badge">Active</span>
+                                </button>
+                                <button class="theme-card-option" data-layout="grimoire" id="theme-grimoire">
+                                    <div class="theme-swatch theme-grimoire-swatch"></div>
+                                    <div class="theme-card-info">
+                                        <div class="theme-card-name">🌳 Emerald Grimoire</div>
+                                        <div class="theme-card-desc">Mystical sage green with gold borders</div>
+                                    </div>
+                                    <span class="theme-active-badge">Active</span>
+                                </button>
+                                <button class="theme-card-option" data-layout="alchemist" id="theme-alchemist">
+                                    <div class="theme-swatch theme-alchemist-swatch"></div>
+                                    <div class="theme-card-info">
+                                        <div class="theme-card-name">🧪 Alchemist Folio</div>
+                                        <div class="theme-card-desc">Pitch dark bronze paper with glowing gold</div>
+                                    </div>
+                                    <span class="theme-active-badge">Active</span>
+                                </button>
+                                <button class="theme-card-option" data-layout="atlas" id="theme-atlas">
+                                    <div class="theme-swatch theme-atlas-swatch"></div>
+                                    <div class="theme-card-info">
+                                        <div class="theme-card-name">🧭 Oceanic Atlas</div>
+                                        <div class="theme-card-desc">Deep sea navy cover with soft teal print</div>
+                                    </div>
+                                    <span class="theme-active-badge">Active</span>
+                                </button>
+                                <button class="theme-card-option" data-layout="zen" id="theme-zen">
+                                    <div class="theme-swatch theme-zen-swatch"></div>
+                                    <div class="theme-card-info">
+                                        <div class="theme-card-name">🍃 Zen Sanctuary</div>
+                                        <div class="theme-card-desc">Soft linen, calming moss accent, charcoal ink</div>
+                                    </div>
+                                    <span class="theme-active-badge">Active</span>
+                                </button>
+                                <button class="theme-card-option" data-layout="poet" id="theme-poet">
+                                    <div class="theme-swatch theme-poet-swatch"></div>
+                                    <div class="theme-card-info">
+                                        <div class="theme-card-name">🌌 Midnight Poet</div>
+                                        <div class="theme-card-desc">Starry indigo pages with glowing gold print</div>
+                                    </div>
+                                    <span class="theme-active-badge">Active</span>
+                                </button>
+                                <button class="theme-card-option" data-layout="cyber" id="theme-cyber">
+                                    <div class="theme-swatch theme-cyber-swatch"></div>
+                                    <div class="theme-card-info">
+                                        <div class="theme-card-name">⚡ Cyberpunk CRT</div>
+                                        <div class="theme-card-desc">Terminal gray with glowing retro phosphor orange</div>
+                                    </div>
+                                    <span class="theme-active-badge">Active</span>
+                                </button>
+                                <button class="theme-card-option" data-layout="autumn" id="theme-autumn">
+                                    <div class="theme-swatch theme-autumn-swatch"></div>
+                                    <div class="theme-card-info">
+                                        <div class="theme-card-name">🍂 Autumn Cozy</div>
+                                        <div class="theme-card-desc">Pumpkin rust parchment with rich mahogany ink</div>
+                                    </div>
+                                    <span class="theme-active-badge">Active</span>
+                                </button>
+                                <button class="theme-card-option" data-layout="sakura" id="theme-sakura">
+                                    <div class="theme-swatch theme-sakura-swatch"></div>
+                                    <div class="theme-card-info">
+                                        <div class="theme-card-name">🌸 Sakura Breeze</div>
+                                        <div class="theme-card-desc">Cherry blossom pink pages with sweet berry print</div>
+                                    </div>
+                                    <span class="theme-active-badge">Active</span>
+                                </button>
+                            </div>
+
+                            <div class="section-divider" style="margin-top:1.2rem;">
+                                <div class="divider-rule"></div>
+                                <span class="divider-icon">⌨️</span>
+                                <span class="section-sub">Keybindings</span>
+                                <div class="divider-rule"></div>
+                            </div>
+
+                            <div class="settings-control-row">
+                                <div>
+                                    <div class="settings-control-label">Vim Mode (ALT + V)</div>
+                                    <div class="settings-control-desc">Enable classic modal text editing shortcuts</div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="settings-vim-mode-toggle">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="settings-control-row">
+                                <div>
+                                    <div class="settings-control-label">Backspace Navigation</div>
+                                    <div class="settings-control-desc">Press Backspace at start of page to go back</div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="settings-backspace-nav-toggle">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="section-divider" style="margin-top:1.2rem;">
+                                <div class="divider-rule"></div>
                                 <span class="divider-icon">💾</span>
                                 <span class="section-sub">Data</span>
                                 <div class="divider-rule"></div>
                             </div>
 
-                            <div class="settings-control-row" style="flex-direction: column; align-items: stretch; gap: 0.4rem; padding: 0.5rem 0.8rem; margin-bottom: 0.6rem;">
+                            <div class="settings-control-row"
+                                style="flex-direction: column; align-items: stretch; gap: 0.4rem; padding: 0.5rem 0.8rem; margin-bottom: 0.6rem;">
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
                                     <div>
                                         <div class="settings-control-label">Database Folder Location</div>
-                                        <div class="settings-control-desc">Path to save your journals, goals, and assets</div>
+                                        <div class="settings-control-desc">Path to save your journals, goals, and assets
+                                        </div>
                                     </div>
                                 </div>
                                 <div style="display: flex; gap: 0.5rem; margin-top: 0.2rem;">
-                                    <input type="text" id="settings-db-path-input" placeholder="Loading current path..." style="flex: 1; background: rgba(255,255,255,0.45); border: 1px solid var(--gold-dim); border-radius: 5px; padding: 0.35rem 0.6rem; font-family: var(--f-head); font-size: 0.78rem; color: var(--ink); outline: none;">
-                                    <button class="settings-action-btn" id="settings-db-path-save-btn" style="width: auto; padding: 0 0.8rem; font-size: 0.75rem; white-space: nowrap;">💾 Save Path</button>
+                                    <input type="text" id="settings-db-path-input" placeholder="Loading current path..."
+                                        style="flex: 1; background: rgba(255,255,255,0.45); border: 1px solid var(--gold-dim); border-radius: 5px; padding: 0.35rem 0.6rem; font-family: var(--f-head); font-size: 0.78rem; color: var(--ink); outline: none;">
+                                    <button class="settings-action-btn" id="settings-db-path-save-btn"
+                                        style="width: auto; padding: 0 0.8rem; font-size: 0.75rem; white-space: nowrap;">💾
+                                        Save Path</button>
                                 </div>
                             </div>
 

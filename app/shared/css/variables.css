@@ -67,6 +67,60 @@ body.layout-ledger {
     --page-border: rgba(229, 195, 106, 0.12);
 }
 
+/* ── Obsidian Light Theme ── */
+body.layout-obsidian {
+    --parchment: #f5f6f8;
+    --parchment-dark: #eef0f3;
+    --parchment-burnt: #ccd1d9;
+    --ink: #1e2025;
+    --ink-2: #2d3139;
+    --ink-muted: #656d78;
+    --amber: #7a58f4;
+    --amber-glow: rgba(122, 88, 244, 0.12);
+    --terracotta: #6366f1;
+    --gold: #7a58f4;
+    --gold-dim: rgba(122, 88, 244, 0.15);
+    --page-bg: #f5f6f8;
+    --page-texture-blend: overlay;
+    --page-border: rgba(122, 88, 244, 0.16);
+}
+
+/* ── Obsidian Dark Theme ── */
+body.layout-obsidian-dark {
+    --parchment: #1c1c26; /* Premium dark slate violet-charcoal page color */
+    --parchment-dark: #13131c; /* Even deeper matching tone for toolbar footer */
+    --parchment-burnt: #0c0c12;
+    --ink: #e3e6eb;
+    --ink-2: #c4c9d4;
+    --ink-muted: #888d96;
+    --amber: #a78bfa;
+    --amber-glow: rgba(167, 139, 250, 0.15);
+    --terracotta: #818cf8;
+    --gold: #a78bfa;
+    --gold-dim: rgba(167, 139, 250, 0.18);
+    --page-bg: #1c1c26;
+    --page-texture-blend: screen;
+    --page-border: rgba(167, 139, 250, 0.18);
+}
+
+/* ── Midnight Violet Theme (Ultra-Dark Void) ── */
+body.layout-midnight-violet {
+    --parchment: #0a0a12; /* Breathtaking ultra-dark midnight violet-black from the screenshot */
+    --parchment-dark: #050508; /* Super-deep secondary dark for footer and controls */
+    --parchment-burnt: #020204;
+    --ink: #ffffff; /* High contrast vibrant white ink for perfect legibility */
+    --ink-2: #e2d8eb;
+    --ink-muted: #746f80;
+    --amber: #c084fc; /* Luminescent violet-neon */
+    --amber-glow: rgba(192, 132, 252, 0.2);
+    --terracotta: #818cf8;
+    --gold: #c084fc;
+    --gold-dim: rgba(192, 132, 252, 0.25);
+    --page-bg: #0a0a12;
+    --page-texture-blend: screen;
+    --page-border: rgba(192, 132, 252, 0.25);
+}
+
 /* ── Specific Font Style Sizing Overrides ── */
 h1 { font-size: calc(1.25rem * var(--scale-fancy, 1.0)) !important; }
 h2, h3 { font-size: calc(0.92rem * var(--scale-fancy, 1.0)) !important; }
@@ -118,3 +172,11 @@ h2, h3 { font-size: calc(0.92rem * var(--scale-fancy, 1.0)) !important; }
 .lock-weekly-btn { font-size: calc(0.72rem * var(--scale-head, 1.0)) !important; }
 .font-scale-btn { font-size: calc(0.8rem * var(--scale-head, 1.0)) !important; }
 .settings-goal-del-btn { font-size: calc(0.72rem * var(--scale-head, 1.0)) !important; }
+
+/* ── Toggleable Page Lines CSS Overrides ── */
+body.hide-page-lines #scrapbook-textarea,
+body.hide-page-lines #scrapbook-textarea-right,
+body.hide-page-lines .page-fold-face-front,
+body.hide-page-lines .page-fold-face-back {
+    background-image: none !important;
+}

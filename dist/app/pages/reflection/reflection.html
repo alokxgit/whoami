@@ -11,9 +11,9 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=EB+Garamond:ital,wght@0,400..700;1,400..700&family=IM+Fell+English:ital@0;1&family=Marcellus&family=Caveat:wght@400;600&display=swap"
         rel="stylesheet">
-  <link rel="stylesheet" crossorigin href="/assets/reflection-DCmE0z8L.css">
-  <link rel="stylesheet" crossorigin href="/assets/base-DVgYjijg.css">
-  <link rel="stylesheet" crossorigin href="/assets/responsive-MIPLCLEB.css">
+  <link rel="stylesheet" crossorigin href="/assets/reflection-CQLcWdbY.css">
+  <link rel="stylesheet" crossorigin href="/assets/base-DGOlCpgw.css">
+  <link rel="stylesheet" crossorigin href="/assets/responsive-DF4Nphwx.css">
 </head>
 
 <body class="layout-codex book-state-open">
@@ -52,7 +52,8 @@
                     <a class="bookmark-tab" data-spread="settings" href="../settings/settings.html">
                         <span class="bm-num">V</span><span class="bm-label">Settings</span>
                     </a>
-                    <a class="bookmark-tab close-book-banner" href="../../index.html" id="close-book-banner" title="Close Journal">
+                    <a class="bookmark-tab close-book-banner" href="../../index.html" id="close-book-banner"
+                        title="Close Journal">
                         <span class="bm-num">✕</span><span class="bm-label">Close</span>
                     </a>
                 </nav>
@@ -64,33 +65,108 @@
                     <!-- SPREAD I: Reflection & Study -->
                     <div class="book-spread active-spread" id="spread-reflection-study">
 
-                        <!-- LEFT PAGE: Active Commitments -->
+                        <!-- LEFT PAGE: Who I Am (Self Portrait) -->
                         <div class="book-page page-left">
                             <div class="page-texture"></div>
-                            <div class="flourish top">❧</div>
+
 
                             <div class="page-running-header">
                                 <span class="running-brand">Alok</span>
                                 <div class="running-switcher">
-                                    <div class="layout-switcher-mini">
-                                        <button class="switcher-btn" data-layout="codex" title="Monk's Codex">📖</button>
-                                        <button class="switcher-btn" data-layout="folio" title="Traveler's Folio">💼</button>
-                                        <button class="switcher-btn" data-layout="ledger" title="Scribe's Ledger">📜</button>
+                                    <div class="page-date-badge">
+                                        <span class="day-number">30</span>
+                                        <span class="month">May</span>
+                                        <span class="year">2026</span>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="page-header">
-                                <h1>Active Commitments</h1>
-                                <p class="page-header-sub">Your sacred bindings and intentions</p>
+                                <h1>Who I Am</h1>
+
                             </div>
 
+                            <!-- Profile Picture Section -->
+                            <div class="profile-pic-container">
+                                <div class="profile-frame" id="profile-frame-btn" title="Click to change your portrait">
+                                    <img id="profile-display-img" src="/assets/default_portrait-DQfu683_.png"
+                                        alt="Profile Portrait">
+                                    <div class="profile-overlay">
+                                        <span class="overlay-icon">🎨</span>
+                                        <span class="overlay-text">Alter Portrait</span>
+                                    </div>
+                                </div>
+                                <input type="file" id="profile-file-input" style="display: none;" accept="image/*">
+                            </div>
 
-                            <div class="section-divider" style="margin-top: 1rem;">
-                                <div class="divider-rule"></div>
-                                <span class="divider-icon">📜</span>
-                                <span class="section-sub">Your Commitments Registry</span>
-                                <div class="divider-rule"></div>
+                            <!-- Center-aligned paragraph about who I am -->
+                            <div class="whoami-bio">
+                                <p class="bio-text">
+                                    "Driven by an insatiable curiosity and an enduring passion for creating beautiful
+                                    digital experiences. I believe that technical mastery should always walk
+                                    hand-in-hand with empathy, visual elegance, and clarity of purpose. An eternal
+                                    student, seeking to bring order to complex systems through clean modular design and
+                                    aesthetic harmony."
+                                </p>
+                            </div>
+
+                            <!-- Strengths vs Improvements Split Section -->
+                            <div class="split-reflection-container">
+                                <!-- Left Column: What I'm Good At -->
+                                <div class="split-col split-left">
+                                    <h3 class="split-title"><span class="split-title-icon"></span> Good At</h3>
+                                    <ul class="split-list">
+                                        <li><strong>UI &amp; Visual Craftsmanship:</strong> Designing interfaces with
+                                            rich textures, elegant layouts, and beautiful typography.</li>
+                                        <li><strong>Logical Problem Solving:</strong> Resolving tricky architectural
+                                            issues, debugging cleanly, and maintaining codebase health.</li>
+                                        <li><strong>Empathetic Collaboration:</strong> Working supportively through pair
+                                            programming with active listening.</li>
+                                        <li><strong>Meticulous Tidiness:</strong> Keeping files clean and preserving
+                                            code standards without shortcuts.</li>
+                                    </ul>
+                                </div>
+
+                                <!-- Vertical Divider -->
+                                <div class="split-divider"></div>
+
+                                <!-- Right Column: Needs Improvements -->
+                                <div class="split-col split-right">
+                                    <h3 class="split-title"><span class="split-title-icon"></span> Needs Improvements
+                                    </h3>
+                                    <ul class="split-list">
+                                        <li><strong>Perfectionist Over-refining:</strong> Learning when a solution is
+                                            strong enough to avoid burning extra hours.</li>
+                                        <li><strong>Context Segmentation:</strong> Sticking to current focus without
+                                            being pulled away by neighboring code enhancements.</li>
+                                        <li><strong>Velocity Balance:</strong> Striking the golden mean between perfect
+                                            code structures and swift delivery.</li>
+                                        <li><strong>Deep Post-Mortems:</strong> Carving out patient space to document
+                                            edge cases after solving pressing bugs.</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <!-- RIGHT PAGE: Active Commitments -->
+                        <div class="book-page page-right">
+                            <div class="page-texture"></div>
+
+
+                            <div class="page-running-header">
+                                <span class="running-section">Reflections</span>
+                                <div class="page-date-badge">
+                                    <span class="day-number">31</span>
+                                    <span class="month">May</span>
+                                    <span class="year">2026</span>
+                                </div>
+                            </div>
+
+                            <div class="page-header">
+                                <h1>Active Commitments</h1>
+
                             </div>
 
                             <div class="commitments-container-scrollable">
@@ -99,69 +175,6 @@
                                 </ul>
                             </div>
 
-                            <div class="flourish bottom">❦</div>
-                        </div>
-
-
-                        <!-- RIGHT PAGE: Daily Check-in -->
-                        <div class="book-page page-right">
-                            <div class="page-texture"></div>
-                            <div class="flourish top">❧</div>
-
-                            <div class="page-running-header">
-                                <span class="running-section">Daily Check-in</span>
-                                <div class="page-date-badge">
-                                    <span class="day-number">30</span>
-                                    <span class="month">May</span>
-                                    <span class="year">2026</span>
-                                </div>
-                            </div>
-
-                            <div class="page-header">
-                                <h1>Daily Check-in</h1>
-                                <p class="page-header-sub">Record today's work honestly</p>
-                            </div>
-
-                            <form id="checkin-form" class="reflection-form">
-                                <div class="form-group">
-                                    <label class="form-label" for="checkin-commitment-select">Which commitment did you work on today?</label>
-                                    <select id="checkin-commitment-select" required>
-                                        <option value="" disabled selected>Select a commitment...</option>
-                                        <!-- Dynamically populated from commitments -->
-                                    </select>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label class="form-label">Did you move forward?</label>
-                                    <div class="yes-no-buttons">
-                                        <button type="button" class="yn-btn active" data-val="Yes">✨ Yes</button>
-                                        <button type="button" class="yn-btn" data-val="No">⏳ No</button>
-                                    </div>
-                                    <input type="hidden" id="checkin-forward" value="Yes" required>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="form-label" for="checkin-notes">One honest line</label>
-                                    <input type="text" id="checkin-notes" placeholder="What happened today..." required>
-                                </div>
-
-                                <button type="submit" class="submit-btn" style="width: 100%; margin-top: 0.5rem;">💾 Record Check-in</button>
-                            </form>
-
-                            <div class="section-divider" style="margin-top: 1rem;">
-                                <div class="divider-rule"></div>
-                                <span class="divider-icon">📖</span>
-                                <span class="section-sub">Recent Progress Ledger</span>
-                                <div class="divider-rule"></div>
-                            </div>
-
-                            <div class="checkins-container-scrollable">
-                                <div id="checkins-list" class="checkins-list">
-                                    <!-- Dynamic list of recent check-ins -->
-                                </div>
-                            </div>
-
-                            <div class="flourish bottom">❦</div>
                         </div>
 
                     </div><!-- /spread -->

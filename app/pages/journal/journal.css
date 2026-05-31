@@ -446,6 +446,318 @@ body.layout-ledger #scrapbook-textarea-right {
     background-attachment: local;
 }
 
+/* ── Obsidian Light Overrides ── */
+body.layout-obsidian #scrapbook-textarea,
+body.layout-obsidian #scrapbook-textarea-right {
+    color: var(--ink);
+    background-image: linear-gradient(transparent calc(var(--journal-line-height, 30px) - 1px),
+            rgba(122, 88, 244, 0.12) calc(var(--journal-line-height, 30px) - 1px),
+            rgba(122, 88, 244, 0.12) var(--journal-line-height, 30px),
+            transparent var(--journal-line-height, 30px)) !important;
+    background-size: 100% var(--journal-line-height, 30px) !important;
+    background-attachment: local;
+}
+
+body.layout-obsidian #spread-chronicles .book-page::-webkit-scrollbar-thumb {
+    background-color: rgba(122, 88, 244, 0.25) !important;
+}
+
+body.layout-obsidian #spread-chronicles .book-page::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(122, 88, 244, 0.5) !important;
+}
+
+/* ── Obsidian Dark Overrides ── */
+body.layout-obsidian-dark #scrapbook-textarea,
+body.layout-obsidian-dark #scrapbook-textarea-right {
+    color: var(--ink);
+    background-image: linear-gradient(transparent calc(var(--journal-line-height, 30px) - 1px),
+            rgba(167, 139, 250, 0.13) calc(var(--journal-line-height, 30px) - 1px),
+            rgba(167, 139, 250, 0.13) var(--journal-line-height, 30px),
+            transparent var(--journal-line-height, 30px)) !important;
+    background-size: 100% var(--journal-line-height, 30px) !important;
+    background-attachment: local;
+}
+
+body.layout-obsidian-dark #spread-chronicles .book-page::-webkit-scrollbar-thumb {
+    background-color: rgba(167, 139, 250, 0.25) !important;
+}
+
+body.layout-obsidian-dark #spread-chronicles .book-page::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(167, 139, 250, 0.5) !important;
+}
+
+body.layout-obsidian-dark .journal-page-nav {
+    background: var(--parchment-dark) !important;
+    border-top: 1px solid rgba(167, 139, 250, 0.18) !important;
+}
+
+body.layout-obsidian-dark .fmt-btn {
+    color: var(--ink-muted) !important;
+}
+
+body.layout-obsidian-dark .fmt-btn:hover {
+    color: var(--amber) !important;
+    border-color: rgba(167, 139, 250, 0.25) !important;
+    background: rgba(167, 139, 250, 0.08) !important;
+}
+
+body.layout-obsidian-dark .fmt-btn.active {
+    color: var(--amber) !important;
+    border-color: rgba(167, 139, 250, 0.4) !important;
+    background: rgba(167, 139, 250, 0.15) !important;
+}
+
+body.layout-obsidian-dark .fmt-divider {
+    background: rgba(167, 139, 250, 0.18) !important;
+}
+
+body.layout-obsidian-dark .font-select,
+body.layout-obsidian-dark .theme-select,
+body.layout-obsidian-dark .sound-select {
+    background-color: #18181c !important;
+    border: 1px solid rgba(167, 139, 250, 0.25) !important;
+    color: var(--ink) !important;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 24 24' fill='none' stroke='%23a78bfa' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") !important;
+}
+
+body.layout-obsidian-dark .font-select:hover,
+body.layout-obsidian-dark .theme-select:hover,
+body.layout-obsidian-dark .sound-select:hover {
+    border-color: rgba(167, 139, 250, 0.45) !important;
+    background-color: rgba(167, 139, 250, 0.06) !important;
+}
+
+body.layout-obsidian-dark .font-select option,
+body.layout-obsidian-dark .theme-select option,
+body.layout-obsidian-dark .sound-select option {
+    background: #18181c !important;
+    color: var(--ink) !important;
+}
+
+body.layout-obsidian-dark .page-nav-btn {
+    border: 1px solid rgba(167, 139, 250, 0.25) !important;
+    background: #18181c !important;
+    color: var(--ink-muted) !important;
+}
+
+body.layout-obsidian-dark .page-nav-btn:hover:not(:disabled) {
+    border-color: var(--amber) !important;
+    color: var(--amber) !important;
+    background: rgba(167, 139, 250, 0.08) !important;
+}
+
+body.layout-obsidian-dark .page-nav-dot {
+    background: rgba(167, 139, 250, 0.18) !important;
+    border-color: rgba(167, 139, 250, 0.35) !important;
+}
+
+body.layout-obsidian-dark .page-nav-dot.active {
+    background: var(--amber) !important;
+    border-color: var(--amber) !important;
+}
+
+body.layout-obsidian-dark .page-nav-label {
+    color: rgba(167, 139, 250, 0.55) !important;
+}
+
+body.layout-obsidian-dark .page-nav-btn.tear-page-btn:hover {
+    background: rgba(239, 68, 68, 0.15) !important;
+    border-color: rgba(239, 68, 68, 0.6) !important;
+    color: #f87171 !important;
+}
+
+/* ── Midnight Violet Overrides ── */
+body.layout-midnight-violet #scrapbook-textarea,
+body.layout-midnight-violet #scrapbook-textarea-right {
+    color: var(--ink);
+    background-image: linear-gradient(transparent calc(var(--journal-line-height, 30px) - 1px),
+            rgba(192, 132, 252, 0.12) calc(var(--journal-line-height, 30px) - 1px),
+            rgba(192, 132, 252, 0.12) var(--journal-line-height, 30px),
+            transparent var(--journal-line-height, 30px)) !important;
+    background-size: 100% var(--journal-line-height, 30px) !important;
+    background-attachment: local;
+}
+
+body.layout-midnight-violet #spread-chronicles .book-page::-webkit-scrollbar-thumb {
+    background-color: rgba(192, 132, 252, 0.25) !important;
+}
+
+body.layout-midnight-violet #spread-chronicles .book-page::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(192, 132, 252, 0.5) !important;
+}
+
+body.layout-midnight-violet .journal-page-nav {
+    background: var(--parchment-dark) !important;
+    border-top: 1px solid rgba(192, 132, 252, 0.18) !important;
+}
+
+body.layout-midnight-violet .fmt-btn {
+    color: var(--ink-muted) !important;
+}
+
+body.layout-midnight-violet .fmt-btn:hover {
+    color: var(--amber) !important;
+    border-color: rgba(192, 132, 252, 0.25) !important;
+    background: rgba(192, 132, 252, 0.08) !important;
+}
+
+body.layout-midnight-violet .fmt-btn.active {
+    color: var(--amber) !important;
+    border-color: rgba(192, 132, 252, 0.4) !important;
+    background: rgba(192, 132, 252, 0.15) !important;
+}
+
+body.layout-midnight-violet .fmt-divider {
+    background: rgba(192, 132, 252, 0.18) !important;
+}
+
+body.layout-midnight-violet .font-select,
+body.layout-midnight-violet .theme-select,
+body.layout-midnight-violet .sound-select {
+    background-color: #050508 !important;
+    border: 1px solid rgba(192, 132, 252, 0.25) !important;
+    color: var(--ink) !important;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 24 24' fill='none' stroke='%23c084fc' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") !important;
+}
+
+body.layout-midnight-violet .font-select:hover,
+body.layout-midnight-violet .theme-select:hover,
+body.layout-midnight-violet .sound-select:hover {
+    border-color: rgba(192, 132, 252, 0.45) !important;
+    background-color: rgba(192, 132, 252, 0.06) !important;
+}
+
+body.layout-midnight-violet .font-select option,
+body.layout-midnight-violet .theme-select option,
+body.layout-midnight-violet .sound-select option {
+    background: #10101b !important;
+    color: var(--ink) !important;
+}
+
+body.layout-midnight-violet .page-nav-btn {
+    border: 1px solid rgba(192, 132, 252, 0.25) !important;
+    background: #10101b !important;
+    color: var(--ink-muted) !important;
+}
+
+body.layout-midnight-violet .page-nav-btn:hover:not(:disabled) {
+    border-color: var(--amber) !important;
+    color: var(--amber) !important;
+    background: rgba(192, 132, 252, 0.08) !important;
+}
+
+body.layout-midnight-violet .page-nav-dot {
+    background: rgba(192, 132, 252, 0.18) !important;
+    border-color: rgba(192, 132, 252, 0.35) !important;
+}
+
+body.layout-midnight-violet .page-nav-dot.active {
+    background: var(--amber) !important;
+    border-color: var(--amber) !important;
+}
+
+body.layout-midnight-violet .page-nav-label {
+    color: rgba(192, 132, 252, 0.55) !important;
+}
+
+body.layout-midnight-violet .page-nav-btn.tear-page-btn {
+    background: rgba(239, 68, 68, 0.05) !important;
+    border: 1px dashed rgba(239, 68, 68, 0.35) !important;
+    color: rgba(239, 68, 68, 0.85) !important;
+}
+
+body.layout-midnight-violet .page-nav-btn.tear-page-btn:hover {
+    background: rgba(239, 68, 68, 0.15) !important;
+    border-color: rgba(239, 68, 68, 0.6) !important;
+    color: #f87171 !important;
+}
+
+body.layout-obsidian .journal-page-nav {
+    background: var(--parchment-dark) !important;
+    border-top: 1px solid rgba(122, 88, 244, 0.15) !important;
+}
+
+body.layout-obsidian .fmt-btn {
+    color: var(--ink-muted) !important;
+}
+
+body.layout-obsidian .fmt-btn:hover {
+    color: var(--amber) !important;
+    border-color: rgba(122, 88, 244, 0.25) !important;
+    background: rgba(122, 88, 244, 0.06) !important;
+}
+
+body.layout-obsidian .fmt-btn.active {
+    color: var(--amber) !important;
+    border-color: rgba(122, 88, 244, 0.4) !important;
+    background: rgba(122, 88, 244, 0.12) !important;
+}
+
+body.layout-obsidian .fmt-divider {
+    background: rgba(122, 88, 244, 0.15) !important;
+}
+
+body.layout-obsidian .font-select,
+body.layout-obsidian .theme-select,
+body.layout-obsidian .sound-select {
+    background-color: #ffffff !important;
+    border: 1px solid rgba(122, 88, 244, 0.2) !important;
+    color: var(--ink) !important;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 24 24' fill='none' stroke='%237a58f4' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") !important;
+}
+
+body.layout-obsidian .font-select:hover,
+body.layout-obsidian .theme-select:hover,
+body.layout-obsidian .sound-select:hover {
+    border-color: rgba(122, 88, 244, 0.4) !important;
+    background-color: rgba(122, 88, 244, 0.04) !important;
+}
+
+body.layout-obsidian .font-select option,
+body.layout-obsidian .theme-select option,
+body.layout-obsidian .sound-select option {
+    background: #ffffff !important;
+    color: var(--ink) !important;
+}
+
+body.layout-obsidian .page-nav-btn {
+    border: 1px solid rgba(122, 88, 244, 0.2) !important;
+    background: #ffffff !important;
+    color: var(--ink-muted) !important;
+}
+
+body.layout-obsidian .page-nav-btn:hover:not(:disabled) {
+    border-color: var(--amber) !important;
+    color: var(--amber) !important;
+    background: rgba(122, 88, 244, 0.05) !important;
+}
+
+body.layout-obsidian .page-nav-dot {
+    background: rgba(122, 88, 244, 0.15) !important;
+    border-color: rgba(122, 88, 244, 0.3) !important;
+}
+
+body.layout-obsidian .page-nav-dot.active {
+    background: var(--amber) !important;
+    border-color: var(--amber) !important;
+}
+
+body.layout-obsidian .page-nav-label {
+    color: rgba(122, 88, 244, 0.5) !important;
+}
+
+body.layout-obsidian .page-nav-btn.tear-page-btn {
+    background: rgba(239, 68, 68, 0.04) !important;
+    border: 1px dashed rgba(239, 68, 68, 0.3) !important;
+    color: rgba(239, 68, 68, 0.75) !important;
+}
+
+body.layout-obsidian .page-nav-btn.tear-page-btn:hover {
+    background: rgba(239, 68, 68, 0.1) !important;
+    border-color: rgba(239, 68, 68, 0.5) !important;
+    color: #ef4444 !important;
+}
+
 /* ── Page swap cover: masks the instant content change on the non-folding page ── */
 .page-swap-cover {
     position: absolute;
@@ -776,6 +1088,33 @@ body.layout-ledger .page-fold-face-back {
     background-size: 100% var(--journal-line-height, 30px);
 }
 
+body.layout-obsidian .page-fold-face-front,
+body.layout-obsidian .page-fold-face-back {
+    background-image: linear-gradient(transparent calc(var(--journal-line-height, 30px) - 1px),
+            rgba(122, 88, 244, 0.12) calc(var(--journal-line-height, 30px) - 1px),
+            rgba(122, 88, 244, 0.12) var(--journal-line-height, 30px),
+            transparent var(--journal-line-height, 30px)) !important;
+    background-size: 100% var(--journal-line-height, 30px) !important;
+}
+
+body.layout-obsidian-dark .page-fold-face-front,
+body.layout-obsidian-dark .page-fold-face-back {
+    background-image: linear-gradient(transparent calc(var(--journal-line-height, 30px) - 1px),
+            rgba(167, 139, 250, 0.13) calc(var(--journal-line-height, 30px) - 1px),
+            rgba(167, 139, 250, 0.13) var(--journal-line-height, 30px),
+            transparent var(--journal-line-height, 30px)) !important;
+    background-size: 100% var(--journal-line-height, 30px) !important;
+}
+
+body.layout-midnight-violet .page-fold-face-front,
+body.layout-midnight-violet .page-fold-face-back {
+    background-image: linear-gradient(transparent calc(var(--journal-line-height, 30px) - 1px),
+            rgba(192, 132, 252, 0.12) calc(var(--journal-line-height, 30px) - 1px),
+            rgba(192, 132, 252, 0.12) var(--journal-line-height, 30px),
+            transparent var(--journal-line-height, 30px)) !important;
+    background-size: 100% var(--journal-line-height, 30px) !important;
+}
+
 /* ── NATIVE GROWING VERTICAL BOOK LAYOUT OVERRIDES ────────────────────────── */
 
 /* Allow body to scroll naturally down the browser viewport */
@@ -882,20 +1221,21 @@ body {
     background: rgba(56, 189, 248, 0.08) !important;
 }
 
-/* Caret overrides when in normal mode - bright glowing distinct gold */
+/* Caret overrides when in normal mode - dynamically uses theme color */
 .vim-normal-caret {
-    caret-color: #ffb300 !important;
+    caret-color: var(--terracotta) !important;
+    caret-shape: block !important;
 }
 
-/* Make normal mode selection extremely distinct in high-contrast amber */
+/* Make normal mode selection extremely distinct using theme color */
 .vim-normal-caret::selection {
-    background-color: rgba(255, 179, 0, 0.4) !important;
-    color: #1e0902 !important;
+    background-color: var(--amber-glow) !important;
+    color: var(--ink) !important;
 }
 
 .vim-normal-caret *::selection {
-    background-color: rgba(255, 179, 0, 0.4) !important;
-    color: #1e0902 !important;
+    background-color: var(--amber-glow) !important;
+    color: var(--ink) !important;
 }
 
 /* ── Tear Page Button Styling ── */
@@ -1076,4 +1416,12 @@ body {
     background: rgba(229, 195, 106, 0.22) !important;
     color: var(--gold) !important;
     font-weight: 600;
+}
+
+/* ── Bulletproof Page Lines Toggle Override ── */
+body.hide-page-lines #scrapbook-textarea,
+body.hide-page-lines #scrapbook-textarea-right,
+body.hide-page-lines .page-fold-face-front,
+body.hide-page-lines .page-fold-face-back {
+    background-image: none !important;
 }
