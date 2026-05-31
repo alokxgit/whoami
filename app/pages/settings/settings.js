@@ -5,8 +5,8 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     const muteToggle = document.getElementById('mute-ambient-audio-toggle');
-    const exportBtn  = document.getElementById('export-journal-btn');
-    const resetBtn   = document.getElementById('reset-journal-btn');
+    const exportBtn = document.getElementById('export-journal-btn');
+    const resetBtn = document.getElementById('reset-journal-btn');
 
     // ── MUTE TOGGLE ──
     if (muteToggle) {
@@ -22,20 +22,20 @@ document.addEventListener('DOMContentLoaded', () => {
     if (exportBtn) {
         exportBtn.addEventListener('click', () => {
             const data = {
-                weekGoals:   JSON.parse(localStorage.getItem('scriptorium_week_goals') || '[]'),
-                longGoals:   JSON.parse(localStorage.getItem('scriptorium_long_goals') || '[]'),
-                desires:     JSON.parse(localStorage.getItem('scriptorium_desires') || '[]'),
+                weekGoals: JSON.parse(localStorage.getItem('scriptorium_week_goals') || '[]'),
+                longGoals: JSON.parse(localStorage.getItem('scriptorium_long_goals') || '[]'),
+                desires: JSON.parse(localStorage.getItem('scriptorium_desires') || '[]'),
                 ledgerTasks: JSON.parse(localStorage.getItem('scriptorium_ledger_tasks') || '[]'),
-                journal:     localStorage.getItem('scriptorium_journal') || '',
-                mindset:     localStorage.getItem('scriptorium_mindset') || '',
-                layout:      localStorage.getItem('scriptorium_layout') || 'codex',
-                exportedAt:  new Date().toISOString()
+                journal: localStorage.getItem('scriptorium_journal') || '',
+                mindset: localStorage.getItem('scriptorium_mindset') || '',
+                layout: localStorage.getItem('scriptorium_layout') || 'codex',
+                exportedAt: new Date().toISOString()
             };
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-            const url  = URL.createObjectURL(blob);
-            const a    = document.createElement('a');
-            a.href     = url;
-            a.download = `scriptorium-backup-${new Date().toISOString().slice(0,10)}.json`;
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `scriptorium-backup-${new Date().toISOString().slice(0, 10)}.json`;
             a.click();
             URL.revokeObjectURL(url);
         });
@@ -54,27 +54,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 localStorage.removeItem('scriptorium_layout');
                 localStorage.removeItem('scriptorium_weekly_locked_week');
                 alert('Journal data has been cleared.');
-                window.location.href = '../index.html';
+                window.location.href = '../../index.html';
             }
         });
     }
 
     // ── GOAL REGISTRY MANAGEMENT & LOCKING RULES ──
-    const tabWeekly      = document.getElementById('tab-btn-weekly');
-    const tabLong        = document.getElementById('tab-btn-long');
-    const tabDesires     = document.getElementById('tab-btn-desires');
+    const tabWeekly = document.getElementById('tab-btn-weekly');
+    const tabLong = document.getElementById('tab-btn-long');
+    const tabDesires = document.getElementById('tab-btn-desires');
     const tabCommitments = document.getElementById('tab-btn-commitments');
-    const goalInput      = document.getElementById('settings-goal-input');
-    const goalForm       = document.getElementById('settings-goal-form');
-    const goalsListEl    = document.getElementById('settings-goals-list');
+    const goalInput = document.getElementById('settings-goal-input');
+    const goalForm = document.getElementById('settings-goal-form');
+    const goalsListEl = document.getElementById('settings-goals-list');
     const commitmentSelect = document.getElementById('goal-commitment-select');
     const commitmentsTabListEl = document.getElementById('settings-commitments-list');
 
     let currentTab = 'weekly'; // 'weekly' | 'long' | 'desires' | 'commitments'
 
-    let weekGoals   = JSON.parse(localStorage.getItem('scriptorium_week_goals'))   || [];
-    let longGoals   = JSON.parse(localStorage.getItem('scriptorium_long_goals'))   || [];
-    let desires     = JSON.parse(localStorage.getItem('scriptorium_desires'))      || [];
+    let weekGoals = JSON.parse(localStorage.getItem('scriptorium_week_goals')) || [];
+    let longGoals = JSON.parse(localStorage.getItem('scriptorium_long_goals')) || [];
+    let desires = JSON.parse(localStorage.getItem('scriptorium_desires')) || [];
     let commitments = [];
 
     function populateCommitmentDropdown() {
@@ -165,8 +165,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function isWeeklyLocked() {
-        const lockedWeek = localStorage.getItem('scriptorium_weekly_locked_week');
-        return lockedWeek === getWeekIdentifier();
+        // Temporarily unlocked for testing as per user request
+        return false;
     }
 
     function renderRegistry() {
@@ -205,7 +205,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // If weekly tab is locked, don't show the delete button
                 const showDel = !(currentTab === 'weekly' && isLocked);
                 const commitmentTag = (currentTab === 'weekly' && g.commitmentTitle)
-                    ? `<span class="goal-commitment-badge" style="background:var(--amber-glow); color:var(--amber); border:1px solid rgba(229,195,106,0.3); font-size:0.65rem; font-family:var(--f-head); padding:1px 6px; border-radius:10px; text-transform:uppercase; font-weight:600; margin-left:6px; display:inline-block; vertical-align:middle; line-height:1.2;">🔗 ${escapeHtml(g.commitmentTitle)}</span>`
+                    ? `<span class="goal-commitment-badge" style="background:var(--amber-glow); color:var(--amber); border:1px solid rgba(229,195,106,0.3); font-size:0.65rem; font-family:var(--f-head); padding:1px 6px; border-radius:10px; text-transform:uppercase; font-weight:600; margin-left:6px; display:inline-block; vertical-align:middle; line-height:1.2;">${escapeHtml(g.commitmentTitle)}</span>`
                     : '';
                 return `
                     <li class="settings-goal-item" data-id="${g.id}">
@@ -291,7 +291,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (tabWeekly) tabWeekly.addEventListener('click', () => setActiveTab('weekly'));
-    if (tabLong)   tabLong.addEventListener('click', () => setActiveTab('long'));
+    if (tabLong) tabLong.addEventListener('click', () => setActiveTab('long'));
     if (tabDesires) tabDesires.addEventListener('click', () => setActiveTab('desires'));
     if (tabCommitments) tabCommitments.addEventListener('click', () => setActiveTab('commitments'));
 
@@ -376,11 +376,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ type: 'commitments', data: commitments })
                 })
-                .then(() => {
-                    localStorage.setItem('scriptorium_commitments', JSON.stringify(commitments));
-                    populateCommitmentDropdown();
-                    renderCommitmentsTabList();
-                });
+                    .then(() => {
+                        localStorage.setItem('scriptorium_commitments', JSON.stringify(commitments));
+                        populateCommitmentDropdown();
+                        renderCommitmentsTabList();
+                    });
             }
         });
     }
@@ -442,32 +442,32 @@ document.addEventListener('DOMContentLoaded', () => {
                     data: payload
                 })
             })
-            .then(res => res.json())
-            .then(res => {
-                if (res.success) {
-                    alert(`Successfully saved ${labelName} in the database/goals/${categoryName} directory!`);
-                    
-                    // Reset locally and in storage
-                    if (currentTab === 'weekly') {
-                        weekGoals = [];
-                        localStorage.setItem(storageKey, '[]');
-                    } else if (currentTab === 'long') {
-                        longGoals = [];
-                        localStorage.setItem(storageKey, '[]');
-                    } else if (currentTab === 'desires') {
-                        desires = [];
-                        localStorage.setItem(storageKey, '[]');
+                .then(res => res.json())
+                .then(res => {
+                    if (res.success) {
+                        alert(`Successfully saved ${labelName} in the database/goals/${categoryName} directory!`);
+
+                        // Reset locally and in storage
+                        if (currentTab === 'weekly') {
+                            weekGoals = [];
+                            localStorage.setItem(storageKey, '[]');
+                        } else if (currentTab === 'long') {
+                            longGoals = [];
+                            localStorage.setItem(storageKey, '[]');
+                        } else if (currentTab === 'desires') {
+                            desires = [];
+                            localStorage.setItem(storageKey, '[]');
+                        }
+
+                        renderRegistry();
+                    } else {
+                        alert(`Failed to save ${labelName}: ` + (res.error || 'Unknown error'));
                     }
-                    
-                    renderRegistry();
-                } else {
-                    alert(`Failed to save ${labelName}: ` + (res.error || 'Unknown error'));
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                alert('Error connecting to the server: ' + err.message);
-            });
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert('Error connecting to the server: ' + err.message);
+                });
         });
     }
 
@@ -481,7 +481,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function escapeHtml(text) {
-        return text.replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;' }[c]));
+        return text.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[c]));
     }
 
     // ── SPECIFIC TYPOGRAPHY STYLE CONTROLS ──
@@ -536,8 +536,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const select = document.getElementById(`font-${style}-select`);
         if (select) {
             const defaultFamily = style === 'fancy' ? "'Cinzel Decorative', serif" :
-                                  style === 'hand' ? "'Caveat', cursive" :
-                                                    "'Marcellus', serif";
+                style === 'hand' ? "'Caveat', cursive" :
+                    "'Marcellus', serif";
             const savedFamily = localStorage.getItem(`scriptorium_font_${style}`) || defaultFamily;
             select.value = savedFamily;
 
@@ -562,12 +562,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const titleInput = document.getElementById('commitment-title');
             const whyInput = document.getElementById('commitment-why');
             const categoryInput = document.getElementById('commitment-category');
-            const statusInput = document.getElementById('commitment-status');
 
             const title = titleInput ? titleInput.value.trim() : '';
             const why = whyInput ? whyInput.value.trim() : '';
             const category = categoryInput ? categoryInput.value.trim() : '';
-            const status = statusInput ? statusInput.value : 'In Progress';
 
             if (!title || !why || !category) return;
 
@@ -587,7 +585,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         category: category,
                         started: formattedDate,
                         lastTouched: formattedDate,
-                        status: status
+                        status: 'In Progress',
+                        progress: []
                     };
 
                     commitments.push(newCommitment);
@@ -621,6 +620,157 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
         });
     }
+
+    // ── DATABASE PATH CONFIGURATOR ──
+    const dbPathInput = document.getElementById('settings-db-path-input');
+    const dbPathSaveBtn = document.getElementById('settings-db-path-save-btn');
+
+    if (dbPathInput && dbPathSaveBtn) {
+        // Fetch current path
+        fetch('/api/settings/database-path')
+            .then(res => res.json())
+            .then(data => {
+                if (data.success && data.databasePath) {
+                    dbPathInput.value = data.databasePath;
+                }
+            })
+            .catch(err => console.error("Error loading database path:", err));
+
+        // Save path handler
+        dbPathSaveBtn.addEventListener('click', () => {
+            const customPath = dbPathInput.value.trim();
+            if (!customPath) {
+                alert("Please provide a valid database directory path!");
+                return;
+            }
+
+            if (confirm(`Are you sure you want to change the database folder location to:\n${customPath}\n\nExisting files will be migrated to the new location.`)) {
+                fetch('/api/settings/database-path', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ databasePath: customPath })
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert(`Database folder location successfully updated!\n\nActive Database Path:\n${data.databasePath}`);
+                            dbPathInput.value = data.databasePath;
+                        } else {
+                            alert('Failed to update database path: ' + (data.error || 'Unknown error'));
+                        }
+                    })
+                    .catch(err => {
+                        console.error("Error saving database path:", err);
+                        alert("Error connecting to the server: " + err.message);
+                    });
+            }
+        });
+    }
+
+    // ── WHO I AM CONFIGURATION LOADER & SAVER ──
+    const whoamiBioInput = document.getElementById('settings-whoami-bio');
+    const whoamiGoodInput = document.getElementById('settings-whoami-good');
+    const whoamiImprovementsInput = document.getElementById('settings-whoami-improvements');
+    const whoamiSaveBtn = document.getElementById('settings-whoami-save-btn');
+
+    const defaultBio = "Driven by an insatiable curiosity and an enduring passion for creating beautiful digital experiences. I believe that technical mastery should always walk hand-in-hand with empathy, visual elegance, and clarity of purpose.";
+
+    const defaultGoodAt = [
+        "UI & Visual Craftsmanship",
+        "Logical Problem Solving",
+        "Empathetic Collaboration",
+        "Meticulous Tidiness"
+    ];
+
+    const defaultImprovements = [
+        "Perfectionist Over-refining",
+        "Context Segmentation",
+        "Velocity Balance",
+        "Deep Post-Mortems"
+    ];
+
+    function loadWhoAmISettings() {
+        if (!whoamiBioInput || !whoamiGoodInput || !whoamiImprovementsInput) return;
+
+        fetch('/api/reflection/load?type=whoami')
+            .then(res => res.json())
+            .then(data => {
+                if (data && !Array.isArray(data) && data.bio) {
+                    whoamiBioInput.value = data.bio;
+                    whoamiGoodInput.value = Array.isArray(data.goodAt) ? data.goodAt.join('\n') : "";
+                    whoamiImprovementsInput.value = Array.isArray(data.improvements) ? data.improvements.join('\n') : "";
+                    localStorage.setItem('scriptorium_whoami', JSON.stringify(data));
+                } else {
+                    // Populate with defaults
+                    whoamiBioInput.value = defaultBio;
+                    whoamiGoodInput.value = defaultGoodAt.join('\n');
+                    whoamiImprovementsInput.value = defaultImprovements.join('\n');
+                }
+            })
+            .catch(err => {
+                console.warn("Failed to load Who I Am settings from server, loading from cache:", err);
+                const cached = localStorage.getItem('scriptorium_whoami');
+                if (cached) {
+                    try {
+                        const parsed = JSON.parse(cached);
+                        whoamiBioInput.value = parsed.bio || defaultBio;
+                        whoamiGoodInput.value = Array.isArray(parsed.goodAt) ? parsed.goodAt.join('\n') : defaultGoodAt.join('\n');
+                        whoamiImprovementsInput.value = Array.isArray(parsed.improvements) ? parsed.improvements.join('\n') : defaultImprovements.join('\n');
+                    } catch (e) {
+                        whoamiBioInput.value = defaultBio;
+                        whoamiGoodInput.value = defaultGoodAt.join('\n');
+                        whoamiImprovementsInput.value = defaultImprovements.join('\n');
+                    }
+                } else {
+                    whoamiBioInput.value = defaultBio;
+                    whoamiGoodInput.value = defaultGoodAt.join('\n');
+                    whoamiImprovementsInput.value = defaultImprovements.join('\n');
+                }
+            });
+    }
+
+    if (whoamiSaveBtn) {
+        whoamiSaveBtn.addEventListener('click', () => {
+            const bio = whoamiBioInput.value.trim();
+            const goodAt = whoamiGoodInput.value.split('\n').map(x => x.trim()).filter(Boolean);
+            const improvements = whoamiImprovementsInput.value.split('\n').map(x => x.trim()).filter(Boolean);
+
+            if (!bio) {
+                alert("Core biography quote cannot be empty!");
+                return;
+            }
+
+            const payload = { bio, goodAt, improvements };
+
+            // Save to Backend
+            fetch('/api/reflection/save', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type: 'whoami', data: payload })
+            })
+                .then(res => res.json())
+                .then(result => {
+                    if (result && result.success) {
+                        alert('Who I Am Portrait successfully saved to database!');
+                        localStorage.setItem('scriptorium_whoami', JSON.stringify(payload));
+
+                        // Play satisfying rustle sound
+                        if (typeof playPaperRustleSound === 'function') {
+                            playPaperRustleSound();
+                        }
+                    } else {
+                        alert('Failed to save settings: ' + (result.error || 'Unknown error'));
+                    }
+                })
+                .catch(err => {
+                    console.error("Failed to save Who I Am settings:", err);
+                    alert("Error connecting to server: " + err.message);
+                });
+        });
+    }
+
+    // Load Who I Am values
+    loadWhoAmISettings();
 
     // Init
     setActiveTab('weekly');

@@ -46,10 +46,10 @@
 
 /* Goal Sections */
 .goal-section {
-    background: rgba(229, 195, 106, 0.05);
-    border: 1px solid rgba(229, 195, 106, 0.16);
+    background: transparent;
+    border: none;
     border-radius: 8px;
-    padding: 0.75rem;
+    padding: 0.5rem 0;
 }
 
 .section-title-wrap {
@@ -129,10 +129,10 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0.1rem 0.5rem;
+    padding: 0.25rem 0.2rem;
     border-radius: 5px;
-    /* background: rgba(255, 255, 255, 0.2); */
-    border: 1px dashed rgba(229, 195, 106, 0.12);
+    background: transparent;
+    border: none;
     transition: all 0.25s ease;
 }
 
@@ -325,13 +325,13 @@
 
 /* ── Dark Mode / Scribe's Ledger Overrides ── */
 body.layout-ledger .goal-section {
-    background: rgba(229, 195, 106, 0.02);
-    border-color: rgba(229, 195, 106, 0.12);
+    background: transparent;
+    border-color: transparent;
 }
 
 body.layout-ledger .custom-goal-item {
-    background: rgba(255, 255, 255, 0.03);
-    border-color: rgba(229, 195, 106, 0.08);
+    background: transparent;
+    border-color: transparent;
 }
 
 body.layout-ledger .goals-mini-form input {
@@ -427,4 +427,62 @@ body.layout-ledger .goals-save-reset-btn:hover {
     background: rgba(229, 195, 106, 0.15);
     color: var(--gold);
     border-color: rgba(229, 195, 106, 0.45);
+}
+
+/* Custom Checkboxes with Theme UI */
+.goal-checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 17px;
+    height: 17px;
+    border: 2px solid var(--terracotta);
+    border-radius: 4px;
+    background: transparent;
+    cursor: pointer;
+    position: relative;
+    outline: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-right: 8px;
+    flex-shrink: 0;
+}
+
+.goal-checkbox:hover {
+    border-color: var(--amber);
+    background: rgba(204, 120, 34, 0.08);
+}
+
+.goal-checkbox:checked {
+    background: var(--terracotta);
+    border-color: var(--terracotta);
+}
+
+.goal-checkbox:checked::after {
+    content: "✓";
+    font-size: 11px;
+    color: #faf5e6;
+    font-weight: 900;
+    display: block;
+    line-height: 1;
+}
+
+/* Dark theme / layout-ledger overrides */
+body.layout-ledger .goal-checkbox {
+    border-color: var(--gold-dim);
+}
+
+body.layout-ledger .goal-checkbox:hover {
+    border-color: var(--amber);
+    background: rgba(229, 195, 106, 0.08);
+}
+
+body.layout-ledger .goal-checkbox:checked {
+    background: var(--amber);
+    border-color: var(--amber);
+}
+
+body.layout-ledger .goal-checkbox:checked::after {
+    color: #17212b; /* Match Scribe's Ledger slate bg */
 }

@@ -312,3 +312,39 @@ body.layout-ledger .book-casing {
 .flourish.bottom {
     bottom: 0.5rem;
 }
+
+/* ── Custom Styled Parchment Scrollbars ── */
+.book-page::-webkit-scrollbar,
+.commitments-container-scrollable::-webkit-scrollbar,
+.checkins-container-scrollable::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.book-page::-webkit-scrollbar-track,
+.commitments-container-scrollable::-webkit-scrollbar-track,
+.checkins-container-scrollable::-webkit-scrollbar-track {
+    background: transparent; /* Completely transparent background */
+}
+
+.book-page::-webkit-scrollbar-thumb,
+.commitments-container-scrollable::-webkit-scrollbar-thumb,
+.checkins-container-scrollable::-webkit-scrollbar-thumb {
+    background: var(--gold-dim);
+    border-radius: 4px;
+    transition: background 0.3s ease;
+}
+
+.book-page::-webkit-scrollbar-thumb:hover,
+.commitments-container-scrollable::-webkit-scrollbar-thumb:hover,
+.checkins-container-scrollable::-webkit-scrollbar-thumb:hover {
+    background: var(--amber); /* Hover glowing amber color */
+}
+
+/* Firefox Support */
+.book-page,
+.commitments-container-scrollable,
+.checkins-container-scrollable {
+    scrollbar-width: thin;
+    scrollbar-color: var(--gold-dim) transparent;
+}

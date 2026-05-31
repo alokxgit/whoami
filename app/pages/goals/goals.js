@@ -9,6 +9,25 @@ document.addEventListener('DOMContentLoaded', () => {
     let weekGoals = JSON.parse(localStorage.getItem('scriptorium_week_goals')) || [];
     let longGoals = JSON.parse(localStorage.getItem('scriptorium_long_goals')) || [];
     let desires = JSON.parse(localStorage.getItem('scriptorium_desires')) || [];
+    let commitments = [];
+
+    // Load Commitments for checkbox sync
+    function loadCommitments() {
+        const cached = localStorage.getItem('scriptorium_commitments');
+        if (cached) {
+            try { commitments = JSON.parse(cached); } catch(e) {}
+        }
+        fetch('/api/reflection/load?type=commitments')
+            .then(res => res.json())
+            .then(data => {
+                if (Array.isArray(data)) {
+                    commitments = data;
+                    localStorage.setItem('scriptorium_commitments', JSON.stringify(commitments));
+                }
+            })
+            .catch(err => console.warn("Failed to load commitments in goals.js:", err));
+    }
+    loadCommitments();
 
     // Prepopulate with elegant realistic placeholders on first load
     if (weekGoals.length === 0) {
@@ -49,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         weekListEl.innerHTML = weekGoals.map(g => {
             const commitmentTag = g.commitmentTitle
-                ? `<span class="goal-commitment-badge" style="background:var(--amber-glow); color:var(--amber); border:1px solid rgba(229,195,106,0.3); font-size:0.65rem; font-family:var(--f-head); padding:1px 6px; border-radius:10px; text-transform:uppercase; font-weight:600; margin-left:6px; display:inline-block; vertical-align:middle; line-height:1.2;">🔗 ${escapeHtml(g.commitmentTitle)}</span>`
+                ? `<span class="goal-commitment-badge" style="background:var(--amber-glow); color:var(--amber); border:1px solid rgba(229,195,106,0.3); font-size:0.65rem; font-family:var(--f-head); padding:1px 6px; border-radius:10px; text-transform:uppercase; font-weight:600; margin-left:6px; display:inline-block; vertical-align:middle; line-height:1.2;">${escapeHtml(g.commitmentTitle)}</span>`
                 : '';
             return `
                 <li class="custom-goal-item ${g.done ? 'done' : ''}" data-id="${g.id}">
@@ -91,6 +110,43 @@ document.addEventListener('DOMContentLoaded', () => {
         `).join('');
     }
 
+    function syncGoalWithCommitment(g) {
+        if (!g.commitmentId && !g.commitmentTitle) return;
+        
+        // Find commitment
+        const c = commitments.find(x => x.id == g.commitmentId || x.title === g.commitmentTitle);
+        if (c) {
+            if (!Array.isArray(c.progress)) {
+                c.progress = [];
+            }
+            
+            if (g.done) {
+                if (!c.progress.some(p => p.id === g.id || p.text === g.text)) {
+                    c.progress.push({ id: g.id, text: g.text });
+                }
+            } else {
+                c.progress = c.progress.filter(p => p.id !== g.id && p.text !== g.text);
+            }
+            
+            // Save locally
+            localStorage.setItem('scriptorium_commitments', JSON.stringify(commitments));
+            
+            // Save on server
+            fetch('/api/reflection/save', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type: 'commitments', data: commitments })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (!data.success) {
+                    console.error("Failed to sync commitment progress with server:", data.error);
+                }
+            })
+            .catch(err => console.error("Error syncing commitment progress:", err));
+        }
+    }
+
     // ── INTERACTIVE EVENTS (EVENT DELEGATION) ──
     if (weekListEl) {
         weekListEl.addEventListener('click', e => {
@@ -103,8 +159,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     g.done = e.target.checked;
                 } else {
                     g.done = !g.done;
+                    const chk = item.querySelector('.goal-checkbox');
+                    if (chk) chk.checked = g.done;
                 }
                 localStorage.setItem('scriptorium_week_goals', JSON.stringify(weekGoals));
+                syncGoalWithCommitment(g);
                 renderWeekGoals();
             }
         });

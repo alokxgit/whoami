@@ -71,20 +71,45 @@ document.addEventListener('DOMContentLoaded', () => {
                 checkins = JSON.parse(localStorage.getItem('scriptorium_checkins')) || [];
                 renderCheckins();
             });
+
+        // Load Who I Am Portrait Data
+        fetch('/api/reflection/load?type=whoami')
+            .then(res => res.json())
+            .then(data => {
+                if (data && !Array.isArray(data) && data.bio) {
+                    renderWhoAmI(data);
+                    localStorage.setItem('scriptorium_whoami', JSON.stringify(data));
+                } else {
+                    renderWhoAmIDefaults();
+                }
+            })
+            .catch(err => {
+                console.warn("Failed to load Who I Am data from server, loading from cache:", err);
+                const cached = localStorage.getItem('scriptorium_whoami');
+                if (cached) {
+                    try {
+                        renderWhoAmI(JSON.parse(cached));
+                    } catch (e) {
+                        renderWhoAmIDefaults();
+                    }
+                } else {
+                    renderWhoAmIDefaults();
+                }
+            });
     }
 
     // ── SAVING DATA TO DATABASE ──
     function saveCommitments() {
         // Local Cache
         localStorage.setItem('scriptorium_commitments', JSON.stringify(commitments));
-        
+
         // Backend Save
         fetch('/api/reflection/save', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ type: 'commitments', data: commitments })
         })
-        .catch(err => console.error("Error saving commitments to backend:", err));
+            .catch(err => console.error("Error saving commitments to backend:", err));
     }
 
     function saveCheckins() {
@@ -97,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ type: 'checkins', data: checkins })
         })
-        .catch(err => console.error("Error saving check-ins to backend:", err));
+            .catch(err => console.error("Error saving check-ins to backend:", err));
     }
 
     // ── RENDERING COMMITMENTS (Left Page) ──
@@ -110,99 +135,64 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Group commitments by category
-        const groups = {};
-        commitments.forEach(item => {
-            const cat = item.category || 'General';
-            if (!groups[cat]) {
-                groups[cat] = [];
-            }
-            groups[cat].push(item);
-        });
+        const ul = document.createElement('ul');
+        ul.className = 'commitments-list';
 
-        // Render each category group
-        Object.keys(groups).forEach(category => {
-            const groupSection = document.createElement('div');
-            groupSection.className = 'category-group-section';
+        commitments.forEach((item, index) => {
+            const li = document.createElement('li');
+            li.className = `commitment-card`;
 
-            const h3 = document.createElement('h3');
-            h3.className = 'category-group-title';
-            h3.textContent = category;
-            groupSection.appendChild(h3);
+            const progressContent = (item.progress && item.progress.length > 0)
+                ? `<div style="display:flex; flex-wrap:wrap; align-items:center; gap:0.5rem;">
+                     ${item.progress.map((p, idx) => `
+                       <span class="progress-step-pill" style="display:inline-flex; align-items:center; background:transparent; border:none; padding:3px 10px; border-radius:5px; font-family:var(--f-hand); font-size:0.95rem; color:var(--ink); font-weight:500;">
+                         ✓ ${escapeHtml(p.text)}
+                       </span>
+                       ${idx < item.progress.length - 1 ? '<span style="color:var(--terracotta); font-weight:bold; padding:0 3px;">➔</span>' : ''}
+                     `).join('')}
+                   </div>`
+                : `<span style="color:var(--ink-muted); font-style:italic; font-family:var(--f-hand); font-size:0.92rem;">No progress steps recorded yet. Complete connected weekly goals to add steps!</span>`;
 
-            const ul = document.createElement('ul');
-            ul.className = 'commitments-list';
-
-            groups[category].forEach(item => {
-                const li = document.createElement('li');
-                li.className = `commitment-card ${item.status.toLowerCase().replace(' ', '-')}`;
+            li.innerHTML = `
+                <div class="commitment-card-header" style="margin-bottom: 0.4rem;">
+                    <span class="commitment-title-text" style="font-size: 1.15rem; color: var(--terracotta); font-weight: 700; font-family: var(--f-head);">${index + 1}. ${escapeHtml(item.title)}</span>
+                </div>
+                <div class="commitment-why-text" style="font-family: var(--f-hand); font-size: 1.05rem; margin-bottom: 0.4rem;"><strong>Why:</strong> "${escapeHtml(item.why)}"</div>
+                <div class="commitment-dates-row" style="margin-bottom:0.8rem; font-size: 0.8rem; opacity: 0.8;">
+                    <span><strong>Started:</strong> ${item.started}</span>
+                    <span><strong>Last touched:</strong> <span class="touched-date">${item.lastTouched || 'Never'}</span></span>
+                </div>
                 
-                li.innerHTML = `
-                    <div class="commitment-card-header">
-                        <span class="commitment-title-text">${escapeHtml(item.title)}</span>
-                        <button class="commitment-delete-btn" data-id="${item.id}" title="Sever this commitment">🗑️</button>
+                <details class="commitment-progress-faq" style="cursor:pointer; outline:none; margin-top:0.8rem; background:transparent; border-radius:6px; padding:0.6rem 0.8rem;">
+                    <summary style="font-family:var(--f-head); font-size:0.78rem; text-transform:uppercase; letter-spacing:0.04em; color:var(--terracotta); font-weight:700; list-style:none; display:flex; align-items:center; justify-content:space-between; outline:none; user-select:none;">
+                        <span style="display:flex; align-items:center; gap:0.3rem;">
+                            <span style="letter-spacing: 0.06em;">Progress Steps</span>
+                        </span>
+                        <span class="faq-toggle-icon" style="font-size:0.75rem; color:var(--terracotta); transition:transform 0.2s ease;">▶</span>
+                    </summary>
+                    <div class="faq-content" style="margin-top:0.6rem; padding-top:0.5rem; border-top:1px dashed rgba(229,195,106,0.25); line-height:1.4;">
+                        ${progressContent}
                     </div>
-                    <div class="commitment-why-text"><strong>Why:</strong> "${escapeHtml(item.why)}"</div>
-                    <div class="commitment-dates-row">
-                        <span><strong>Started:</strong> ${item.started}</span>
-                        <span><strong>Last touched:</strong> <span class="touched-date">${item.lastTouched || 'Never'}</span></span>
-                    </div>
-                    <div class="commitment-status-control">
-                        <label class="status-label">Status:</label>
-                        <select class="commitment-status-select" data-id="${item.id}">
-                            <option value="In Progress" ${item.status === 'In Progress' ? 'selected' : ''}>🎯 In Progress</option>
-                            <option value="Abandoned" ${item.status === 'Abandoned' ? 'selected' : ''}>🥀 Abandoned</option>
-                            <option value="Done" ${item.status === 'Done' ? 'selected' : ''}>🏆 Done</option>
-                        </select>
-                    </div>
-                `;
-                ul.appendChild(li);
-            });
-
-            groupSection.appendChild(ul);
-            commitmentsListEl.appendChild(groupSection);
+                </details>
+            `;
+            ul.appendChild(li);
         });
 
-        // Add Event Listeners for inline changes
-        document.querySelectorAll('.commitment-status-select').forEach(select => {
-            select.addEventListener('change', (e) => {
-                const id = e.target.dataset.id;
-                const newStatus = e.target.value;
-                const item = commitments.find(x => x.id === id);
-                if (item) {
-                    item.status = newStatus;
-                    item.lastTouched = getFormattedDate(); // Auto update Last Touched date
-                    saveCommitments();
-                    renderCommitments();
-                }
-            });
-        });
-
-        document.querySelectorAll('.commitment-delete-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const id = e.target.dataset.id;
-                if (confirm("Are you sure you want to sever/remove this commitment? All check-ins will remain, but the active binding will be deleted.")) {
-                    commitments = commitments.filter(x => x.id !== id);
-                    saveCommitments();
-                    renderCommitments();
-                    populateCheckinSelect();
-                }
-            });
-        });
+        commitmentsListEl.appendChild(ul);
     }
 
     // ── POPULATING CHECK-IN COMMITMENT DROP-DOWN (Right Page) ──
     function populateCheckinSelect() {
         if (!checkinSelect) return;
-        
+
         // Save current selection to restore after populating
         const currentVal = checkinSelect.value;
-        
+
         checkinSelect.innerHTML = `<option value="" disabled selected>Select a commitment...</option>`;
-        
+
         // Only list commitments that are "In Progress"
         const activeOnes = commitments.filter(c => c.status === 'In Progress');
-        
+
         activeOnes.forEach(c => {
             const opt = document.createElement('option');
             opt.value = c.id;
@@ -231,7 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
         sorted.forEach(item => {
             const card = document.createElement('div');
             card.className = `checkin-ledger-item ${item.forward === 'Yes' ? 'forward-yes' : 'forward-no'}`;
-            
+
             card.innerHTML = `
                 <div class="checkin-meta-row">
                     <span class="checkin-date">${item.date}</span>
@@ -333,9 +323,167 @@ document.addEventListener('DOMContentLoaded', () => {
     // ── HELPER: ESCAPE HTML ──
     function escapeHtml(text) {
         if (!text) return '';
-        return text.replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;' }[c]));
+        return text.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[c]));
+    }
+
+    // ── WHO I AM RENDERING ENGINE ──
+    const defaultBio = "Driven by an insatiable curiosity and an enduring passion for creating beautiful digital experiences. I believe that technical mastery should always walk hand-in-hand with empathy, visual elegance, and clarity of purpose. An eternal student, seeking to bring order to complex systems through clean modular design and aesthetic harmony.";
+
+    const defaultGoodAt = [
+        "UI & Visual Craftsmanship: Designing interfaces with rich textures, elegant layouts, and beautiful typography.",
+        "Logical Problem Solving: Resolving tricky architectural issues, debugging cleanly, and maintaining codebase health.",
+        "Empathetic Collaboration: Working supportively through pair programming with active listening.",
+        "Meticulous Tidiness: Keeping files clean and preserving code standards without shortcuts."
+    ];
+
+    const defaultImprovements = [
+        "Perfectionist Over-refining: Learning when a solution is strong enough to avoid burning extra hours.",
+        "Context Segmentation: Sticking to current focus without being pulled away by neighboring code enhancements.",
+        "Velocity Balance: Striking the golden mean between perfect code structures and swift delivery.",
+        "Deep Post-Mortems: Carving out patient space to document edge cases after solving pressing bugs."
+    ];
+
+    function renderWhoAmIDefaults() {
+        renderWhoAmI({ bio: defaultBio, goodAt: defaultGoodAt, improvements: defaultImprovements });
+    }
+
+    function renderWhoAmI(data) {
+        const bioEl = document.querySelector('.whoami-bio .bio-text');
+        const goodListEl = document.querySelector('.split-left .split-list');
+        const improvementsListEl = document.querySelector('.split-right .split-list');
+
+        if (bioEl && data.bio) {
+            bioEl.textContent = `"${data.bio}"`;
+        }
+
+        if (goodListEl && Array.isArray(data.goodAt)) {
+            goodListEl.innerHTML = data.goodAt.map(item => {
+                const parts = item.split(':');
+                if (parts.length > 1) {
+                    const title = parts[0];
+                    const desc = parts.slice(1).join(':');
+                    return `<li><strong>${escapeHtml(title)}:</strong>${escapeHtml(desc)}</li>`;
+                }
+                return `<li>${escapeHtml(item)}</li>`;
+            }).join('');
+        }
+
+        if (improvementsListEl && Array.isArray(data.improvements)) {
+            improvementsListEl.innerHTML = data.improvements.map(item => {
+                const parts = item.split(':');
+                if (parts.length > 1) {
+                    const title = parts[0];
+                    const desc = parts.slice(1).join(':');
+                    return `<li><strong>${escapeHtml(title)}:</strong>${escapeHtml(desc)}</li>`;
+                }
+                return `<li>${escapeHtml(item)}</li>`;
+            }).join('');
+        }
     }
 
     // ── RUN INITIALIZATION ──
     loadData();
+
+    // ── PROFILE PICTURE LOADER & UPDATER ──
+    const profileFrameBtn = document.getElementById('profile-frame-btn');
+    const profileFileInput = document.getElementById('profile-file-input');
+    const profileDisplayImg = document.getElementById('profile-display-img');
+
+    // Load existing profile picture from Local Cache or Server Settings
+    function loadProfilePicture() {
+        if (!profileDisplayImg) return;
+
+        // 1. Check local cache first for instant load
+        const cachedPic = localStorage.getItem('scriptorium_profile_picture');
+        if (cachedPic) {
+            profileDisplayImg.src = cachedPic;
+        }
+
+        // 2. Fetch from DB config
+        fetch('/api/settings')
+            .then(res => res.json())
+            .then(settings => {
+                if (settings && settings.scriptorium_profile_picture) {
+                    profileDisplayImg.src = settings.scriptorium_profile_picture;
+                    localStorage.setItem('scriptorium_profile_picture', settings.scriptorium_profile_picture);
+                }
+            })
+            .catch(e => console.warn("Failed to sync profile picture settings:", e));
+    }
+
+    if (profileFrameBtn && profileFileInput && profileDisplayImg) {
+        // Trigger file select on clicking frame
+        profileFrameBtn.addEventListener('click', () => {
+            profileFileInput.click();
+        });
+
+        // Handle selected image file
+        profileFileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            // Ensure it is an image
+            if (!file.type.startsWith('image/')) {
+                alert('Please select an image file.');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (event) {
+                const base64Data = event.target.result;
+
+                // Show instant preview
+                profileDisplayImg.src = base64Data;
+
+                // Play loading paper rustle sound
+                if (typeof playPaperRustleSound === 'function') {
+                    playPaperRustleSound();
+                }
+
+                // Upload to Server
+                fetch('/api/kb/upload', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        filename: file.name,
+                        data: base64Data
+                    })
+                })
+                    .then(res => res.json())
+                    .then(result => {
+                        if (result && result.success && result.url) {
+                            const uploadedUrl = result.url;
+
+                            // Update display and caches
+                            profileDisplayImg.src = uploadedUrl;
+                            localStorage.setItem('scriptorium_profile_picture', uploadedUrl);
+
+                            // Save to backend configuration
+                            fetch('/api/settings/save', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ scriptorium_profile_picture: uploadedUrl })
+                            })
+                                .then(() => {
+                                    // Play success audio indicator
+                                    if (typeof playPaperRustleSound === 'function') {
+                                        playPaperRustleSound();
+                                    }
+                                })
+                                .catch(err => console.error("Error saving profile setting to backend:", err));
+                        } else {
+                            throw new Error("Upload failed: " + (result.error || "unknown error"));
+                        }
+                    })
+                    .catch(err => {
+                        console.error("Profile picture upload failed:", err);
+                        alert("Could not upload profile picture: " + err.message);
+                    });
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    // Load profile portrait
+    loadProfilePicture();
 });
