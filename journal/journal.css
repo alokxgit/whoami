@@ -126,6 +126,119 @@ body.layout-ledger #spread-chronicles .book-page::-webkit-scrollbar-thumb:hover 
     text-decoration: line-through;
 }
 
+#scrapbook-textarea img,
+#scrapbook-textarea-right img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    border: 1px dashed rgba(229, 195, 106, 0.45);
+    background: rgba(0, 0, 0, 0.05);
+    padding: 6px;
+    margin: 12px 0;
+    display: block;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+#scrapbook-textarea img:hover,
+#scrapbook-textarea-right img:hover {
+    transform: scale(1.008);
+    border-color: rgba(229, 195, 106, 0.85);
+    background: rgba(229, 195, 106, 0.02);
+    box-shadow: 0 6px 15px rgba(229, 195, 106, 0.12);
+}
+
+#scrapbook-textarea img.selected-img,
+#scrapbook-textarea-right img.selected-img {
+    border-style: solid;
+    border-color: var(--amber) !important;
+    box-shadow: 0 0 0 2px rgba(229, 195, 106, 0.25), 0 8px 24px rgba(0, 0, 0, 0.15);
+    outline: none;
+}
+
+/* Glassmorphic Image Dropdown relative to fmt-image button */
+.image-dropdown {
+    position: absolute;
+    z-index: 10000;
+    display: none;
+    flex-direction: column;
+    min-width: 170px;
+    background: rgba(30, 11, 4, 0.98);
+    border: 1px solid rgba(229, 195, 106, 0.4);
+    border-radius: 6px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    padding: 6px 0;
+    font-family: var(--f-head);
+    animation: dropdown-fade-in 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.image-dropdown.open {
+    display: flex;
+}
+
+@keyframes dropdown-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fmt-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    color: rgba(250, 245, 230, 0.75);
+    font-size: 0.68rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.fmt-dropdown-item:hover {
+    background: rgba(229, 195, 106, 0.08);
+    color: var(--gold);
+}
+
+.fmt-dropdown-item.active {
+    background: rgba(229, 195, 106, 0.15);
+    color: var(--gold);
+    font-weight: bold;
+}
+
+.fmt-dropdown-item.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.fmt-dropdown-item.btn-delete {
+    color: rgba(239, 68, 68, 0.85);
+}
+
+.fmt-dropdown-item.btn-delete:hover {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+
+.fmt-dropdown-header {
+    padding: 4px 12px;
+    font-size: 0.58rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: rgba(229, 195, 106, 0.55);
+}
+
+.fmt-dropdown-divider {
+    height: 1px;
+    background: rgba(229, 195, 106, 0.15);
+    margin: 4px 0;
+}
+
 
 /* Scrapbook footer (left page only) */
 .scrapbook-footer {

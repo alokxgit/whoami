@@ -153,6 +153,24 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!html) return '';
         let md = html;
         md = md.replace(/\r/g, '');
+
+        // Safely parse image tags and preserve custom widths/styles as HTML img tags,
+        // while converting default 25% (or un-styled) images to classic markdown syntax.
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = md;
+        const imgs = tempDiv.querySelectorAll('img');
+        imgs.forEach(img => {
+            const width = img.getAttribute('width') || img.style.width;
+            const alt = img.getAttribute('alt') || '';
+            const src = img.getAttribute('src') || '';
+            if (!width || width === '25%' || width === '25') {
+                img.outerHTML = `![${alt}](${src})`;
+            } else {
+                img.outerHTML = `<img src="${src}" alt="${alt}" width="${width}">`;
+            }
+        });
+        md = tempDiv.innerHTML;
+
         // Replace bold tags
         md = md.replace(/<(b|strong)>(.*?)<\/\1>/gi, '**$2**');
         // Replace italic tags
@@ -181,6 +199,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Restore underlines
         html = html.replace(/&lt;u&gt;(.*?)&lt;\/u&gt;/gi, '<u>$1</u>');
+
+        // Restore HTML img tags (e.g. resized ones)
+        html = html.replace(/&lt;img\s+(.*?)&gt;/gi, '<img $1>');
+
+        // Image parser (default to 25% width)
+        html = html.replace(/!\[(.*?)\]\((.*?)\)/g, '<img src="$2" alt="$1" width="25%">');
 
         // Bold parser
         html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
@@ -729,6 +753,364 @@ document.addEventListener('DOMContentLoaded', () => {
         ta.addEventListener('keyup', updateActiveStates);
         ta.addEventListener('click', updateActiveStates);
     });
+
+    // ── Image Upload & Resizing Dropdown Handling ───────────────────────────
+    const imgBtn = document.getElementById('fmt-image');
+    const fileInput = document.getElementById('image-upload-input');
+
+    function toggleImageDropdown(show) {
+        let dropdown = document.getElementById('image-dropdown');
+        if (!dropdown) {
+            dropdown = document.createElement('div');
+            dropdown.id = 'image-dropdown';
+            dropdown.className = 'image-dropdown';
+            document.body.appendChild(dropdown);
+        }
+
+        const shouldOpen = (show !== undefined) ? show : !dropdown.classList.contains('open');
+
+        if (!shouldOpen) {
+            dropdown.classList.remove('open');
+            return;
+        }
+
+        // Re-generate inner HTML to reflect current selection state
+        const selectedImg = document.querySelector('.selected-img');
+        const hasSelected = !!selectedImg;
+        const currentWidth = hasSelected ? (selectedImg.getAttribute('width') || selectedImg.style.width || '100%') : '';
+
+        dropdown.innerHTML = `
+            <div class="fmt-dropdown-item" id="img-opt-upload">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: block; opacity: 0.8;"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                <span>Upload Image...</span>
+            </div>
+            <div class="fmt-dropdown-divider"></div>
+            <div class="fmt-dropdown-header">Resize Selected Image</div>
+            <div class="fmt-dropdown-item ${!hasSelected ? 'disabled' : ''} ${currentWidth === '25%' ? 'active' : ''}" data-width="25%">
+                <span>25% Width (Default)</span>
+            </div>
+            <div class="fmt-dropdown-item ${!hasSelected ? 'disabled' : ''} ${currentWidth === '50%' ? 'active' : ''}" data-width="50%">
+                <span>50% Width</span>
+            </div>
+            <div class="fmt-dropdown-item ${!hasSelected ? 'disabled' : ''} ${currentWidth === '75%' ? 'active' : ''}" data-width="75%">
+                <span>75% Width</span>
+            </div>
+            <div class="fmt-dropdown-item ${!hasSelected ? 'disabled' : ''} ${currentWidth === '100%' ? 'active' : ''}" data-width="100%">
+                <span>100% Width</span>
+            </div>
+            <div class="fmt-dropdown-divider"></div>
+            <div class="fmt-dropdown-item btn-delete ${!hasSelected ? 'disabled' : ''}" id="img-opt-delete">
+                <span>✕ Delete Image</span>
+            </div>
+        `;
+
+        dropdown.classList.add('open');
+
+        // Position the dropdown relative to `#fmt-image` button (above it)
+        const imgBtnEl = document.getElementById('fmt-image');
+        if (imgBtnEl) {
+            const btnRect = imgBtnEl.getBoundingClientRect();
+            const dropdownHeight = dropdown.getBoundingClientRect().height;
+            const dropdownTop = btnRect.top + window.scrollY - dropdownHeight - 4;
+            const dropdownLeft = btnRect.left + window.scrollX - 10;
+            dropdown.style.top = `${dropdownTop}px`;
+            dropdown.style.left = `${dropdownLeft}px`;
+        }
+
+        // Add event listeners inside the dropdown
+        dropdown.querySelector('#img-opt-upload').addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dropdown.classList.remove('open');
+            if (fileInput) fileInput.click();
+        });
+
+        dropdown.querySelectorAll('[data-width]').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (!hasSelected) return;
+
+                const newWidth = item.dataset.width;
+                selectedImg.setAttribute('width', newWidth);
+                selectedImg.style.width = newWidth;
+                
+                persist();
+                updateWordCount();
+                
+                // Refresh active status
+                toggleImageDropdown(true);
+            });
+        });
+
+        dropdown.querySelector('#img-opt-delete').addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (!hasSelected) return;
+
+            selectedImg.remove();
+            removeSelectedImageState();
+            dropdown.classList.remove('open');
+
+            persist();
+            updateWordCount();
+        });
+    }
+
+    function selectImage(img) {
+        removeSelectedImageState();
+        img.classList.add('selected-img');
+        toggleImageDropdown(true);
+    }
+
+    function removeSelectedImageState() {
+        document.querySelectorAll('#scrapbook-textarea img, #scrapbook-textarea-right img').forEach(img => {
+            img.classList.remove('selected-img');
+        });
+        const dropdown = document.getElementById('image-dropdown');
+        if (dropdown) dropdown.classList.remove('open');
+    }
+
+    // Global listener for clicking on images or dismissing the dropdown
+    document.addEventListener('click', (e) => {
+        if (e.target.tagName === 'IMG' && (e.target.closest('#scrapbook-textarea') || e.target.closest('#scrapbook-textarea-right'))) {
+            e.stopPropagation();
+            selectImage(e.target);
+        } else if (!e.target.closest('#image-dropdown') && !e.target.closest('#fmt-image')) {
+            removeSelectedImageState();
+        }
+    });
+
+    if (imgBtn) {
+        imgBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleImageDropdown();
+        });
+    }
+
+    if (fileInput) {
+        fileInput.addEventListener('change', () => {
+            const file = fileInput.files[0];
+            if (!file) return;
+
+            // Reset input so user can upload the same file again
+            fileInput.value = '';
+
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            
+            // Show status
+            flash('Uploading image...');
+
+            reader.onload = () => {
+                const base64Data = reader.result;
+
+                fetch('/api/kb/upload', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        filename: file.name,
+                        data: base64Data
+                    })
+                })
+                .then(res => res.json())
+                .then(res => {
+                    if (res.success && res.url) {
+                        flash('Image inserted ✓');
+
+                        // Insert at cursor selection if focused, otherwise append
+                        const selection = window.getSelection();
+                        let inserted = false;
+
+                        if (selection.rangeCount > 0) {
+                            const range = selection.getRangeAt(0);
+                            const editorLeft = document.getElementById('scrapbook-textarea');
+                            const editorRight = document.getElementById('scrapbook-textarea-right');
+
+                            if (editorLeft.contains(range.commonAncestorContainer) || editorRight.contains(range.commonAncestorContainer)) {
+                                range.deleteContents();
+                                const img = document.createElement('img');
+                                img.src = res.url;
+                                img.alt = file.name;
+                                img.setAttribute('width', '25%');
+                                img.style.width = '25%';
+                                range.insertNode(img);
+
+                                // Move cursor right after the image
+                                range.setStartAfter(img);
+                                range.setEndAfter(img);
+                                selection.removeAllRanges();
+                                selection.addRange(range);
+                                inserted = true;
+                            }
+                        }
+
+                        if (!inserted) {
+                            // Fallback to active TA
+                            const ta = activeTA();
+                            const img = document.createElement('img');
+                            img.src = res.url;
+                            img.alt = file.name;
+                            img.setAttribute('width', '25%');
+                            img.style.width = '25%';
+                            ta.appendChild(img);
+                        }
+
+                        // Save new state
+                        persist();
+                        updateWordCount();
+                    } else {
+                        flash('Upload failed ✕');
+                    }
+                })
+                .catch(err => {
+                    console.error("Image upload failed:", err);
+                    flash('Upload failed ✕');
+                });
+            };
+        });
+    }
+
+    // ── Paste Event Interception to prevent base64 contamination ──
+    function uploadPastedImage(file, ta) {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        
+        flash('Uploading pasted image...');
+
+        reader.onload = () => {
+            const base64Data = reader.result;
+
+            fetch('/api/kb/upload', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    filename: file.name || 'pasted_image.png',
+                    data: base64Data
+                })
+            })
+            .then(res => res.json())
+            .then(res => {
+                if (res.success && res.url) {
+                    flash('Image pasted & saved ✓');
+
+                    // Create image element
+                    const img = document.createElement('img');
+                    img.src = res.url;
+                    img.alt = file.name || 'pasted_image.png';
+                    img.setAttribute('width', '25%');
+                    img.style.width = '25%';
+
+                    // Insert at current cursor selection inside the active textarea
+                    const selection = window.getSelection();
+                    let inserted = false;
+
+                    if (selection.rangeCount > 0) {
+                        const range = selection.getRangeAt(0);
+                        if (ta.contains(range.commonAncestorContainer)) {
+                            range.deleteContents();
+                            range.insertNode(img);
+
+                            // Move cursor after the image
+                            range.setStartAfter(img);
+                            range.setEndAfter(img);
+                            selection.removeAllRanges();
+                            selection.addRange(range);
+                            inserted = true;
+                        }
+                    }
+
+                    if (!inserted) {
+                        ta.appendChild(img);
+                    }
+
+                    persist();
+                    updateWordCount();
+                } else {
+                    flash('Upload failed ✕');
+                }
+            })
+            .catch(err => {
+                console.error("Pasted image upload failed:", err);
+                flash('Upload failed ✕');
+            });
+        };
+    }
+
+    function setupPasteHandling(ta) {
+        ta.addEventListener('paste', (e) => {
+            // Check for pasted files
+            const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+            let hasImage = false;
+            for (let i = 0; i < items.length; i++) {
+                if (items[i].type.indexOf('image') !== -1) {
+                    hasImage = true;
+                    e.preventDefault();
+                    const file = items[i].getAsFile();
+                    if (file) {
+                        uploadPastedImage(file, ta);
+                    }
+                    break;
+                }
+            }
+
+            if (hasImage) return;
+
+            // Also check for pasted HTML containing base64 images
+            const pastedHtml = e.clipboardData.getData('text/html');
+            if (pastedHtml && (pastedHtml.includes('src="data:image/') || pastedHtml.includes("src='data:image/"))) {
+                e.preventDefault();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(pastedHtml, 'text/html');
+                const imgs = doc.querySelectorAll('img');
+                
+                const uploadPromises = [];
+                imgs.forEach(img => {
+                    const src = img.getAttribute('src') || '';
+                    if (src.startsWith('data:image/')) {
+                        const match = src.match(/^data:image\/([a-zA-Z+]+);base64,/);
+                        const ext = match ? match[1] : 'png';
+                        
+                        const promise = fetch('/api/kb/upload', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                filename: `pasted_image_${Date.now()}.${ext}`,
+                                data: src
+                            })
+                        })
+                        .then(res => res.json())
+                        .then(res => {
+                            if (res.success && res.url) {
+                                img.setAttribute('src', res.url);
+                                img.setAttribute('width', '25%');
+                                img.style.width = '25%';
+                            }
+                        })
+                        .catch(err => console.error("Pasted inline image upload failed:", err));
+                        uploadPromises.push(promise);
+                    }
+                });
+
+                if (uploadPromises.length > 0) {
+                    flash('Uploading pasted images...');
+                    Promise.all(uploadPromises).then(() => {
+                        const cleanHtml = doc.body.innerHTML;
+                        document.execCommand('insertHTML', false, cleanHtml);
+                        persist();
+                        updateWordCount();
+                    });
+                }
+            }
+        });
+    }
+
+    [leftTA, rightTA].forEach(ta => setupPasteHandling(ta));
 
     // ── Vim Mode Integration ────────────────────────────────────────────────
     let vimEnabled = false;

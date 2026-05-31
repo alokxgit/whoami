@@ -391,3 +391,40 @@ body.layout-ledger .goals-mini-form input {
 body.layout-ledger .editor-checkbox-wrapper input[type="checkbox"] {
     accent-color: var(--amber);
 }
+
+/* ── Save & Reset Daily Chronicle Button ── */
+.goals-save-reset-btn {
+    background: rgba(133, 97, 68, 0.08);
+    color: var(--terracotta);
+    border: 1px solid rgba(133, 97, 68, 0.3);
+    border-radius: 6px;
+    padding: 0.45rem 1rem;
+    font-family: var(--f-head);
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-weight: 600;
+}
+
+.goals-save-reset-btn:hover {
+    background: rgba(133, 97, 68, 0.18);
+    color: #7c2e10;
+    border-color: rgba(133, 97, 68, 0.5);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+body.layout-ledger .goals-save-reset-btn {
+    background: rgba(229, 195, 106, 0.07);
+    color: var(--gold);
+    border-color: rgba(229, 195, 106, 0.25);
+}
+
+body.layout-ledger .goals-save-reset-btn:hover {
+    background: rgba(229, 195, 106, 0.15);
+    color: var(--gold);
+    border-color: rgba(229, 195, 106, 0.45);
+}

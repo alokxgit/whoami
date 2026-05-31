@@ -66,7 +66,7 @@
                     <!-- SPREAD I: Reflection & Study -->
                     <div class="book-spread active-spread" id="spread-reflection-study">
 
-                        <!-- LEFT PAGE -->
+                        <!-- LEFT PAGE: Active Commitments -->
                         <div class="book-page page-left">
                             <div class="page-texture"></div>
                             <div class="flourish top">❧</div>
@@ -83,52 +83,35 @@
                             </div>
 
                             <div class="page-header">
-                                <h1>Morning Reflection</h1>
-                                <p class="page-header-sub">Start your day with intention</p>
+                                <h1>Active Commitments</h1>
+                                <p class="page-header-sub">Your sacred bindings and intentions</p>
                             </div>
 
-                            <div class="illuminated-header">
-                                <div class="drop-cap">W</div>
-                                <div class="header-text">
-                                    <h2>Daily Wisdom</h2>
-                                    <p class="cursive-sub">A thought to guide your day</p>
-                                </div>
-                            </div>
 
-                            <div class="quote-block">
-                                <p class="quote-text" id="quote-text">"The secret of getting ahead is getting started."</p>
-                                <p class="quote-author" id="quote-author">— Mark Twain</p>
-                                <button class="new-quote-btn" id="new-quote-btn" title="New quote">↻ New</button>
-                            </div>
-
-                            <div class="section-divider">
+                            <div class="section-divider" style="margin-top: 1rem;">
                                 <div class="divider-rule"></div>
-                                <span class="divider-icon">✦</span>
-                                <span class="section-sub">Today's Focus</span>
-                                <span class="divider-icon">✦</span>
+                                <span class="divider-icon">📜</span>
+                                <span class="section-sub">Your Commitments Registry</span>
                                 <div class="divider-rule"></div>
                             </div>
 
-                            <div class="mindset-chips">
-                                <button class="mindset-btn" data-mindset="Deep Work">🎯 Deep Work</button>
-                                <button class="mindset-btn" data-mindset="Creative Flow">🎨 Creative Flow</button>
-                                <button class="mindset-btn" data-mindset="Learning">📚 Learning</button>
-                                <button class="mindset-btn" data-mindset="Rest & Recovery">🌿 Rest</button>
-                                <button class="mindset-btn" data-mindset="Planning">🗺️ Planning</button>
+                            <div class="commitments-container-scrollable">
+                                <ul id="commitments-list" class="commitments-list">
+                                    <!-- Dynamic content -->
+                                </ul>
                             </div>
-                            <p class="active-mindset-display" id="active-mindset-name">None selected</p>
 
                             <div class="flourish bottom">❦</div>
                         </div>
 
 
-                        <!-- RIGHT PAGE -->
+                        <!-- RIGHT PAGE: Daily Check-in -->
                         <div class="book-page page-right">
                             <div class="page-texture"></div>
                             <div class="flourish top">❧</div>
 
                             <div class="page-running-header">
-                                <span class="running-section">Reflection &amp; Study</span>
+                                <span class="running-section">Daily Check-in</span>
                                 <div class="page-date-badge">
                                     <span class="day-number">30</span>
                                     <span class="month">May</span>
@@ -137,23 +120,47 @@
                             </div>
 
                             <div class="page-header">
-                                <h1>Ambient Focus</h1>
-                                <p class="page-header-sub">Set the mood for your session</p>
+                                <h1>Daily Check-in</h1>
+                                <p class="page-header-sub">Record today's work honestly</p>
                             </div>
 
-                            <div class="section-divider">
+                            <form id="checkin-form" class="reflection-form">
+                                <div class="form-group">
+                                    <label class="form-label" for="checkin-commitment-select">Which commitment did you work on today?</label>
+                                    <select id="checkin-commitment-select" required>
+                                        <option value="" disabled selected>Select a commitment...</option>
+                                        <!-- Dynamically populated from commitments -->
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Did you move forward?</label>
+                                    <div class="yes-no-buttons">
+                                        <button type="button" class="yn-btn active" data-val="Yes">✨ Yes</button>
+                                        <button type="button" class="yn-btn" data-val="No">⏳ No</button>
+                                    </div>
+                                    <input type="hidden" id="checkin-forward" value="Yes" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label" for="checkin-notes">One honest line</label>
+                                    <input type="text" id="checkin-notes" placeholder="What happened today..." required>
+                                </div>
+
+                                <button type="submit" class="submit-btn" style="width: 100%; margin-top: 0.5rem;">💾 Record Check-in</button>
+                            </form>
+
+                            <div class="section-divider" style="margin-top: 1rem;">
                                 <div class="divider-rule"></div>
-                                <span class="divider-icon">♪</span>
-                                <span class="section-sub">Soundscapes</span>
-                                <span class="divider-icon">♪</span>
+                                <span class="divider-icon">📖</span>
+                                <span class="section-sub">Recent Progress Ledger</span>
                                 <div class="divider-rule"></div>
                             </div>
 
-                            <div class="sound-btns">
-                                <button class="sound-btn" id="btn-fire" data-sound="fire">🔥 Fireplace</button>
-                                <button class="sound-btn" id="btn-rain" data-sound="rain">🌧️ Rain</button>
-                                <button class="sound-btn" id="btn-wind" data-sound="wind">💨 Wind</button>
-                                <button class="sound-btn" id="btn-chimes" data-sound="chimes">🔔 Chimes</button>
+                            <div class="checkins-container-scrollable">
+                                <div id="checkins-list" class="checkins-list">
+                                    <!-- Dynamic list of recent check-ins -->
+                                </div>
                             </div>
 
                             <div class="flourish bottom">❦</div>

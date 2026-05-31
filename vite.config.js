@@ -323,6 +323,156 @@ const localJournalPlugin = () => ({
         return;
       }
 
+      // ── API: Upload an image for the Knowledge Base ──
+      const uploadsDir = path.resolve(__dirname, 'database/knowledge_base/uploads');
+      if (!fs.existsSync(uploadsDir)) {
+        fs.mkdirSync(uploadsDir, { recursive: true });
+      }
+
+      if (req.url === '/api/kb/upload' && req.method === 'POST') {
+        let body = '';
+        req.on('data', chunk => { body += chunk; });
+        req.on('end', () => {
+          try {
+            const { filename, data } = JSON.parse(body);
+            if (!filename || !data) throw new Error("Missing filename or base64 data");
+
+            // Extract the base64 content
+            const base64Content = data.split(';base64,').pop();
+            const uniqueFilename = `${Date.now()}_${filename.replace(/[^a-zA-Z0-9_\.\-]+/g, '_')}`;
+            const targetPath = path.join(uploadsDir, uniqueFilename);
+
+            fs.writeFileSync(targetPath, base64Content, 'base64');
+
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: true, url: `/api/kb/uploads/${uniqueFilename}` }));
+          } catch (err) {
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: err.message }));
+          }
+        });
+        return;
+      }
+
+      // ── API: Serve uploaded Knowledge Base images ──
+      if (req.url.startsWith('/api/kb/uploads/') && req.method === 'GET') {
+        const parts = req.url.split('/api/kb/uploads/');
+        const filename = parts[1] ? decodeURIComponent(parts[1]) : '';
+        const targetPath = path.join(uploadsDir, filename);
+
+        if (filename && fs.existsSync(targetPath) && fs.statSync(targetPath).isFile()) {
+          const ext = path.extname(filename).toLowerCase();
+          let contentType = 'application/octet-stream';
+          if (ext === '.png') contentType = 'image/png';
+          else if (ext === '.jpg' || ext === '.jpeg') contentType = 'image/jpeg';
+          else if (ext === '.gif') contentType = 'image/gif';
+          else if (ext === '.svg') contentType = 'image/svg+xml';
+          else if (ext === '.webp') contentType = 'image/webp';
+
+          const content = fs.readFileSync(targetPath);
+          res.writeHead(200, { 'Content-Type': contentType });
+          res.end(content);
+        } else {
+          res.writeHead(404, { 'Content-Type': 'text/plain' });
+          res.end('404 Not Found');
+        }
+        return;
+      }
+
+      // ── API: Save and Reset Goals & Tasks ──
+      if (req.url === '/api/goals/save' && req.method === 'POST') {
+        let body = '';
+        req.on('data', chunk => { body += chunk; });
+        req.on('end', () => {
+          try {
+            const { category, filename, data } = JSON.parse(body);
+            if (!category || !filename || !data) {
+              throw new Error("Missing category, filename, or data");
+            }
+
+            // Allowed categories/subfolders
+            const allowedCategories = ['daily', 'weekly', 'longterm', 'inner_desire', 'active_commitments'];
+            if (!allowedCategories.includes(category)) {
+              throw new Error("Invalid category: " + category);
+            }
+
+            const targetDir = category === 'active_commitments'
+              ? path.resolve(__dirname, `database/reflection/${category}`)
+              : path.resolve(__dirname, `database/goals/${category}`);
+            if (!fs.existsSync(targetDir)) {
+              fs.mkdirSync(targetDir, { recursive: true });
+            }
+
+            const sanitizedFilename = filename.replace(/[^a-zA-Z0-9_\-\.]/g, '_');
+            const targetPath = path.join(targetDir, sanitizedFilename);
+            fs.writeFileSync(targetPath, JSON.stringify(data, null, 2), 'utf-8');
+
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: true }));
+          } catch (err) {
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: err.message }));
+          }
+        });
+        return;
+      }
+
+      // ── API: Save and Load Reflection Commitments & Check-ins ──
+      if (req.url === '/api/reflection/save' && req.method === 'POST') {
+        let body = '';
+        req.on('data', chunk => { body += chunk; });
+        req.on('end', () => {
+          try {
+            const { type, data } = JSON.parse(body);
+            if (!type || !data) {
+              throw new Error("Missing type or data");
+            }
+            if (type !== 'commitments' && type !== 'checkins') {
+              throw new Error("Invalid reflection data type: " + type);
+            }
+
+            const targetDir = path.resolve(__dirname, 'database/reflection');
+            if (!fs.existsSync(targetDir)) {
+              fs.mkdirSync(targetDir, { recursive: true });
+            }
+
+            const targetPath = path.join(targetDir, `${type}.json`);
+            fs.writeFileSync(targetPath, JSON.stringify(data, null, 2), 'utf-8');
+
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: true }));
+          } catch (err) {
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: err.message }));
+          }
+        });
+        return;
+      }
+
+      if (req.url.startsWith('/api/reflection/load') && req.method === 'GET') {
+        try {
+          const urlObj = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
+          const type = urlObj.searchParams.get('type');
+          if (type !== 'commitments' && type !== 'checkins') {
+            throw new Error("Invalid reflection data type: " + type);
+          }
+
+          const targetPath = path.resolve(__dirname, `database/reflection/${type}.json`);
+          if (fs.existsSync(targetPath)) {
+            const content = fs.readFileSync(targetPath, 'utf-8');
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(content);
+          } else {
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify([])); // Return empty array if file does not exist yet
+          }
+        } catch (err) {
+          res.writeHead(500, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ error: err.message }));
+        }
+        return;
+      }
+
       next();
     });
   }

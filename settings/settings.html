@@ -75,9 +75,12 @@
                                 <span class="running-brand">Alok</span>
                                 <div class="running-switcher">
                                     <div class="layout-switcher-mini">
-                                        <button class="switcher-btn" data-layout="codex" title="Monk's Codex">📖</button>
-                                        <button class="switcher-btn" data-layout="folio" title="Traveler's Folio">💼</button>
-                                        <button class="switcher-btn" data-layout="ledger" title="Scribe's Ledger">📜</button>
+                                        <button class="switcher-btn" data-layout="codex"
+                                            title="Monk's Codex">📖</button>
+                                        <button class="switcher-btn" data-layout="folio"
+                                            title="Traveler's Folio">💼</button>
+                                        <button class="switcher-btn" data-layout="ledger"
+                                            title="Scribe's Ledger">📜</button>
                                     </div>
                                 </div>
                             </div>
@@ -119,6 +122,82 @@
                                     </div>
                                     <span class="theme-active-badge">Active</span>
                                 </button>
+                            </div>
+
+                            <div class="section-divider" style="margin-top:1.5rem;">
+                                <div class="divider-rule"></div>
+                                <span class="divider-icon">✒️</span>
+                                <span class="section-sub">Goal Registry</span>
+                                <div class="divider-rule"></div>
+                            </div>
+
+                            <div class="settings-goals-manager">
+                                <div class="manager-tabs">
+                                    <button class="manager-tab-btn active" data-tab="weekly"
+                                        id="tab-btn-weekly">Weekly</button>
+                                    <button class="manager-tab-btn" data-tab="long" id="tab-btn-long">Long-Term</button>
+                                    <button class="manager-tab-btn" data-tab="desires"
+                                        id="tab-btn-desires">Desires</button>
+                                    <button class="manager-tab-btn" data-tab="commitments"
+                                        id="tab-btn-commitments">Commitments</button>
+                                </div>
+
+                                <div class="manager-content">
+                                    <form class="settings-goal-add-form" id="settings-goal-form" style="display:flex; flex-direction:column; gap:0.5rem; width:100%;">
+                                        <div style="display:flex; gap:0.5rem; width:100%;">
+                                            <input type="text" id="settings-goal-input" placeholder="Add new weekly goal..."
+                                                autocomplete="off" required style="flex:1;">
+                                            <button type="submit" style="width:auto; padding:0 1rem;">✒ Add</button>
+                                        </div>
+                                        <div id="weekly-commitment-select-container" style="display:flex; align-items:center; gap:0.5rem; width:100%;">
+                                            <label for="goal-commitment-select" style="font-family:var(--f-head); font-size:0.75rem; color:var(--ink-muted); white-space:nowrap;">Connect to Commitment:</label>
+                                            <select id="goal-commitment-select" style="flex:1; padding:4px 8px; font-family:var(--f-head); font-size:0.75rem; border:1px dashed var(--gold-dim); background:rgba(0,0,0,0.1); color:var(--ink); border-radius:4px; cursor:pointer;">
+                                                <option value="">-- None --</option>
+                                            </select>
+                                        </div>
+                                    </form>
+                                    <ul class="settings-goals-list" id="settings-goals-list">
+                                        <!-- Dynamically populated -->
+                                    </ul>
+                                    
+                                    <div id="settings-commitments-tab-content" style="display: none; flex-direction: column; gap: 0.8rem; width: 100%;">
+                                        <form id="add-commitment-form" class="settings-commitment-form" style="display:flex; flex-direction:column; gap:0.65rem; background:rgba(229, 195, 106, 0.03); border:1px solid rgba(229, 195, 106, 0.15); border-radius:8px; padding:0.75rem;">
+                                            <div style="display:flex; flex-direction:column; gap:0.2rem;">
+                                                <label class="form-label" style="font-family:var(--f-head); font-size:0.78rem; color:var(--terracotta); text-transform:uppercase; letter-spacing:0.04em; font-weight:600;" for="commitment-title">The Commitment</label>
+                                                <input type="text" id="commitment-title" placeholder="What exactly you committed to..." style="background:rgba(255,255,255,0.45); border:1px solid var(--gold-dim); border-radius:5px; padding:0.35rem 0.6rem; font-family:var(--f-hand); font-size:0.92rem; color:var(--ink); outline:none;" required>
+                                            </div>
+                                            <div style="display:flex; flex-direction:column; gap:0.2rem;">
+                                                <label class="form-label" style="font-family:var(--f-head); font-size:0.78rem; color:var(--terracotta); text-transform:uppercase; letter-spacing:0.04em; font-weight:600;" for="commitment-why">The Purpose</label>
+                                                <input type="text" id="commitment-why" placeholder="One line, why you decided this..." style="background:rgba(255,255,255,0.45); border:1px solid var(--gold-dim); border-radius:5px; padding:0.35rem 0.6rem; font-family:var(--f-hand); font-size:0.92rem; color:var(--ink); outline:none;" required>
+                                            </div>
+                                            <div style="display:flex; gap:0.5rem;">
+                                                <div style="flex:1; display:flex; flex-direction:column; gap:0.2rem;">
+                                                    <label class="form-label" style="font-family:var(--f-head); font-size:0.78rem; color:var(--terracotta); text-transform:uppercase; letter-spacing:0.04em; font-weight:600;" for="commitment-category">Category</label>
+                                                    <input type="text" id="commitment-category" placeholder="e.g. Work, Health..." style="background:rgba(255,255,255,0.45); border:1px solid var(--gold-dim); border-radius:5px; padding:0.35rem 0.6rem; font-family:var(--f-hand); font-size:0.92rem; color:var(--ink); outline:none;" required>
+                                                </div>
+                                                <div style="flex:1; display:flex; flex-direction:column; gap:0.2rem;">
+                                                    <label class="form-label" style="font-family:var(--f-head); font-size:0.78rem; color:var(--terracotta); text-transform:uppercase; letter-spacing:0.04em; font-weight:600;" for="commitment-status">Status</label>
+                                                    <select id="commitment-status" style="background:rgba(255,255,255,0.45); border:1px solid var(--gold-dim); border-radius:5px; padding:0.35rem 0.6rem; font-family:var(--f-hand); font-size:0.92rem; color:var(--ink); outline:none; width:100%;">
+                                                        <option value="In Progress">🎯 In Progress</option>
+                                                        <option value="Abandoned">🥀 Abandoned</option>
+                                                        <option value="Done">🏆 Done</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <button type="submit" class="settings-action-btn" style="width:100%; margin-top:0.25rem; padding:0.4rem 1rem;">✒️ Bind Commitment</button>
+                                        </form>
+                                        
+                                        <h3 style="font-family:var(--f-head); font-size:0.8rem; color:var(--terracotta); text-transform:uppercase; margin-top:0.6rem; border-bottom:1px solid rgba(229,195,106,0.2); padding-bottom:4px; letter-spacing:0.04em; font-weight:600;">Active Commitments</h3>
+                                        <ul class="settings-goals-list" id="settings-commitments-list" style="margin-top: 0; max-height: 250px; overflow-y: auto;">
+                                            <!-- Dynamically populated commitments -->
+                                        </ul>
+                                    </div>
+                                    
+                                    <button class="settings-action-btn" id="settings-goals-save-reset-btn"
+                                        style="width: 100%; margin-top: 0.8rem; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                                        Save &amp; Reset Active Registry Tab
+                                    </button>
+                                </div>
                             </div>
 
                             <div class="flourish bottom">❦</div>
@@ -168,9 +247,11 @@
                                     <div class="settings-control-desc">EB Garamond &amp; Cinzel headings</div>
                                 </div>
                                 <div class="font-scale-adjuster">
-                                    <button class="font-scale-btn" id="scale-fancy-dec" title="Decrease size">A−</button>
+                                    <button class="font-scale-btn" id="scale-fancy-dec"
+                                        title="Decrease size">A−</button>
                                     <span class="font-scale-val" id="scale-fancy-val">1.0</span>
-                                    <button class="font-scale-btn" id="scale-fancy-inc" title="Increase size">A+</button>
+                                    <button class="font-scale-btn" id="scale-fancy-inc"
+                                        title="Increase size">A+</button>
                                 </div>
                             </div>
                             <div class="settings-control-row submenu-row">
@@ -235,30 +316,6 @@
                                 </select>
                             </div>
 
-                            <div class="section-divider" style="margin-top:1rem;">
-                                <div class="divider-rule"></div>
-                                <span class="divider-icon">✒️</span>
-                                <span class="section-sub">Goal Registry</span>
-                                <div class="divider-rule"></div>
-                            </div>
-
-                            <div class="settings-goals-manager">
-                                <div class="manager-tabs">
-                                    <button class="manager-tab-btn active" data-tab="weekly" id="tab-btn-weekly">Weekly</button>
-                                    <button class="manager-tab-btn" data-tab="long" id="tab-btn-long">Long-Term</button>
-                                    <button class="manager-tab-btn" data-tab="desires" id="tab-btn-desires">Desires</button>
-                                </div>
-
-                                <div class="manager-content">
-                                    <form class="settings-goal-add-form" id="settings-goal-form">
-                                        <input type="text" id="settings-goal-input" placeholder="Add new weekly goal..." autocomplete="off" required>
-                                        <button type="submit">✒ Add</button>
-                                    </form>
-                                    <ul class="settings-goals-list" id="settings-goals-list">
-                                        <!-- Dynamically populated -->
-                                    </ul>
-                                </div>
-                            </div>
 
                             <div class="section-divider" style="margin-top:1.2rem;">
                                 <div class="divider-rule"></div>

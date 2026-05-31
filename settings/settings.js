@@ -60,18 +60,75 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ── GOAL REGISTRY MANAGEMENT & LOCKING RULES ──
-    const tabWeekly   = document.getElementById('tab-btn-weekly');
-    const tabLong     = document.getElementById('tab-btn-long');
-    const tabDesires  = document.getElementById('tab-btn-desires');
-    const goalInput   = document.getElementById('settings-goal-input');
-    const goalForm    = document.getElementById('settings-goal-form');
-    const goalsListEl = document.getElementById('settings-goals-list');
+    const tabWeekly      = document.getElementById('tab-btn-weekly');
+    const tabLong        = document.getElementById('tab-btn-long');
+    const tabDesires     = document.getElementById('tab-btn-desires');
+    const tabCommitments = document.getElementById('tab-btn-commitments');
+    const goalInput      = document.getElementById('settings-goal-input');
+    const goalForm       = document.getElementById('settings-goal-form');
+    const goalsListEl    = document.getElementById('settings-goals-list');
+    const commitmentSelect = document.getElementById('goal-commitment-select');
+    const commitmentsTabListEl = document.getElementById('settings-commitments-list');
 
-    let currentTab = 'weekly'; // 'weekly' | 'long' | 'desires'
+    let currentTab = 'weekly'; // 'weekly' | 'long' | 'desires' | 'commitments'
 
-    let weekGoals = JSON.parse(localStorage.getItem('scriptorium_week_goals')) || [];
-    let longGoals = JSON.parse(localStorage.getItem('scriptorium_long_goals')) || [];
-    let desires   = JSON.parse(localStorage.getItem('scriptorium_desires'))    || [];
+    let weekGoals   = JSON.parse(localStorage.getItem('scriptorium_week_goals'))   || [];
+    let longGoals   = JSON.parse(localStorage.getItem('scriptorium_long_goals'))   || [];
+    let desires     = JSON.parse(localStorage.getItem('scriptorium_desires'))      || [];
+    let commitments = [];
+
+    function populateCommitmentDropdown() {
+        if (!commitmentSelect) return;
+        commitmentSelect.innerHTML = '<option value="">-- None --</option>';
+        commitments.forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c.id;
+            opt.textContent = `[${c.category || 'General'}] ${c.title}`;
+            commitmentSelect.appendChild(opt);
+        });
+    }
+
+    function renderCommitmentsTabList() {
+        if (!commitmentsTabListEl) return;
+        if (commitments.length === 0) {
+            commitmentsTabListEl.innerHTML = `<li style="text-align:center;color:var(--ink-muted);font-family:var(--f-hand);font-size:0.85rem;padding:0.8rem 0;">No commitments bound yet. Bind your first commitment above!</li>`;
+            return;
+        }
+        commitmentsTabListEl.innerHTML = commitments.map(c => `
+            <li class="settings-goal-item" data-id="${c.id}" style="display:flex; flex-direction:column; align-items:stretch; gap:0.25rem; padding:0.6rem 0.8rem; border:1px solid rgba(229,195,106,0.15); border-radius:6px; background:rgba(229,195,106,0.02); margin-bottom:0.4rem; position:relative;">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; width:100%;">
+                    <span style="font-family:var(--f-head); font-weight:600; font-size:0.82rem; color:var(--amber); line-height:1.2;">
+                        ${escapeHtml(c.title)}
+                    </span>
+                    <button class="settings-commitment-del-btn" data-id="${c.id}" title="Sever commitment" style="background:none; border:none; color:var(--ink-muted); cursor:pointer; font-size:0.8rem; padding:0 2px; transition:color 0.2s;">✕</button>
+                </div>
+                <div style="font-family:var(--f-hand); font-size:0.85rem; color:var(--ink); font-style:italic; line-height:1.2;">
+                    "Why: ${escapeHtml(c.why)}"
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; font-family:var(--f-head); font-size:0.65rem; color:var(--ink-muted); margin-top:0.1rem;">
+                    <span>Category: <strong style="color:var(--ink);">${escapeHtml(c.category)}</strong></span>
+                    <span>Status: <strong style="color:var(--ink);">${escapeHtml(c.status)}</strong></span>
+                </div>
+            </li>
+        `).join('');
+    }
+
+    function loadCommitments() {
+        fetch('/api/reflection/load?type=commitments')
+            .then(res => res.json())
+            .then(data => {
+                commitments = Array.isArray(data) ? data : [];
+                populateCommitmentDropdown();
+                renderCommitmentsTabList();
+            })
+            .catch(err => {
+                console.error("Failed to load commitments:", err);
+                commitments = JSON.parse(localStorage.getItem('scriptorium_commitments')) || [];
+                populateCommitmentDropdown();
+                renderCommitmentsTabList();
+            });
+    }
+    loadCommitments();
 
     // Prepopulate with elegant realistic placeholders on first load if empty
     if (weekGoals.length === 0 && localStorage.getItem('scriptorium_week_goals') === null) {
@@ -147,9 +204,15 @@ document.addEventListener('DOMContentLoaded', () => {
             goalsListEl.innerHTML = list.map(g => {
                 // If weekly tab is locked, don't show the delete button
                 const showDel = !(currentTab === 'weekly' && isLocked);
+                const commitmentTag = (currentTab === 'weekly' && g.commitmentTitle)
+                    ? `<span class="goal-commitment-badge" style="background:var(--amber-glow); color:var(--amber); border:1px solid rgba(229,195,106,0.3); font-size:0.65rem; font-family:var(--f-head); padding:1px 6px; border-radius:10px; text-transform:uppercase; font-weight:600; margin-left:6px; display:inline-block; vertical-align:middle; line-height:1.2;">🔗 ${escapeHtml(g.commitmentTitle)}</span>`
+                    : '';
                 return `
                     <li class="settings-goal-item" data-id="${g.id}">
-                        <span class="settings-goal-text">${escapeHtml(g.text)}</span>
+                        <div style="display:flex; align-items:center; gap:0.4rem; flex-wrap:wrap; flex:1;">
+                            <span class="settings-goal-text">${escapeHtml(g.text)}</span>
+                            ${commitmentTag}
+                        </div>
                         ${showDel ? `<button class="settings-goal-del-btn" title="Delete goal">✕</button>` : ''}
                     </li>
                 `;
@@ -179,23 +242,58 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function setActiveTab(tab) {
         currentTab = tab;
-        [tabWeekly, tabLong, tabDesires].forEach(btn => {
+        [tabWeekly, tabLong, tabDesires, tabCommitments].forEach(btn => {
             if (btn) {
                 const active = btn.dataset.tab === tab;
                 btn.classList.toggle('active', active);
             }
         });
-        if (goalInput) {
-            if (tab === 'weekly') goalInput.placeholder = "Add new weekly goal...";
-            else if (tab === 'long') goalInput.placeholder = "Add new long-term goal...";
-            else if (tab === 'desires') goalInput.placeholder = "Add heart's desire...";
+
+        const weeklyCommitmentContainer = document.getElementById('weekly-commitment-select-container');
+        const normalForm = document.getElementById('settings-goal-form');
+        const normalList = document.getElementById('settings-goals-list');
+        const saveBtn = document.getElementById('settings-goals-save-reset-btn');
+        const commitmentsContent = document.getElementById('settings-commitments-tab-content');
+        const lockMsg = document.getElementById('weekly-lock-message');
+        const lockBtn = document.getElementById('lock-weekly-action-btn');
+
+        if (tab === 'commitments') {
+            if (normalForm) normalForm.style.display = 'none';
+            if (normalList) normalList.style.display = 'none';
+            if (saveBtn) saveBtn.style.display = 'none';
+            if (lockMsg) lockMsg.style.display = 'none';
+            if (lockBtn) lockBtn.style.display = 'none';
+            if (commitmentsContent) commitmentsContent.style.display = 'flex';
+            renderCommitmentsTabList();
+        } else {
+            if (normalForm) normalForm.style.display = 'flex';
+            if (normalList) normalList.style.display = 'block';
+            if (saveBtn) saveBtn.style.display = 'flex';
+            if (lockMsg) lockMsg.style.display = 'block';
+            if (lockBtn) lockBtn.style.display = 'block';
+            if (commitmentsContent) commitmentsContent.style.display = 'none';
+
+            if (weeklyCommitmentContainer) {
+                weeklyCommitmentContainer.style.display = (tab === 'weekly') ? 'flex' : 'none';
+            }
+
+            if (goalInput) {
+                if (tab === 'weekly') {
+                    goalInput.placeholder = "Add new weekly goal...";
+                } else if (tab === 'long') {
+                    goalInput.placeholder = "Add new long-term goal...";
+                } else if (tab === 'desires') {
+                    goalInput.placeholder = "Add heart's desire...";
+                }
+            }
+            renderRegistry();
         }
-        renderRegistry();
     }
 
     if (tabWeekly) tabWeekly.addEventListener('click', () => setActiveTab('weekly'));
     if (tabLong)   tabLong.addEventListener('click', () => setActiveTab('long'));
     if (tabDesires) tabDesires.addEventListener('click', () => setActiveTab('desires'));
+    if (tabCommitments) tabCommitments.addEventListener('click', () => setActiveTab('commitments'));
 
     if (goalForm && goalInput) {
         goalForm.addEventListener('submit', e => {
@@ -208,9 +306,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
+            const selectedId = commitmentSelect ? commitmentSelect.value : '';
+            let connectedCommitmentTitle = '';
+            if (selectedId) {
+                const connected = commitments.find(c => c.id === selectedId);
+                if (connected) connectedCommitmentTitle = connected.title;
+            }
+
             const newItem = { id: Date.now(), text: val, done: false };
 
             if (currentTab === 'weekly') {
+                if (selectedId) {
+                    newItem.commitmentId = selectedId;
+                    newItem.commitmentTitle = connectedCommitmentTitle;
+                }
                 weekGoals.push(newItem);
                 localStorage.setItem('scriptorium_week_goals', JSON.stringify(weekGoals));
             } else if (currentTab === 'long') {
@@ -222,6 +331,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             goalInput.value = '';
+            if (commitmentSelect) commitmentSelect.value = '';
             renderRegistry();
         });
     }
@@ -236,8 +346,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const item = e.target.closest('.settings-goal-item');
                 if (!item) return;
-                const id = parseInt(item.dataset.id);
+                const rawId = item.dataset.id;
 
+                const id = parseInt(rawId);
                 if (currentTab === 'weekly') {
                     weekGoals = weekGoals.filter(x => x.id !== id);
                     localStorage.setItem('scriptorium_week_goals', JSON.stringify(weekGoals));
@@ -251,6 +362,122 @@ document.addEventListener('DOMContentLoaded', () => {
                 renderRegistry();
             }
         });
+    }
+
+    if (commitmentsTabListEl) {
+        commitmentsTabListEl.addEventListener('click', e => {
+            const delBtn = e.target.closest('.settings-commitment-del-btn');
+            if (!delBtn) return;
+            const commitId = delBtn.dataset.id;
+            if (confirm("Are you sure you want to sever/remove this commitment? All check-ins will remain, but the active binding will be deleted.")) {
+                commitments = commitments.filter(x => x.id !== commitId);
+                fetch('/api/reflection/save', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ type: 'commitments', data: commitments })
+                })
+                .then(() => {
+                    localStorage.setItem('scriptorium_commitments', JSON.stringify(commitments));
+                    populateCommitmentDropdown();
+                    renderCommitmentsTabList();
+                });
+            }
+        });
+    }
+
+    // ── SAVE & RESET ACTIVE REGISTRY TAB ──
+    const registrySaveBtn = document.getElementById('settings-goals-save-reset-btn');
+    if (registrySaveBtn) {
+        registrySaveBtn.addEventListener('click', () => {
+            let activeList = [];
+            let categoryName = '';
+            let storageKey = '';
+            let labelName = '';
+
+            if (currentTab === 'weekly') {
+                activeList = weekGoals;
+                categoryName = 'weekly';
+                storageKey = 'scriptorium_week_goals';
+                labelName = 'Weekly Goals';
+            } else if (currentTab === 'long') {
+                activeList = longGoals;
+                categoryName = 'longterm';
+                storageKey = 'scriptorium_long_goals';
+                labelName = 'Long-Term Goals';
+            } else if (currentTab === 'desires') {
+                activeList = desires;
+                categoryName = 'inner_desire';
+                storageKey = 'scriptorium_desires';
+                labelName = 'Inner Desires';
+            }
+
+            if (activeList.length === 0) {
+                alert(`Your ${labelName} list is empty! Nothing to save.`);
+                return;
+            }
+
+            const promptMessage = currentTab === 'weekly' && isWeeklyLocked()
+                ? `⚠️ Note: Weekly goals are locked for this calendar week. Are you absolutely sure you want to save and reset your ${labelName}?`
+                : `Are you sure you want to save and reset your ${labelName}?`;
+
+            if (!confirm(promptMessage)) {
+                return;
+            }
+
+            const filename = `${getFormattedDate()}.json`;
+            const payload = {
+                date: new Date().toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' }),
+                tab: currentTab,
+                goals: activeList
+            };
+
+            fetch('/api/goals/save', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    category: categoryName,
+                    filename: filename,
+                    data: payload
+                })
+            })
+            .then(res => res.json())
+            .then(res => {
+                if (res.success) {
+                    alert(`Successfully saved ${labelName} in the database/goals/${categoryName} directory!`);
+                    
+                    // Reset locally and in storage
+                    if (currentTab === 'weekly') {
+                        weekGoals = [];
+                        localStorage.setItem(storageKey, '[]');
+                    } else if (currentTab === 'long') {
+                        longGoals = [];
+                        localStorage.setItem(storageKey, '[]');
+                    } else if (currentTab === 'desires') {
+                        desires = [];
+                        localStorage.setItem(storageKey, '[]');
+                    }
+                    
+                    renderRegistry();
+                } else {
+                    alert(`Failed to save ${labelName}: ` + (res.error || 'Unknown error'));
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Error connecting to the server: ' + err.message);
+            });
+        });
+    }
+
+    function getFormattedDate() {
+        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        const d = new Date();
+        const day = d.getDate();
+        const month = months[d.getMonth()];
+        const year = d.getFullYear();
+        return `${day}_${month}_${year}`; // e.g. 31_May_2026
     }
 
     function escapeHtml(text) {
@@ -325,6 +552,75 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     ['fancy', 'hand', 'head'].forEach(bindFontFamilySelect);
+
+    // ── COMMITMENT REGISTRY IN SETTINGS ──
+    const addCommitmentForm = document.getElementById('add-commitment-form');
+    if (addCommitmentForm) {
+        addCommitmentForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const titleInput = document.getElementById('commitment-title');
+            const whyInput = document.getElementById('commitment-why');
+            const categoryInput = document.getElementById('commitment-category');
+            const statusInput = document.getElementById('commitment-status');
+
+            const title = titleInput ? titleInput.value.trim() : '';
+            const why = whyInput ? whyInput.value.trim() : '';
+            const category = categoryInput ? categoryInput.value.trim() : '';
+            const status = statusInput ? statusInput.value : 'In Progress';
+
+            if (!title || !why || !category) return;
+
+            // Load existing commitments, push new one, and save
+            fetch('/api/reflection/load?type=commitments')
+                .then(res => res.json())
+                .then(data => {
+                    commitments = Array.isArray(data) ? data : [];
+
+                    const options = { day: 'numeric', month: 'short', year: 'numeric' };
+                    const formattedDate = new Date().toLocaleDateString('en-US', options);
+
+                    const newCommitment = {
+                        id: 'commit_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+                        title: title,
+                        why: why,
+                        category: category,
+                        started: formattedDate,
+                        lastTouched: formattedDate,
+                        status: status
+                    };
+
+                    commitments.push(newCommitment);
+
+                    // Save to backend
+                    return fetch('/api/reflection/save', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ type: 'commitments', data: commitments })
+                    });
+                })
+                .then(res => res.json())
+                .then(res => {
+                    if (res.success) {
+                        alert('Sacred commitment successfully bound! You can track progress and daily check-ins on the Reflection page.');
+                        localStorage.setItem('scriptorium_commitments', JSON.stringify(commitments));
+                        if (titleInput) titleInput.value = '';
+                        if (whyInput) whyInput.value = '';
+                        if (categoryInput) categoryInput.value = '';
+                        if (statusInput) statusInput.value = 'In Progress';
+                        populateCommitmentDropdown();
+                        renderCommitmentsTabList();
+                        renderRegistry();
+                    } else {
+                        alert('Failed to save commitment: ' + (res.error || 'Unknown error'));
+                    }
+                })
+                .catch(err => {
+                    console.error("Error creating commitment in settings:", err);
+                    alert("Error connecting to the server: " + err.message);
+                });
+        });
+    }
 
     // Init
     setActiveTab('weekly');
