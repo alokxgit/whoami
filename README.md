@@ -63,11 +63,11 @@ Built with Electron and Vite, all data is stored locally with absolute privacy.
 *   Node.js (v18 or higher recommended)
 *   npm
 
-### Installation
+### Installation & Run
 
 1.  Clone the repository:
 ```bash
-    git clone <repository-url>
+    git clone https://github.com/alokxgit/whoami.git
     cd whoami
 ```
 
@@ -85,6 +85,18 @@ Built with Electron and Vite, all data is stored locally with absolute privacy.
 
 On the first launch, the application will prompt you to select a local directory. This folder acts as your secure, active database location. All journal entries, settings, images, and data backups will be saved exclusively within this folder.
 
+### Building & Packaging for Production
+
+To build the static assets and package the application into a standalone desktop executable (e.g., an AppImage for Linux, or a Setup EXE for Windows):
+
+```bash
+# 1. Compile Vite assets and copy shared scripts
+npm run build
+
+# 2. Package the application
+npm run dist
+```
+
 ---
 
 ## Project Structure
@@ -93,7 +105,7 @@ On the first launch, the application will prompt you to select a local directory
 ├── app/
 │   ├── api/                    # Server-side mock API endpoints and settings handlers
 │   ├── index.html              # Main application entry point (Cover view)
-│   ├── pages/                  # Page-specific assets and views (Goals, Journal, KB, Reflection, Settings)
+│   ├── pages/                  # Page-specific assets and views (cover, goals, journal, knowledge_base, reflection, settings, shortcuts)
 │   └── shared/                 # Shared resources (Core engine logic, ambient audio, global styling)
 ├── public/                     # Static media and app assets
 ├── main.js                     # Electron main process configuration
