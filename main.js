@@ -76,7 +76,8 @@ function createWindow(url) {
     const win = new BrowserWindow({
         width: 1440,
         height: 900,
-        fullscreen: true,
+        // fullscreen: true,
+        show: false,
         frame: false,
         icon: iconPath,
         webPreferences: {
@@ -84,6 +85,9 @@ function createWindow(url) {
             contextIsolation: true
         }
     });
+
+    win.maximize();  // maximized but taskbar still visible
+    win.show();
 
     try {
         const img = nativeImage.createFromPath(iconPath);
