@@ -16,8 +16,9 @@ Built with Electron and Vite, all data is stored locally with absolute privacy.
 | Windows | [Whoami.Setup.1.0.0.exe](https://github.com/alokxgit/whoami/releases/download/v1.0.0/Whoami.Setup.1.0.0.exe) |
 | Mac | Coming soon |
 
----
+![Downloads](https://img.shields.io/github/downloads/alokxgit/whoami/total?color=blue&logo=github)
 
+---
 
 ## Screenshots
 
