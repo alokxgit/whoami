@@ -23,12 +23,12 @@ Built with Electron and Vite, all data is stored locally with absolute privacy.
 
 | Feature | Screenshot |
 |----------|----------|
-| Reflection & Identity | ![Reflection & Identity](https://github.com/alokxgit/whoami/blob/main/screenshots/reflection.png) |
-| Goals & Commitments | ![Goals & Commitments](https://github.com/alokxgit/whoami/blob/main/screenshots/goals.png) |
-| Journaling | ![Journaling](https://github.com/alokxgit/whoami/blob/main/screenshots/journal.png) |
-| Knowledge Base | ![Knowledge Base](https://github.com/alokxgit/whoami/blob/main/screenshots/kb.png) |
-| Settings | ![Settings](https://github.com/alokxgit/whoami/blob/main/screenshots/settings.png) |
-| Shortcuts | ![Shortcuts](https://github.com/alokxgit/whoami/blob/main/screenshots/shortcuts.png) |
+| Reflection & Identity | ![Reflection & Identity](https://github.com/alokxgit/whoami/blob/main/public/screenshots/reflection.png) |
+| Goals & Commitments | ![Goals & Commitments](https://github.com/alokxgit/whoami/blob/main/public/screenshots/goals.png) |
+| Journaling | ![Journaling](https://github.com/alokxgit/whoami/blob/main/public/screenshots/journal.png) |
+| Knowledge Base | ![Knowledge Base](https://github.com/alokxgit/whoami/blob/main/public/screenshots/kb.png) |
+| Settings | ![Settings](https://github.com/alokxgit/whoami/blob/main/public/screenshots/settings.png) |
+| Shortcuts | ![Shortcuts](https://github.com/alokxgit/whoami/blob/main/public/screenshots/shortcuts.png) |
 
 ---
 
